@@ -100,6 +100,7 @@ Tracks where each doc stands. `baseline` = pre-session (Haven-lifted, untouched)
 
 | File | What it covers |
 |---|---|
+| [component-names.md](foundation/component-names.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
 | [result-pattern.md](foundation/result-pattern.md) | Result carrier — `AppResult<TSuccess, TFailure>` union, `ISuccessResult`/`IFailureResult` markers, per-operation containers |
 | [validation.md](foundation/validation.md) | Input validation — `IValidator<T>`, mediator validation behavior |
 | [time.md](foundation/time.md) | Time abstraction — `TimeProvider`, no `DateTime.Now` |

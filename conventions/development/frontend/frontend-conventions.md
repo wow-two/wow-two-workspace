@@ -1,38 +1,39 @@
 # Conventions — Development — Frontend (React / TypeScript)
 
-*Last updated: 2026-06-09*
+*Last updated: 2026-07-03*
 
 > React 19 / TypeScript (strict) / Vite / Tailwind v4 / `@wow-two-beta/ui` code-style conventions for
 > every frontend under `wow-two-ws/`. Lookup table — open a file when the task touches it; do not
 > pre-read. Repo layout is one level up: [../repo/repo-structure.md](../repo/repo-structure.md). The .NET
 > sibling: [../backend/](../backend/).
 
-## Language
+## code-style/
 
 | File | What it covers |
 |---|---|
-| [naming.md](naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
-| [documentation.md](documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
-| [code-organization.md](code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, file-internal order |
-| [models.md](models.md) | Domain model vs DTO vs form-fields, `interface`/`type`, collections (`Array` vs `ReadonlyArray`) |
+| [naming.md](code-style/naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
+| [documentation.md](code-style/documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
+| [code-organization.md](code-style/code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, file-internal order |
+| [models.md](code-style/models.md) | Domain model vs `*Dto` (declare only on shape mismatch) + mapper · `*Content`/`*Values`/`*Draft` · fields (`T` / `T?`) · `interface`/`type` · doc rules (`Defines` / `Gets or sets`, blank line between members) |
+| [type-mapping.md](code-style/type-mapping.md) | The .NET ↔ wire ↔ TS scalar contract — `Guid`/`number`/`boolean` · `Temporal.*` dates wired by one global reviver · enums · `ReadonlyArray<T>` (never `T[]`) · `?`-nullability |
+| [enums.md](code-style/enums.md) | const object `as const` — PascalCase key (code) / camelCase value (wire) · derived `type` · `{Enum}Labels` · `Unresolved` first |
+| [extensions.md](code-style/extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
 
-## Type-kinds
-
-| File | What it covers |
-|---|---|
-| [enums.md](enums.md) | TS `enum` + label `Record`, camelCase wire values, `Unresolved` first, dropdown options |
-| [components.md](components.md) | One-component-per-folder, props (`readonly`, no destructure), file structure, UI terminology, variants |
-| [hooks.md](hooks.md) | `use*` naming, object vs tuple return, `Manages`/`Provides access to`, abort on unmount |
-| [extensions.md](extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
-| [forms.md](forms.md) | String form state (`EditableFields`), resolve-on-submit, enum-as-string |
-
-## Architecture
+## architecture/
 
 | File | What it covers |
 |---|---|
-| [project-structure.md](project-structure.md) | Single Vite app vs pnpm workspace + `packages/` (`@{brand}/ui`·`common`·`domain`), boundaries, ports |
-| [state-and-data.md](state-and-data.md) | Same-origin `/api` client, dev proxy, `ApiError`/ProblemDetails, Context+hooks, localStorage keys |
-| [styling.md](styling.md) | Tailwind v4 `@import`/`@theme`/`@source`-ing `@wow-two-beta/ui`, tokens, `cn()`, `tailwind-variants`, dark mode |
+| [architecture.md](architecture/architecture.md) | **Layer model** — `bootstrap · integration · domain · application · presentation` × domain slices · inward dependency · `common/` · barrels · naming vocabulary · discriminated dispatch · **packaging** (single-app vs pnpm workspace + `@{brand}/*` + boundaries) · dev server + preview |
+| [state-and-data.md](architecture/state-and-data.md) | Same-origin `/api` client, dev proxy, `ApiError`/ProblemDetails, Context+hooks, localStorage keys |
+
+## presentation/
+
+| File | What it covers |
+|---|---|
+| [components.md](presentation/components.md) | One-component-per-folder, props (`readonly`, no destructure), file structure, UI terminology, variants |
+| [forms.md](presentation/forms.md) | String form state (`EditableFields`), resolve-on-submit, enum-as-string |
+| [hooks.md](presentation/hooks.md) | `use*` naming, object vs tuple return, `Manages`/`Provides access to`, abort on unmount |
+| [styling.md](presentation/styling.md) | Tailwind v4 `@import`/`@theme`/`@source`-ing `@wow-two-beta/ui`, tokens, `cn()`, `tailwind-variants`, dark mode |
 
 ## Notes
 
@@ -52,7 +53,7 @@ focused file when the supporting practice lands in a repo.
 | Gap | Why it matters | Note |
 |---|---|---|
 | **Testing** | Beta UI is explicitly "no tests"; products need a real stance (Vitest + RTL? Playwright? what's required vs optional) | No FE test convention exists in any source today |
-| **Error & loading states** | `ApiError` exists ([state-and-data.md](state-and-data.md)) but no shared pattern for error boundaries, loading skeletons, empty states (`EmptyState`/`Alert`/`Spinner` exist in beta UI but usage isn't codified) | Partially implied; needs its own file |
+| **Error & loading states** | `ApiError` exists ([state-and-data.md](architecture/state-and-data.md)) but no shared pattern for error boundaries, loading skeletons, empty states (`EmptyState`/`Alert`/`Spinner` exist in beta UI but usage isn't codified) | Partially implied; needs its own file |
 | **Routing** | Today: URL-hash routing for light apps. No decision for multi-route apps (React Router? TanStack Router? file-based?) | `useHashRouter` is Haven-only; not generalized |
 
 ### P2 — soon

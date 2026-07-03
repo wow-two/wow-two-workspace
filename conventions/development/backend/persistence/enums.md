@@ -30,22 +30,22 @@ public enum ChannelType { Supply, Demand }
 
 ### Value-level
 
-- `/// <summary>` on each value describes what the value means
+- `/// <summary>` on each value starts with **Represents** — a value is one data case (per [documentation.md](../code-style/documentation.md) starter table) — then states what the value means
 
 ```csharp
 /// <summary>Defines the execution status of a pipeline run.</summary>
 public enum PipelineRunStatus
 {
-    /// <summary>Pipeline is currently executing.</summary>
+    /// <summary>Represents a run currently executing.</summary>
     Running,
 
-    /// <summary>Pipeline finished successfully.</summary>
+    /// <summary>Represents a run that finished successfully.</summary>
     Completed,
 
-    /// <summary>Pipeline terminated due to an error.</summary>
+    /// <summary>Represents a run that terminated due to an error.</summary>
     Failed,
 
-    /// <summary>Manually stopped by user before completion.</summary>
+    /// <summary>Represents a run manually stopped before completion.</summary>
     Cancelled
 }
 ```

@@ -7,5 +7,6 @@
 
 | Area | Covers |
 |---|---|
-| [version-planning/](version-planning/version-docs.md) | Version docs — `v{X.Y}/v{X.Y}.md` folders, lifecycle, cadence, rules + iteration template |
+| [version-track/](version-track/version-track.md) | Version docs — `v{X.Y}/v{X.Y}.md` folders, lifecycle, cadence, rules + iteration template |
+| [polish-track/](polish-track/polish-track.md) | Polish docs — behavior-invariant cleanup, tasks per file, decoupled `p{X.Y}` line + template |
 | [engineering-planning/](engineering-planning/engineering-planning-conventions.md) | The repo's main planning doc — versions · decisions · ordered backlog · log (Haven-proven shape) |

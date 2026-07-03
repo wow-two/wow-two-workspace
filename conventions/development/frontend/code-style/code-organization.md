@@ -2,7 +2,7 @@
 
 *Last updated: 2026-06-09*
 
-The TS counterpart of [../backend/code-organization.md](../backend/code-style/code-organization.md). File-per-type and one-component-per-folder live in [naming.md](naming.md) / [components.md](components.md); this file covers in-file layout.
+The TS counterpart of [../backend/code-organization.md](../../backend/code-style/code-organization.md). File-per-type and one-component-per-folder live in [naming.md](naming.md) / [components.md](../presentation/components.md); this file covers in-file layout.
 
 ## Language baseline
 
@@ -63,9 +63,9 @@ import { CONTACT_TYPE_COLORS } from "@/common/lib/constants";
 
 ## File-internal order
 
-Components: imports → types → constants → helpers → component → sub-components (see [components.md](components.md)). Non-component modules: imports → types → constants → exported members.
+Components: imports → types → constants → helpers → component → sub-components (see [components.md](../presentation/components.md)). Non-component modules: imports → types → constants → exported members.
 
 ## See also
 
-- [naming.md](naming.md) · [components.md](components.md)
-- [../backend/code-organization.md](../backend/code-style/code-organization.md) — the C# sibling
+- [naming.md](naming.md) · [components.md](../presentation/components.md)
+- [../backend/code-organization.md](../../backend/code-style/code-organization.md) — the C# sibling

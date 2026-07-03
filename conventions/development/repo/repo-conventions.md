@@ -11,3 +11,4 @@
 | [tech-stack.md](tech-stack.md) | Default stack — backend + frontend + beta SDKs |
 | [ports.md](ports.md) | Port ledger — allocated dev ports (check before picking one) |
 | [single-host-serving.md](single-host-serving.md) | Backend serves the SPA from `wwwroot` — vite `outDir` + static-serve/fallback + `BuildSpa` MSBuild target + dev proxy + CORS posture |
+| [git.md](git.md) | Commit-message format — `{type}: {past-tense verb} {subject}`, one cohesive change per commit |

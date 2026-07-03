@@ -41,7 +41,9 @@ Default to `sealed record` for every data carrier. Open `record` (non-sealed) on
 ### Required vs init defaults
 
 - **`required`** on every non-nullable property whose value must come from outside the constructor (caller, EF, binder)
-- **No default values** unless the property is genuinely optional
+- **No default values** unless the property is genuinely optional — applies to **all** models; a generic-role model that genuinely needs a default is
+  an **explicit override documented in its own convention** (e.g. a tuning `Options` type — see [component-names.md](../foundation/component-names.md)
+  `Settings` vs `Options`), never an ad-hoc default sprinkled in
 - **Init-only** (`{ get; init; }`) for immutable models — settings, DTOs, value objects
 - **Get-set** (`{ get; set; }`) for entities — EF Core requires set accessors
 

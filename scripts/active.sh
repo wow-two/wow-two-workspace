@@ -38,7 +38,7 @@ DELAY="${DELAY:-0.4}"
 PROJECTS=(
   "drydock|wow-two-platform/wow-two-platform.drydock/engineering/codebase/drydock.backend-services/Drydock.slnx|wow-two-platform/wow-two-platform.drydock/engineering/codebase/drydock.frontend-services"
   "secrets-vault|wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.backend-services/Wow-Two-Platform.Secrets-Vault.sln|wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.frontend-services"
-  "smart-qr|ventures/smart-qr-poc/platform/src/backend/SmartQr.sln|ventures/smart-qr-poc/platform/src/frontend"
+  "smart-qr|ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/smartqr.backend-services.slnx|ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services"
   "trademark-watcher|ventures/trademark-watcher-poc/platform/src/backend/Trademark.Watcher.sln|-"
   "acquisition-explorer|-|ventures/acquisition-explorer-poc/platform/acquisition-explorer-frontend"
   "yt-scraper|ventures/yt-transcripts-poc/platform/src/backend/Yt.Transcripts.Poc.sln|ventures/yt-transcripts-poc/platform/src/yt-scraper.frontend-services/web"

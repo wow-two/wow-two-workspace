@@ -12,7 +12,7 @@
 - must allocate the next free even port from [ports.md](../../repo/ports.md) - never reuse one across projects
 - must set `ASPNETCORE_ENVIRONMENT` to `Development`
 - must trust the dev cert once per machine - `dotnet dev-certs https --trust`
-- the Vite dev server proxies `/api` to the even (HTTPS) port with `secure: false` - see [state-and-data.md](../../frontend/state-and-data.md)
+- the Vite dev server proxies `/api` to the even (HTTPS) port with `secure: false` - see [state-and-data.md](../../frontend/architecture/state-and-data.md)
 
 ### Example
 

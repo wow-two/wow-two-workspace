@@ -17,7 +17,7 @@ export interface EditableFields {
 
 - **Enum fields → `string | null`** in form state.
 - **Scalars stay as-is** (`number | null`, `boolean`).
-- Resolve strings back to enum values on submit (reuse the domain mapper — see [models.md](models.md)), and surface validation errors instead of silently coercing.
+- Resolve strings back to enum values on submit (reuse the domain mapper — see [models.md](../code-style/models.md)), and surface validation errors instead of silently coercing.
 
 ## Flow
 
@@ -33,10 +33,10 @@ domain model (enum types)
 
 - Prefer `@wow-two-beta/ui` form components (`TextInput`, …) before hand-rolling — see [components.md](components.md).
 - Controlled inputs; keep form state local (`useState`) unless it must be shared, then lift to a hook.
-- Dropdown options derive from enum **label Records** via `enumOptions(Labels)` — see [enums.md](enums.md).
+- Dropdown options derive from enum **label Records** via `enumOptions(Labels)` — see [enums.md](../code-style/enums.md).
 
 ## See also
 
-- [models.md](models.md) — domain model ↔ DTO ↔ form fields
-- [enums.md](enums.md) — label Records → dropdown options
+- [models.md](../code-style/models.md) — domain model ↔ DTO ↔ form fields
+- [enums.md](../code-style/enums.md) — label Records → dropdown options
 - [components.md](components.md) — props, `Form` terminology

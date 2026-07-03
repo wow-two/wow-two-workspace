@@ -34,7 +34,7 @@ The Vite plugin is `@tailwindcss/vite` (in `plugins: [react(), tailwindcss()]`).
 
 ## Variants — `tailwind-variants`
 
-Components with multiple visual states define their class map with **`tailwind-variants`** in a co-located `*.variants.ts` / `*Styles.ts` file (see [naming.md](naming.md)) — keep large variant maps out of the JSX.
+Components with multiple visual states define their class map with **`tailwind-variants`** in a co-located `*.variants.ts` / `*Styles.ts` file (see [naming.md](../code-style/naming.md)) — keep large variant maps out of the JSX.
 
 ## Dark mode
 
@@ -44,4 +44,4 @@ Components with multiple visual states define their class map with **`tailwind-v
 ## See also
 
 - [components.md](components.md) — variants, props
-- [project-structure.md](project-structure.md) — where `index.css` lives
+- [architecture.md](../architecture/architecture.md) — where `index.css` lives (the `bootstrap/` layer)

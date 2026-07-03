@@ -9,7 +9,7 @@
 ## Cycle = two versions
 
 - a cycle maps to **two version numbers**: the **deliverable version** (cycle 1) then the **extraction version** (cycle 2) — **1 cycle = 2 versions shipped**.
-- products start at `v0.1`, minor-increment per version, major only at `.100` or a breaking change — see [version-docs.md](../planning/version-planning/version-docs.md).
+- products start at `v0.1`, minor-increment per version, major only at `.100` or a breaking change — see [version-track.md](../planning/version-track/version-track.md).
 - example: smart-qr `v0.1` (product + migrator built inline) → `v0.2` (migrator extracted to the SDK + adopted across apps) → `v0.3` next deliverable.
 
 ---
@@ -19,7 +19,7 @@
 - build the version's scope inside the app; iterate in sub-cycles until it ships.
 - a product holds **business logic only**; cross-cutting infrastructure (migrations, auth, hosting, result/mediator plumbing) is built **inline** in the app to move fast.
 - don't pre-extract — a block earns extraction by proving itself in a real product first.
-- track the version in the app's planning per [version-docs.md](../planning/version-planning/version-docs.md).
+- track the version in the app's planning per [version-track.md](../planning/version-track/version-track.md).
 
 ---
 

@@ -43,10 +43,11 @@ Rules:
   a table row or a 1-line bullet, it must not be a paragraph.
 - **Shape** — `# Title` → `*Last updated:*` → description blockquote → `##` sections. `---` between **every** section. No `## See also` — link inline only
   where load-bearing.
-- **Description** — a 3-line blockquote: **What** (one line, what it governs + scope boundary), **Purpose** (the *why* / benefit / problem it solves),
-  **Use case** (the *when* / where you reach for it). Purpose ≠ Use case — don't let both collapse to the same phrase. Not "Conventions for X" filler.
+- **Description** — **one line**: **What** it governs + the scope boundary. Add **Purpose** (*why*) / **Use case** (*when*) only when they aren't obvious from What — and never restate a fact (e.g. a path) in both the description and the body. Not "Conventions for X" filler.
 - **Density** — super-compact bullets, imperatives, one fact per line. No prose paragraph > 2 lines. Code fence for multi-line only; backticks for every
   identifier.
+- **Directive rules** — write each rule as `- must {action}` / `- must not {action}` / `- may {action}`: one atomic rule per bullet, the exact action, no rationale unless it changes what's done. Turn a description ("the latest folder is active") into a directive ("must treat the latest folder as active").
+- **Plain-noun headers** — section headers are flat nouns (`Scope`, `Invariant`, `Naming`, `Lifecycle`), never narrative phrases (`The wall`).
 - **Hard wrap** — wrap prose at **150 cols** (the editor's setting).
 - **Tables vs bullets** — tables only for narrow 3+-item × 2+-col data that fits inside 150 cols. If any row would exceed the 150-col hard wrap,
   convert that table to bullet points — a wrapped wide table is unreadable.
@@ -83,6 +84,7 @@ Cross-area: **[dev-cycle.md](development/dev-cycle.md)** — 2-cycle app↔SDK m
 | Tech stack — backend + frontend + beta SDKs | [development/repo/tech-stack.md](development/repo/tech-stack.md) |
 | Port ledger — allocated dev ports | [development/repo/ports.md](development/repo/ports.md) |
 | Single-host serving — SPA baked into the backend `wwwroot` (vite `outDir` + static-serve + `BuildSpa` target + dev proxy) · CORS posture | [development/repo/single-host-serving.md](development/repo/single-host-serving.md) |
+| Commit-message format — `{type}: {past-tense verb} {subject}` (past tense, not imperative) · one cohesive change per commit | [development/repo/git.md](development/repo/git.md) |
 
 ### backend/ — .NET conventions (by sub-domain) · [backend-conventions.md](development/backend/backend-conventions.md)
 
@@ -95,7 +97,7 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 | **`persistence/`** (focus) | `database` · `entities` · `enums` · `data-access` · `migrations/` (`migrations` · `bespoke-migrations` · `migration-dialects` · `ef-migrations` · `dbup-migrations` · `migration-tooling`) |
 | `presentation/` | `controllers` · `controllers-known-endpoints` · `request-models` · `response-models` · `api-context-building` · `problem-details` |
 | `runtime/` | `settings` · `launch-profiles` |
-| `foundation/` | `result-pattern` · `validation` · `time` |
+| `foundation/` | `component-names` · `result-pattern` · `validation` · `time` |
 | **`integrations/`** (focus) | `clients` |
 | `testing/` | `testing` · `test-databases` |
 | `messaging/` | `mediator` |
@@ -104,7 +106,11 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 
 ### frontend/ — React / TS code style · [frontend-conventions.md](development/frontend/frontend-conventions.md)
 
-`naming` · `documentation` · `code-organization` · `models` · `enums` · `components` · `hooks` · `extensions` · `forms` · `project-structure` · `state-and-data` · `styling`
+| Group | File |
+|---|---|
+| `code-style/` | `naming` · `documentation` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
+| `architecture/` | `architecture` · `state-and-data` |
+| `presentation/` | `components` · `forms` · `hooks` · `styling` |
 
 ---
 
@@ -112,7 +118,8 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 
 | Area | File |
 |---|---|
-| Version docs — naming, lifecycle, cadence + iteration template | [planning/version-planning/version-docs.md](planning/version-planning/version-docs.md) |
+| Version-track docs — `v{X.Y}` versions: naming, lifecycle, cadence + iteration template | [planning/version-track/version-track.md](planning/version-track/version-track.md) |
+| Polish-track docs — `p{X.Y}` behavior-invariant cleanup, tasks per file, decoupled + template | [planning/polish-track/polish-track.md](planning/polish-track/polish-track.md) |
 | Engineering planning — repo roadmap + backlog | [planning/engineering-planning/engineering-planning-conventions.md](planning/engineering-planning/engineering-planning-conventions.md) |
 
 ## agentic-workflow — index: [agentic-workflow/agentic-workflow.md](agentic-workflow/agentic-workflow.md)

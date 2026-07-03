@@ -12,7 +12,7 @@ The first word of every `<summary>` is fixed by type-kind. This is the canonical
 |---|---|---|
 | Interface | **Defines** | `Defines the contract for stamping audit fields on save.` |
 | Enum | **Defines** | `Defines the execution status of a pipeline run.` |
-| Enum value | (describe the meaning, no fixed verb) | `Pipeline finished successfully.` |
+| Enum value | **Represents** | `Represents a run that finished successfully.` |
 | Entity / record / model class | **Represents** | `Represents an external listing channel.` |
 | DTO | **Represents** (or describe projection) | `Represents a flat channel projection for the CRM grid.` |
 | Service | **Provides** | `Provides channel and pipeline seeding on application startup.` |
@@ -41,6 +41,8 @@ The first word of every `<summary>` is fixed by type-kind. This is the canonical
 | Request model (`{Verb}{Noun}ApiRequest`) | **Represents** | `Represents the create-code request body.` |
 
 A doc violating the starter table is a style miss regardless of content quality.
+
+**Enum type vs value:** the enum *type* uses **Defines** (it declares the closed set); each *value* uses **Represents** (it is one data case). This is the same split as everywhere — `Defines` the type/contract, `Represents` the instance/case/message. (Chosen over `Refers to`, which implies an indirection an enum value doesn't have.)
 
 **Defines / Represents / Handles** — the CQRS verb trio, by layer: **Defines** an interface / marker definition · **Represents** a concrete message model · **Handles** a handler. Same three verbs apply to the mediator markers — see [mediator.md](../../messaging/mediator.md) (§ Comment conventions).
 

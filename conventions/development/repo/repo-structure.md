@@ -36,24 +36,29 @@ A product repo *ships a thing to users*; a library repo *is consumed by other re
 │   ├── planning/                 ← product milestones + roadmap (planning.md)
 │   └── marketing/                ← GTM · channels · campaigns (marketing.md + …)
 │
-└── engineering/                  ← the EXECUTION — build · ship · run
+└── engineering/                  ← the EXECUTION — design · plan · build · ship · run
     ├── engineering.md            ← technical overview · stack · map (lead doc)
-    ├── architecture/             ← system + per-area design (architecture.md + …)
-    ├── codebase/                 ← THE CODE — and the only place code lives
+    ├── architecture/             ← DESIGN — system + per-area design
+    │   ├── architecture.md       ← lead doc
+    │   ├── flows/                ← per-flow docs (`{flow}-flow.md` — Overview + bottom-up layer table)
+    │   ├── infra/                ← cross-cutting subsystem design
+    │   ├── research/             ← pre-decision technical investigation (graduates to a design doc)
+    │   └── {domain}/             ← per-domain / per-subsystem design docs
+    ├── planning/                ← PLAN — what + when
+    │   ├── planning.md          ← roadmap + tracker (lead) · backlog.md · rules.md
+    │   ├── version-track/       ← v{X.Y}/v{X.Y}.md per version (version-track.md lead)
+    │   └── polish-track/        ← p{X.Y}/p{X.Y}.md per polish iteration, behavior-invariant (polish-track.md lead)
+    ├── codebase/                 ← BUILD — THE CODE (the only place code lives)
     │   ├── codebase.md           ← what services live here (lead doc)
     │   ├── {slug}.backend-services/   ← .NET (Clean Arch) — solution + projects (+ tests/)
     │   ├── {slug}.frontend-services/  ← React (Vite / pnpm)
     │   ├── database/             ← SQL / migrations, when managed apart (optional)
     │   └── pipelines/            ← data pipelines (optional)
-    ├── development/              ← build guidelines + process
+    ├── development/              ← BUILD — guidelines + process
     │   ├── development.md        ← lead doc
     │   ├── backend-guidelines.md · frontend-guidelines.md · iteration-guide.md
-    ├── deployment/              ← Dockerfile · compose · ops · domain setup (deployment.md + …)
-    ├── planning/                ← planning.md (roadmap + tracker) · backlog.md · rules.md
-    ├── versions/                ← per-version iteration docs (versions.md + v{X.Y}/v{X.Y}.md)
-    ├── research/                ← technical research dumps (research.md + …)
-    ├── scripts/                 ← dev / ops scripts (scripts.md + …)
-    └── secrets/                 ← gitignored local env (optional)
+    ├── deployment/              ← SHIP — Dockerfile · compose · domain setup (deployment.md)
+    └── operations/              ← RUN — repo setup · scripts · runbooks · secrets/ (gitignored) (operations.md)
 ```
 
 > **`{slug}`** = the repo's distinctive lowercase hyphenated name — its last dot-segment
@@ -102,7 +107,7 @@ business/                          ← the venture layer — model · positionin
 1. **Top-level dirs are exactly `product/` and `engineering/`** (lowercase). Plus root `README.md`, `CLAUDE.md`, `.claude/`.
 2. **All code lives under `engineering/codebase/`.** Always a `codebase/` wrapper — never services directly under `engineering/`.
 3. **The code dirs are exactly `codebase/{slug}.backend-services/` and `codebase/{slug}.frontend-services/`** (dot-prefixed with the repo `{slug}`; + optional `database/`, `pipelines/`). Never bare `backend-services`/`frontend-services`, never `backend`/`frontend`, never `{name}.backend`, never a loose dir outside `codebase/`. **Rationale:** the `{slug}.` prefix keeps the two folders uniquely named so several repos open side-by-side in IDEs never collide on identical `backend-services/` / `frontend-services/` folder names. (`{slug}` = the repo's distinctive lowercase hyphenated name — its last dot-segment, e.g. `secrets-vault`, `drydock`; product-template = `sample`.)
-4. **`{slug}.backend-services/` holds the solution + projects directly.** `.sln`/`.slnx` at its root; projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.sln` encoding) → [`backend/service-architecture.md`](../backend/architecture/service-architecture.md). (Apps only — library/SDK repos use their own package layout.)
+4. **`{slug}.backend-services/` holds the solution + projects directly — solution file is `{slug}.backend-services.slnx`.** Exactly `.slnx` (the XML format, **not** legacy `.sln`), named after its folder so it opens in the IDE under the matching name (e.g. `smartqr.backend-services.slnx`, `drydock.backend-services.slnx`). Projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.slnx` encoding) → [`backend/service-architecture.md`](../backend/architecture/service-architecture.md). (Apps only — library/SDK repos use their own package layout.)
 5. **`{slug}.frontend-services/` holds the app directly (single) or a pnpm workspace (multi)** — app folders (lowercase) + `packages/` for shared (`@{brand}/common`, `@{brand}/ui`).
 6. **Per-repo `development/` guidelines defer to shared conventions** (`wow-two-ws/conventions/*.md`) — only repo-specific deltas live in the repo.
 
@@ -166,5 +171,5 @@ A product repo publishes its **single deployable image** via a fixed-name CI wor
 - **Marker file:** `.github/workflows/publish-docker-image.yml` — its presence = the repo publishes a deployable image (Drydock keys on this exact path).
 - **Trigger + build:** on a published GitHub **release** (semver tag), build from `engineering/deployment/Dockerfile` (context `engineering/codebase/`, §8) and push to **`ghcr.io/{owner}/{repo}`** (lowercased) with **two tags — the release tag + `latest`**.
 - **Resolution contract:** Drydock resolves a deployable as *latest release → its tag → `ghcr.io/{owner}/{repo}:{tag}`*, pinning the explicit release tag (reproducible deploy + rollback).
-- **Tag value:** apps use the **product iteration version** (`vX.Y.Z`, `version-docs.md`); libraries use the .NET-major scheme (`docs/versioning-strategy.md`).
+- **Tag value:** apps use the **product iteration version** (`vX.Y.Z`, `version-track.md`); libraries use the .NET-major scheme (`docs/versioning-strategy.md`).
 - Per-repo today; a reusable/example workflow + the full `deployment` convention domain is a later step.

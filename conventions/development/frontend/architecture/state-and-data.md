@@ -43,16 +43,16 @@ export class ApiError extends Error {
 |---|---|
 | Local UI state | `useState` / `useReducer` |
 | Shared app state | **React Context + hooks** — no Redux/Zustand |
-| Server data | a `use{Resource}` data hook owning fetch + mapping (see [hooks.md](hooks.md)) |
+| Server data | a `use{Resource}` data hook owning fetch + mapping (see [hooks.md](../presentation/hooks.md)) |
 | Persistence | `localStorage`, namespaced key `{brand}:{app}:{feature}` |
-| View routing | URL hash (lightweight apps) — see gap note on routing in [frontend-conventions.md](frontend-conventions.md) |
+| View routing | URL hash (lightweight apps) — see gap note on routing in [frontend-conventions.md](../frontend-conventions.md) |
 
 - Fetch inside hooks, not components; abort on unmount with `AbortController`.
-- Map DTO → domain model at the hook boundary (see [models.md](models.md)); never leak raw DTOs into the view tree.
+- Map DTO → domain model at the hook boundary (see [models.md](../code-style/models.md)); never leak raw DTOs into the view tree.
 
 ## See also
 
-- [hooks.md](hooks.md) — data-fetching hooks
-- [models.md](models.md) — DTO ↔ domain mapping
-- [../backend/presentation/response-models.md](../backend/presentation/response-models.md) — the `ApiResponse<T>` success envelope this consumes
-- [../backend/presentation/problem-details.md](../backend/presentation/problem-details.md) — the `Problem()` / ProblemDetails error shape this consumes
+- [hooks.md](../presentation/hooks.md) — data-fetching hooks
+- [models.md](../code-style/models.md) — DTO ↔ domain mapping
+- [../backend/presentation/response-models.md](../../backend/presentation/response-models.md) — the `ApiResponse<T>` success envelope this consumes
+- [../backend/presentation/problem-details.md](../../backend/presentation/problem-details.md) — the `Problem()` / ProblemDetails error shape this consumes

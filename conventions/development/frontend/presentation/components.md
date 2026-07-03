@@ -31,7 +31,7 @@ components/
 
 ## File structure (order within a component file)
 
-1. Imports (see import order in [code-organization.md](code-organization.md))
+1. Imports (see import order in [code-organization.md](../code-style/code-organization.md))
 2. Types / interfaces (props, local types)
 3. Constants (options arrays, config objects)
 4. Helper functions (pure, no hooks)
@@ -89,5 +89,5 @@ export function AuthorContact({ authorName, phones }: AuthorContactProps) {
 ## See also
 
 - [styling.md](styling.md) · [forms.md](forms.md) · [hooks.md](hooks.md)
-- [code-organization.md](code-organization.md) — import order, section dividers
-- [project-structure.md](project-structure.md) — where components live
+- [code-organization.md](../code-style/code-organization.md) — import order, section dividers
+- [architecture.md](../architecture/architecture.md) — where components live (the `presentation/` layer)
