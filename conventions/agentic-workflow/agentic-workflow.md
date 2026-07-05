@@ -33,6 +33,6 @@
 
 ## Commit discipline
 
-- Git is **human-managed** — agents never commit / push unless explicitly told ([CLAUDE.md](../../CLAUDE.md) › Working rules).
+- Git is **human-managed** — agents **never** run `git commit` / `git push` (hook-enforced: `.claude/hooks/guard-git.py`). Agents stage + draft the message; the human commits + pushes. Full protocol: [../development/repo/git.md](../development/repo/git.md).
 - Large uncommitted work in a shared tree is **fragile** — flag it for the human to commit so a later agent (or a careless revert) can't lose it.
 - When a tree mixes lanes, commit **deliberately** (stage by lane / path) — never a blind `git add -A` that bundles another lane's half-done work.

@@ -16,11 +16,13 @@ A consuming app's `src/index.css` imports Tailwind, imports the beta-UI design t
 @import '@wow-two-beta/ui/styles.css';
 
 /* Tailwind v4 ignores node_modules; point it at the beta UI's dist so its utility
-   classes are generated. */
-@source '../node_modules/@wow-two-beta/ui/dist';
+   classes are generated. Path is relative to THIS file. */
+@source '../../node_modules/@wow-two-beta/ui/dist';
 ```
 
 The Vite plugin is `@tailwindcss/vite` (in `plugins: [react(), tailwindcss()]`). No `tailwind.config.js` content array — `@source` declarations live in CSS.
+
+- **`@source` is relative to `index.css`.** Per the layer architecture `index.css` lives in `bootstrap/`, so the lib path is `../../node_modules/...` (two up: `bootstrap/` → `src/` → repo root). A wrong depth **silently drops** the lib's utility classes — the app renders half-styled with no build error. This bit smart-qr after the layer reorg.
 
 ## Design tokens
 

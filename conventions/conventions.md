@@ -84,7 +84,7 @@ Cross-area: **[dev-cycle.md](development/dev-cycle.md)** — 2-cycle app↔SDK m
 | Tech stack — backend + frontend + beta SDKs | [development/repo/tech-stack.md](development/repo/tech-stack.md) |
 | Port ledger — allocated dev ports | [development/repo/ports.md](development/repo/ports.md) |
 | Single-host serving — SPA baked into the backend `wwwroot` (vite `outDir` + static-serve + `BuildSpa` target + dev proxy) · CORS posture | [development/repo/single-host-serving.md](development/repo/single-host-serving.md) |
-| Commit-message format — `{type}: {past-tense verb} {subject}` (past tense, not imperative) · one cohesive change per commit | [development/repo/git.md](development/repo/git.md) |
+| Commit-message format (`{type}: {past-tense verb} {subject}`, not imperative · one cohesive change) **+ commit protocol** — agent stages + drafts the message only; the human commits + pushes (hook-enforced) | [development/repo/git.md](development/repo/git.md) |
 
 ### backend/ — .NET conventions (by sub-domain) · [backend-conventions.md](development/backend/backend-conventions.md)
 
@@ -95,7 +95,7 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 | `code-style/` | `documentation` · `naming` · `code-organization` · `members` · `models` · `idioms` |
 | `architecture/` | `service-architecture` · `domain-structuring` · `host-configuration` · `services` |
 | **`persistence/`** (focus) | `database` · `entities` · `enums` · `data-access` · `migrations/` (`migrations` · `bespoke-migrations` · `migration-dialects` · `ef-migrations` · `dbup-migrations` · `migration-tooling`) |
-| `presentation/` | `controllers` · `controllers-known-endpoints` · `request-models` · `response-models` · `api-context-building` · `problem-details` |
+| `presentation/` | `controllers` · `controllers-known-endpoints` · `request-models` · `response-models` · `serialization` · `api-context-building` · `problem-details` |
 | `runtime/` | `settings` · `launch-profiles` |
 | `foundation/` | `component-names` · `result-pattern` · `validation` · `time` |
 | **`integrations/`** (focus) | `clients` |

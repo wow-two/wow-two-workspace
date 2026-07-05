@@ -61,6 +61,12 @@ import { CONTACT_TYPE_COLORS } from "@/common/lib/constants";
 
 > A **single-Vite-app** repo has no `@{brand}/*` packages — groups 3–4 collapse; `@/` (group 5–6) and relative (7) remain.
 
+## React types — import named, never the UMD namespace
+
+- must import React types by name and reference them bare — `import { type ReactNode } from "react"` → `ReactNode`.
+- must not reference the `React.*` UMD global (`React.ReactNode`, `React.JSX.Element`, `React.MouseEvent`): with `jsx: "react-jsx"` there is no `React` value in scope, so `React.*` triggers TS `ts(2686)` ("refers to a UMD global").
+- `React.JSX.Element` → `ReactElement`; or `JSX.Element` via `import { type JSX } from "react"`.
+
 ## File-internal order
 
 Components: imports → types → constants → helpers → component → sub-components (see [components.md](../presentation/components.md)). Non-component modules: imports → types → constants → exported members.

@@ -119,6 +119,7 @@ interface InfoBannerProps {
 | Type export | PascalCase | `Listing` |
 | Domain enum / label Record | PascalCase, singular, no `Enum` suffix | `ContactType`, `ContactTypeLabels` |
 | UI value-set (const `as const`) | PascalCase, singular, no labels | `HtmlElement`, `ButtonType`, `Key` |
+| Constant — scalar / data | `UPPER_SNAKE`, `as const` for objects | `PRESET_ICON_SIZE`, `ANGLES`, `DEFAULT_RADIUS` |
 | Standalone boolean prop | `is*` / `has*` / `can*` | `isDisabled`, `isInvalid`, `hasIcon` |
 | Handler / render prop | `on*` / `render*` | `onValueChange`, `renderItem` |
 | Controlled triad (bare root) | `x` / `defaultX` / `onXChange` | `open` / `defaultOpen` / `onOpenChange` |

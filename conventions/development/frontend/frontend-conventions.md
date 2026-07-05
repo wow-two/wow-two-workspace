@@ -13,10 +13,11 @@
 |---|---|
 | [naming.md](code-style/naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
 | [documentation.md](code-style/documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
-| [code-organization.md](code-style/code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, file-internal order |
+| [code-organization.md](code-style/code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, React named-type imports (no UMD `React.*`), file-internal order |
 | [models.md](code-style/models.md) | Domain model vs `*Dto` (declare only on shape mismatch) + mapper · `*Content`/`*Values`/`*Draft` · fields (`T` / `T?`) · `interface`/`type` · doc rules (`Defines` / `Gets or sets`, blank line between members) |
 | [type-mapping.md](code-style/type-mapping.md) | The .NET ↔ wire ↔ TS scalar contract — `Guid`/`number`/`boolean` · `Temporal.*` dates wired by one global reviver · enums · `ReadonlyArray<T>` (never `T[]`) · `?`-nullability |
-| [enums.md](code-style/enums.md) | const object `as const` — PascalCase key (code) / camelCase value (wire) · derived `type` · `{Enum}Labels` · `Unresolved` first |
+| [enums.md](code-style/enums.md) | const object `as const` — PascalCase key / camelCase value · derived `type` · `Unresolved` first · `//` comment · `Displays` (presentation) + `Payloads` (backend) extensions |
+| [constants.md](code-style/constants.md) | `UPPER_SNAKE` scalars / data · `as const` · JSDoc one-liner · const-vs-enum decision |
 | [extensions.md](code-style/extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
 
 ## architecture/

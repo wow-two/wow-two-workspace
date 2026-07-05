@@ -22,6 +22,7 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 
 - must group `## {area}` → `### {file path}` → `[ ]` tasks; areas are `Backend` / `Frontend` / `Database`, include only the ones touched
 - must write each task as the file's concrete change, any size — `Split the render switch into per-format handlers`, not an abstract capability
+- must follow the shared **Task form** — verb-first, one action per bullet, fewest words ([planning-conventions.md](../planning-conventions.md)); split a multi-part change instead of joining with `·`
 - must not add a per-file status, ledger, or coverage map — a file may recur across iterations; git is the record
 - must carry meta `**Status:** … · **Started:** … · **Completed:** …` — those three only, no `Type`
 

@@ -28,6 +28,11 @@ Five layers at `src/` root (no `layers/` wrapper). Dependency runs **inward**: `
 - a domain divides into cohesive **sub-domains** — `codes` → `core` (the QR builder) + `content` (per content-type).
 - must fold a concern into a sub-domain once it owns ≥ 3 components — otherwise keep it flat.
 - e.g. `domain/codes/core/` (module · finder · preview · rule) · `domain/codes/content/` (one module per content type).
+- a sub-domain may itself **divide by concern** as it grows — `presentation/codes/core` → `design` · `shape` · `routing` · `preview` (a noun per concern).
+- a component sub-domain may hold its components **directly** (`core/design/FillControls.tsx`); the `components/` wrapper is optional — use it only to separate non-component files (hooks, helpers). Keep one style within a domain.
+- **two kinds of folder** inside a domain: a **sub-domain** (a model noun — `core` · `content` · `design`) and a **role-group** (a role word — `screens/` · `components/` · `hooks/`). A role-group is never a sub-domain.
+- **domain-level `common/`** — the home for whatever belongs to no single sub-domain: cross-sub-domain **shared** components/hooks (e.g. a `PresetIconButton` used by `design` + `shape`) **and** the domain's **composition** role-groups. Symmetric with the layer-level `common/` (cross-domain).
+- **routed screens** compose sub-domains, so they belong to none — they live under domain-`common/`: `presentation/{domain}/common/screens/`, never as a peer to the sub-domains.
 
 ## Files — where general naming applies
 
@@ -142,9 +147,10 @@ src/
   application/   common/
                  codes/ (useCodes · useCodeBuilder · toCodeRow mapper)  identity/ (useAuth)  billing/
   presentation/  common/
-                 codes/ core/components/    (ShapeControls · FillControls · QrPreview …)
+                 codes/ core/ design/ (FillControls · EmojiControls · ContrastHint) · shape/ (ShapeControls)
+                              routing/ (RuleBuilder) · preview/ (QrPreview)
                         content/components/ (UrlForm · WifiForm …) · ContentTypeForm
-                        CreateCodeScreen · CodesListScreen
+                        screens/ (CreateCodeScreen · CodesListScreen)
                  identity/ billing/ marketing/
 ```
 Each slice folder carries a lowercase `index.ts` barrel — the slice's only public surface.

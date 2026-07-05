@@ -1,9 +1,9 @@
 # Git
 
-*Last updated: 2026-07-03*
+*Last updated: 2026-07-05*
 
-> Commit-message format for every repo under `wow-two-ws/`.
-> Purpose — a uniform, scannable history whose subject reads as *what changed*, in the past tense.
+> Commit-message format **and** the agent⇄human commit protocol, for every repo under `wow-two-ws/`.
+> Purpose — a uniform, scannable history whose subject reads as *what changed* (past tense); and one unambiguous rule for who commits (the human, always).
 
 ## Message
 
@@ -30,5 +30,20 @@
 
 ## Discipline
 
-- must commit / push only when asked — the developer manages git.
+- **must not** ever run `git commit`, `git push`, `git reset --hard`, force-push, or `git stash drop/pop` — the human is the **only** one who commits + pushes. Enforced by the `guard-git` PreToolUse hook ([../../../.claude/hooks/guard-git.py](../../../.claude/hooks/guard-git.py)).
+- **may** run `git add`, `git restore --staged`, `git status`, `git diff`, `git log` — staging + inspection are the agent's job.
+- must treat "commit this" / "push it" / "get it pushed" as the cue to **prepare** (stage + draft the message), **not** authorization to run the command.
 - parallel-lane rules (assume-intentional · no-revert · stage only your own files): [../../agentic-workflow/agentic-workflow.md](../../agentic-workflow/agentic-workflow.md).
+
+---
+
+## Protocol (agent ⇄ human)
+
+Per commit, in this order:
+
+1. agent stages exactly one cohesive change — `git add` / `git restore --staged` to carve the index by lane / path; never a blind `git add -A` that bundles unrelated work.
+2. agent prints the commit message (`{type}: {past-tense} {what}` subject + optional body) in chat, then **stops**.
+3. human reviews, commits, and pushes.
+4. repeat from 1 for the next commit until the tree is clean.
+
+- must keep each commit buildable where practical; when a split can't (e.g. a rename-only commit that won't build alone), say so before staging it.

@@ -87,6 +87,7 @@ Tracks where each doc stands. `baseline` = pre-session (Haven-lifted, untouched)
 |---|---|
 | [controllers.md](presentation/controllers.md) | Thin-dispatcher controllers — `ISender.Send` + `AppResult.Match` |
 | [response-models.md](presentation/response-models.md) | `ApiResponse<T>` success envelope + DTO rules (`{Entity}Dto`) |
+| [serialization.md](presentation/serialization.md) | JSON wire contract — camelCase props + **camelCase string enums** + null-omit + ISO dates; wired once in `AddControllers()` |
 | [problem-details.md](presentation/problem-details.md) | RFC-7807 error responses — `Problem()`, `ApiResults.ToStatusCode`, global handler |
 
 ## runtime/ — config + launch

@@ -30,6 +30,7 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - must write each task as a capability the version delivers — abstract, user-POV: `Ability to log in as a guest`, not `Mint a guest cookie`
 - must open each task with the Type verb — `Ability to` / `Fix`; `Extract … → SDK` / `Adopt …`
 - must keep one capability per task on one line — no `— detail` clause; join closely-related with `and`, split unrelated
+- must follow the shared **Task form** — verb-first, one action per bullet, fewest words ([planning-conventions.md](../planning-conventions.md))
 - must stay capability-grained — never per-endpoint, per-field, or naming a table / class / file
 - may close with a `### Verification` iteration — always last, bare noun, ordered `[ ] {action} → {expected}` checks
 - must carry meta `**Status:** … · **Type:** … · **Started:** … · **Completed:** …` (those four only); declare a `Type`; title is a plain noun phrase

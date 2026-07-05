@@ -11,8 +11,8 @@ JSDoc on every public export. Mirrors the backend XML-doc starter table ([../bac
 
 ```typescript
 // ✅ Correct — compact one-liner
-/** Defines the supported currencies for listing prices and payments. */
-export enum Currency { }
+/** Defines the editable fields for the listing edit form. */
+export interface EditableFields { }
 
 // ✅ OK — multi-line for genuinely complex docs
 /**
@@ -24,16 +24,16 @@ export function mapListingDto(dto: ListingDto): MapListingResult { }
 
 // ❌ Wrong — multi-line for a simple doc
 /**
- * Defines the supported currencies for listing prices and payments.
+ * Defines the editable fields for the listing edit form.
  */
-export enum Currency { }
+export interface EditableFields { }
 ```
 
 ## Verb starters (the table)
 
 | Target | Verb | Example |
 |---|---|---|
-| Enum | `Defines` | `/** Defines the contact type of a listing author. */` |
+| Enum | `Defines` | `/** Defines the QR data-module body shape. */` |
 | Label Record | `Represents a container for {Enum} enum labels.` | `/** Represents a container for ContactType enum labels. */` |
 | Interface — shape/contract | `Defines` | `/** Defines the editable fields for the listing edit form. */` |
 | Interface — data holder | `Represents` | `/** Represents a domain listing with resolved enum values. */` |

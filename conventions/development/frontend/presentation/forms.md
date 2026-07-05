@@ -1,42 +1,48 @@
 # Forms
 
-*Last updated: 2026-06-09*
+*Last updated: 2026-07-03*
 
-## String form state (not enum types)
+> Editable form state for a model — a flat, forgiving `*Values` shape, resolved back to the model on submit.
+> The type contract + enums: [../code-style/type-mapping.md](../code-style/type-mapping.md) · [../code-style/enums.md](../code-style/enums.md).
 
-Forms that edit domain models with enum fields use **string** form state — HTML `<select>` / inputs work with strings, and partial edits need a forgiving shape. The `EditableFields` pattern:
+## `*Values` — the editable shape
+
+A form binds a `{Model}Values` type ([../code-style/models.md](../code-style/models.md)), not the domain model — HTML inputs need a forgiving, all-editable shape.
+
+- must name it `{Model}Values` — `InvoiceValues` for `Invoice`.
+- must type enum fields as `string` (a `<select>` binds strings), scalars as-is, and a date field as the SDK control's value type (`Date` / `TimeValue`).
+- must keep fields forgiving while editing (`?` / `""` / `null`) — validation runs on submit, not per keystroke.
 
 ```typescript
-/** Defines the editable fields for the listing edit form. */
-export interface EditableFields {
-  contactType: string | null;     // ← string, NOT ContactType
-  priceCurrency: string | null;   // ← string, NOT Currency
-  priceAmount: number | null;     // ← scalar, unchanged
+/** Defines the editable fields of the invoice form. */
+export interface InvoiceValues {
+  /** Gets or sets the status, as the raw select value. */
+  status: string;
+
+  /** Gets or sets the total, as entered. */
+  total: number | null;
+
+  /** Gets or sets the issue date from the picker. */
+  issuedAt: Date | null;
 }
 ```
 
-- **Enum fields → `string | null`** in form state.
-- **Scalars stay as-is** (`number | null`, `boolean`).
-- Resolve strings back to enum values on submit (reuse the domain mapper — see [models.md](../code-style/models.md)), and surface validation errors instead of silently coercing.
+---
 
 ## Flow
 
 ```
-domain model (enum types)
-   → EditableFields (strings)        ← seed form from model
-   → user edits
-   → resolve + validate on submit    ← strings back to enums
-   → domain model / DTO              ← send to API
+domain model            → *Values (strings / control types)   ← seed the form from the model
+user edits              → resolve + validate on submit         ← strings → enums, Date/TimeValue → Temporal.*
+                        → domain model (or its *Dto)           ← send to the API
 ```
+
+- must resolve on submit — narrow enum strings to the enum ([../code-style/enums.md](../code-style/enums.md)) and bridge `Date` / `TimeValue` → `Temporal.*` ([../code-style/type-mapping.md](../code-style/type-mapping.md)); surface validation errors, never silently coerce.
+
+---
 
 ## Inputs
 
-- Prefer `@wow-two-beta/ui` form components (`TextInput`, …) before hand-rolling — see [components.md](components.md).
-- Controlled inputs; keep form state local (`useState`) unless it must be shared, then lift to a hook.
-- Dropdown options derive from enum **label Records** via `enumOptions(Labels)` — see [enums.md](../code-style/enums.md).
-
-## See also
-
-- [models.md](../code-style/models.md) — domain model ↔ DTO ↔ form fields
-- [enums.md](../code-style/enums.md) — label Records → dropdown options
-- [components.md](components.md) — props, `Form` terminology
+- must prefer `@wow-two-beta/ui` controls (`TextInput`, `Select`, `DatePicker`, `TimeField`, …) over hand-rolled ones — [components.md](components.md).
+- must keep form state local (`useState`); lift to a hook only when it must be shared.
+- must derive dropdown options from the enum label record — `enumOptions({Enum}Labels)` ([../code-style/enums.md](../code-style/enums.md)).

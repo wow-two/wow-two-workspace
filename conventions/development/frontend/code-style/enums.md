@@ -1,95 +1,130 @@
 # Enums
 
-*Last updated: 2026-07-03*
+*Last updated: 2026-07-05*
 
-> How a fixed value-set is declared in TS so it reads **PascalCase in code** and travels **camelCase on the wire**.
-> Purpose — one enum shape that maps to the backend `enum` with zero runtime translation (the wire value *is* the value).
-> Supersedes the former TS-`enum` + label-`Record` prescription; every product already uses (or is moving to) the const-object form.
+> How to declare an enum and layer its display + send-object data. The enum is a `const` object — PascalCase key → camelCase wire value — and the **only** enum constant; display + payloads attach as `Record<Enum, …>` keyed by it. No TS `enum` keyword.
 
-## Pattern — const object `as const`
+**Flow:** `kind → location → doc + shape → members → export → displays → payloads → use`
 
-- must declare a const object with **PascalCase keys** (code-facing) and **camelCase string values** (the wire form), then derive the type.
-- must not use the TS `enum` keyword — the const object is tree-shakeable, has no nominal-typing / `const enum` pitfalls, and the value *is* the wire string.
-- must name it singular, no `Enum` suffix — `BarcodeFormat`, not `BarcodeFormats` / `BarcodeFormatEnum`.
+---
+
+## 1. Kind
+
+The fork that drives location.
+
+|                           | Domain enum                                 | Non-domain enum                      |
+|---------------------------|---------------------------------------------|--------------------------------------|
+| Tied to a product domain? | **yes** — even if it never hits the backend | no                                   |
+| Examples                  | `BarcodeFormat` · `ModuleShape` · `Plan`    | `ButtonType` · `Key` (SDK UI tokens) |
+
+- must classify by **domain tie** (`identity` · `codes` · `billing` …), not by whether it crosses the API — a product-domain concept → domain enum; a UI / app / integration token → non-domain.
+
+---
+
+## 2. Location
+
+- must create a **domain enum** in the [`domain` layer](../architecture/architecture.md), at `domain/{sub-domain}/enums/{EnumName}.ts`.
+- must place a **non-domain enum** in the layer that owns it — `application` / `integration` / `presentation`; no fixed home.
+- must name it singular, no `Enum` suffix — `BarcodeFormat`, not `BarcodeFormats`.
+
+---
+
+## 3. Shape and documentation
+
+- must JSDoc the type with a one-liner starting **`Defines …`** ([documentation.md](documentation.md)).
+- must declare a `const` object `as const`, then derive the type.
+- must not use the TS `enum` keyword — nominal-typing + `const enum` pitfalls; the const object is tree-shakeable and the value *is* the wire string.
 
 ```typescript
-/** Defines the rendering symbology of a code. */
-export const BarcodeFormat = {
-  QrCode: "qrCode",
-  DataMatrix: "dataMatrix",
-  Code128: "code128",
-} as const;
-export type BarcodeFormat = (typeof BarcodeFormat)[keyof typeof BarcodeFormat];
+/** Defines the QR data-module body shape. */
+export const ModuleShape = { … } as const;
 ```
 
-- **PascalCase for usage** — code references the key: `BarcodeFormat.QrCode`.
-- **camelCase for mapping** — the value *is* the wire string (`"qrCode"`); the field type is the union of those values. Assigning `BarcodeFormat.QrCode` yields `"qrCode"` — no mapper, no lookup.
-
 ---
 
-## Wire contract — camelCase both sides
+## 4. Members and documentation
 
-- backend **must** serialize / deserialize enums as camelCase — `JsonStringEnumConverter(JsonNamingPolicy.CamelCase)` (see [../backend/persistence/enums.md](../../backend/persistence/enums.md)). This is a **required backend change** for products still emitting PascalCase enum names.
-- because the wire value equals the const value, a DTO enum field is typed as the enum directly (`barcodeFormat: BarcodeFormat`) — the mapper passes it through unchanged (enums are identity; only dates transform — see [models.md](models.md)).
-
----
-
-## Labels — the display bridge
-
-- domain enums **must** ship a `{Enum}Labels: Record<Enum, string>` — a compile error forces a label for every member (later swapped for backend-served translations).
-- must key labels by the enum member, not the raw string.
+- must document each member with a JSDoc one-liner starting **`Refers to …`** — what the value stands for.
+- must use a **PascalCase key** + a **camelCase value** — the value *is* the wire string ([serialization casing](../../backend/presentation/serialization.md#contract)).
+- must **not** add an `Unresolved` / `Unknown` sentinel member — keep three concerns separate:
+  - **nothing selected** → `null` / optional field (form state); omit on send, never emit null.
+  - **"any / all"** → a real member present on **both** sides, or modeled as absence.
+  - **unmappable inbound value** (deploy skew / corrupt data) → handled at the **read boundary** (the api mapper coerces to a safe default or drops + logs) — it never enters the typed union, so pickers and exhaustive switches stay clean.
 
 ```typescript
-/** Human-readable labels for BarcodeFormat. */
-export const BarcodeFormatLabels: Record<BarcodeFormat, string> = {
-  [BarcodeFormat.QrCode]: "QR code",
-  [BarcodeFormat.DataMatrix]: "Data Matrix",
-  [BarcodeFormat.Code128]: "Code 128",
+export const ModuleShape = {
+  /** Refers to a plain square module. */
+  Square: "square",
+  /** Refers to a module with rounded corners. */
+  Rounded: "rounded",
+} as const;
+```
+
+---
+
+## 5. Export
+
+- must derive the type from the const on its own line, with a **blank line before it**.
+
+```typescript
+export const ModuleShape = {
+  …
+} as const;
+
+export type ModuleShape = (typeof ModuleShape)[keyof typeof ModuleShape];
+```
+
+---
+
+## 6. Displays — presentation extension
+
+- must extract display data out of the enum into a **`{Enum}Display` interface** in the presentation layer, JSDoc'd with `Defines …`.
+- the interface **may** carry `label` · `description` · `icon` (a `ReactNode`) · any enum-specific field — the shape is the app's.
+- must **not** doc the interface members — the field names carry themselves.
+- must bind it as **`{Enum}Displays: Record<Enum, {Enum}Display>`**, JSDoc'd with **`Maps …`** — one entry per member, looked up by value, no mapper.
+- must declare the interface + its `Record` in the **same file** — one unit, the exception to one-type-per-file.
+
+```typescript
+// presentation/codes/core/shape/ShapeDisplays.ts
+/** Defines the display for a module-shape option. */
+interface ModuleShapeDisplay {
+  label: string;
+  icon: ReactNode;
+}
+
+/** Maps each module shape to its display. */
+export const ModuleShapeDisplays: Record<ModuleShape, ModuleShapeDisplay> = {
+  [ModuleShape.Square]: { label: "Square", icon: <SquareSwatch /> },
+  [ModuleShape.Rounded]: { label: "Rounded", icon: <RoundedSwatch /> },
 };
 ```
 
 ---
 
-## Unresolved fallback
+## 7. Payloads — backend extension
 
-- a domain enum **must** include `Unresolved: "unresolved"` as its **first** member — the fallback when a value can't be resolved (bad / future wire data must not crash the UI).
-- must default to `Unresolved` when mapping an unknown wire value; log it.
+- must model a rich send-object as **`{Enum}Payloads: Record<Enum, {Enum}Payload>`** (`domain` / `integration`) when the wire value alone can't be sent — picked by the enum, sent as-is.
 
 ---
 
-## Usage
+## 8. Use
+
+**The enum**
+- must compare by key, never a magic string.
 
 ```typescript
-if (code.barcodeFormat === BarcodeFormat.QrCode) { }   // ✅ compare via the key
-const label = BarcodeFormatLabels[code.barcodeFormat];  // ✅ display via labels
-const options = enumOptions(BarcodeFormatLabels);        // ✅ dropdowns from labels
-if (code.barcodeFormat === "qrCode") { }                 // ❌ magic-string compare
+if (code.barcodeFormat === BarcodeFormat.QrCode) { }   // ✅
+if (code.barcodeFormat === "qrCode") { }                // ❌
 ```
 
----
+**With a `Displays` extension**
+- must read display from the record by value.
 
-## Domain enum vs UI value-set
+```typescript
+const { label, icon } = BarcodeFormatDisplays[code.barcodeFormat];
+```
 
-Both use the const-object shape; they differ in whether they cross the API + need labels.
-
-| | Domain enum | UI value-set |
-|---|---|---|
-| Crosses the API? | **yes** — camelCase values match the backend | no — internal plumbing |
-| Label record? | **required** (`{Enum}Labels`) | none |
-| `Unresolved` member? | **yes**, first | no |
-| Examples | `BarcodeFormat`, `Plan`, `RuleConditionType` | `ButtonType`, `HtmlElement`, `Key`, `ModuleShape` (style token) |
-
-- must pick by what the set *is* — user-facing + API-mapped → domain enum; pure UI/runtime token → value-set (see [extensions.md](extensions.md) for the same shape).
-
----
-
-## Location
-
-- must live in the domain layer: `domain/{domain}/{sub}/enums/{EnumName}.ts` (single app) — one file per enum + its labels, exposed via the slice barrel.
-
----
-
-## Enums in models vs forms
-
-- **domain models + DTOs** — enum field typed as the enum ([models.md](models.md)); the wire value satisfies it directly.
-- **form values** (`*Values`) — enum fields are `string` (HTML `<select>` binds strings); the `*Values` → request bridge narrows back to the enum ([forms.md](../presentation/forms.md)).
+**As a field**
+- a model / DTO field is the enum type (`barcodeFormat: BarcodeFormat`); the wire string already fits — nothing converts it ([models.md](models.md)).
+- a form-values field is `string` (a `<select>` emits strings), narrowed back to the enum on submit ([forms.md](../presentation/forms.md)).
+</content>
