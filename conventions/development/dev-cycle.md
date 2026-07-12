@@ -33,6 +33,20 @@
 
 ---
 
+## Vector completeness — build the whole vector, not the ask
+
+The defining rule of cycle 2. A known domain (forms, validation, auth, tables, storage) is built to completeness, proactively — the cost that kills velocity is **integration** with the rest of the component set, not invention; pay it once, in the SDK, fully.
+
+- must treat the triggering product's need as the **trigger** to build the vector, not its **scope** — ship that product's essential slice, then complete the vector
+- must, before building the completion, inventory every capability the vector integrates — a `docs/analysis/{vector}-*.md` completeness map enumerating all, each with a verdict: ship-now / defer-with-named-trigger / skip-with-reason
+- must complete the vector in a dedicated follow-up pass (its own chat) after the triggering product ships — so the **second** product finds the capability already present, never re-triggers the question
+- must not gate a vector **capability** on "a consumer asked" — proactive to completeness is the default
+- may gate an alternative **engine adapter** (a 2nd/3rd wrapping of the same capability, e.g. RHF beside TanStack) on preference/trigger once swap-freedom exists (≥2 adapters) — that is the lone exception, not a capability gap
+- applies to both the backend and the frontend SDK
+- track every vector + its completion iterations in the SDK's `docs/planning.md` Vectors table — a new vector (e.g. i18n) gets a row there the moment it is triggered
+
+---
+
 ## What "stable" means
 
 - proven in a real product under tests — e.g. the bespoke migrator ran green (`SmartQr.IntegrationTests` + `SmartQr.Migrations.Tests`) in smart-qr before and after extraction.

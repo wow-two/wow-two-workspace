@@ -26,6 +26,10 @@ A reply violating any of these is a style miss regardless of correctness.
 - Touching code · repo structure · naming · versioning → read **`conventions/conventions.md` first** (the single index to all conventions), then open only the file you need. Don't pre-read; don't skip.
 - A convention applies to every repo; a repo-level `CLAUDE.md` / `.claude/rules/` overrides for that repo.
 
+## SDK doctrine — build the whole vector
+
+- The SDK's main frame: a product's need is the **trigger** to build a vector, **not** its scope. Ship the essential slice for that product, then **complete the whole vector** in a dedicated pass — inventory every capability, build to completeness — so the *next* product finds it already there. A known domain (forms, validation, auth, tables) is built proactively; the real cost is integration, paid once in the SDK. Full rule: `conventions/development/dev-cycle.md` § *Vector completeness*. Applies to both the backend and frontend SDKs.
+
 ## Layout
 
 ```
@@ -46,8 +50,8 @@ docs/ (strategy, playbooks) · system/sessions/ · ideas/ · scripts/ · workben
 - 2–3 related repos per session. Updating a lib → check consumers for breaking changes.
 - Each repo's own `CLAUDE.md` overrides this root. Conventional commits (`feat`/`fix`/`docs`/`refactor`).
 - Passive language — describe where things are; never instruct to pre-read.
-- **Git:** agents **never** `git commit` / `git push` — stage + draft the message only, the developer commits + pushes (hook-enforced: `.claude/hooks/guard-git.py`). Protocol: `conventions/development/repo/git.md`.
-- **No `README.md` below a repo root.** Only a repo's top-level `README.md` is allowed; every other folder's lead doc is `{folder}.md` (e.g. `Data/Migrations/migrations.md`, not `.../README.md`). See `conventions/development/repo/repo-structure.md` §3. **Exception:** a packable project's NuGet `PackageReadmeFile` README (e.g. `src/README.md` next to the `.csproj`) is a functional package file, not a folder doc — leave it.
+- **Git:** agents **never** `git commit` / `git push` — stage + draft the message only, the developer commits + pushes (hook-enforced: `.claude/hooks/guard-git.py`). Protocol: `conventions/development/repo/version-control/git.md`.
+- **No `README.md` below a repo root.** Only a repo's top-level `README.md` is allowed; every other folder's lead doc is `{folder}.md` (e.g. `Data/Migrations/migrations.md`, not `.../README.md`). See `conventions/development/repo/structure/repo-structure.md` §3. **Exception:** a packable project's NuGet `PackageReadmeFile` README (e.g. `src/README.md` next to the `.csproj`) is a functional package file, not a folder doc — leave it.
 - **Skills** (`.claude/skills/`): `open-active` (open the working set in Rider/WebStorm) · `create-repo` (scaffold a conformant repo).
 - **Live state / roadmap:** `workbench/wow-two/wow-two.refinement`.
 

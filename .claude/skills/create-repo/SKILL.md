@@ -15,7 +15,7 @@ description: >-
 # create-repo
 
 Scaffolds a **product / venture** repo that conforms to
-`conventions/development/repo/repo-structure.md` (top-level `product/` + `engineering/`;
+`conventions/development/repo/structure/repo-structure.md` (top-level `product/` + `engineering/`;
 **all code under `engineering/codebase/`**; the two code dirs are **exactly**
 `codebase/{slug}.backend-services/` + `codebase/{slug}.frontend-services/` — dot-prefixed with the
 repo `{slug}` = its last dot-segment, e.g. `secrets-vault`, so several open repos never collide on a
@@ -66,7 +66,7 @@ This (deterministic, no code-gen, no commit):
    `launchSettings.json`), then renames every `Sample*` **file/dir** → `{Brand}*`
    (`Sample.sln`→`{Brand}.sln`, the 5 project dirs, `tests/Sample.Tests`, `SampleDbContext.cs`, …),
 5. **port pass** — the template binds `8220` https / `8221` http / `8225` vite; re-allocates to the
-   next-free even/odd backend pair + free vite port (seeded from `conventions/development/repo/ports.md`
+   next-free even/odd backend pair + free vite port (seeded from `conventions/deployment/hosting/ports.md`
    "Next free", scanning existing `launchSettings.json`/`vite.config.ts` to avoid collisions), rewrites
    them across launchSettings/vite proxy/`.http`/appsettings, and appends a `ports.md` row + bumps "Next free",
 6. **slug-prefix pass** — the template ships its code dirs as `sample.backend-services/` +
@@ -82,7 +82,7 @@ Free-text placeholders (`{{ONE_LINE_WHAT_THIS_IS}}`, guideline bodies, the per-p
 `.claude/rules/file-references.md`) stay — fill them with the user's one-liner. **The `codebase/` code
 is already in place and rebranded** — no authoring needed; just verify it builds.
 
-**Resulting layout** (per `conventions/development/repo/repo-structure.md` — each folder leads with its
+**Resulting layout** (per `conventions/development/repo/structure/repo-structure.md` — each folder leads with its
 `{folder}.md`, no README below root):
 
 ```

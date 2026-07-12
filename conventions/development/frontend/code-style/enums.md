@@ -109,12 +109,41 @@ export const ModuleShapeDisplays: Record<ModuleShape, ModuleShapeDisplay> = {
 
 ## 8. Use
 
+**No bare-union types**
+- must **not** declare a domain or UI value-set as a bare string-union `type` (`type X = "a" | "b"`) — a union is a type with **no value source**, so every use site falls back to a magic string literal.
+- must declare the const-object enum (§3) and derive the type from it, then compare by member (`X.A`) — never the literal.
+
+```typescript
+type Nav = "strip" | "pills";                     // ❌ no value source — magic strings everywhere
+
+export const Nav = {                               // ✅ const object → value source + derived type
+  /** Refers to the segmented strip layout. */
+  Strip: "strip",
+  /** Refers to the pill-group layout. */
+  Pills: "pills",
+} as const;
+
+export type Nav = (typeof Nav)[keyof typeof Nav];
+```
+
 **The enum**
 - must compare by key, never a magic string.
 
 ```typescript
 if (code.barcodeFormat === BarcodeFormat.QrCode) { }   // ✅
 if (code.barcodeFormat === "qrCode") { }                // ❌
+```
+
+**No parallel `isMember` flags**
+- must model a value that is one of an enum's members as the **enum**, then compare `x === Enum.Member` at the use site — never fan it into a family of derived booleans (`isSolid` + `isGradient`, `isLinear` + `isRadial`).
+- a boolean-per-member family doesn't scale (new member ⇒ new flag at every branch) and a fall-through `if/else` silently mishandles it — a `switch (x)` or an enum-keyed `Record` (§6) stays exhaustive.
+- deriving the enum from a nullable / binary field is fine — do it **once** (`const fill = gradient ? FillType.Gradient : FillType.Solid`), then compare `fill`.
+- a standalone predicate with no underlying enum (`const isEdit = Boolean(id)`) may stay a boolean.
+
+```typescript
+const fill = gradient ? FillType.Gradient : FillType.Solid;
+{fill === FillType.Gradient ? <GradientRow/> : <SolidRow/>}   // ✅ compare the enum
+const isGradient = gradient !== null; …{isGradient && …}       // ❌ boolean stand-in
 ```
 
 **With a `Displays` extension**

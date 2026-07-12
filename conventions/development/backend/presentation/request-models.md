@@ -2,7 +2,7 @@
 
 *Last updated: 2026-06-17*
 
-> **API request** — the presentation-layer body a client sends, named `{Verb}{Noun}ApiRequest`; a controller binds it and maps it to its **application request** (the mediator `Command` / `Query` — see [mediator.md](../messaging/mediator.md)).
+> **API request** — the presentation-layer body a client sends, named `{Noun}{Verb}ApiRequest`; a controller binds it and maps it to its **application request** (the mediator `Command` / `Query` — see [mediator.md](../messaging/mediator.md)).
 > Both are requests — the `Api` / `Application` qualifier tells the layers apart.
 
 ## Request shape
@@ -21,7 +21,9 @@
 ### Declaration
 
 - must be a `public sealed record`
-- must be named `{Verb}{Noun}ApiRequest`, verb-first - e.g. `CreateCodeApiRequest`, `UpdateCodeApiRequest`
+- must be named `{Noun}{Verb}ApiRequest`, **noun-first** - e.g. `CodeCreateApiRequest`, `CodeUpdateApiRequest` - matches the `{Noun}{Verb}Command` application request and groups a concern's requests together (search / scan)
+- the **noun** is the entity, or the **domain / subdomain** when the action isn't scoped to one entity (a multi-entity create/update) - not forced to a single entity
+- must **merge** create + update into one `{Noun}CreateUpdateApiRequest` - the id rides the route, not the body, so the two bodies are identical; split into `{Noun}Create` / `{Noun}Update` only once they diverge
 - `Api` marks the presentation layer - never bare `Request` or `Dto` (the response suffix)
 - must live in the API project under `Requests/` - never in `Application/`
 
@@ -29,7 +31,7 @@
 
 - **body-only** - only what the client sends; never the actor, source IP, route id, or a server timestamp (those are caller context, merged in the mapping)
 - `required` on every non-nullable property; each carries a `Gets {what}.` summary (property doc rule → [documentation.md](../code-style/documentation/summary.md))
-- nested body types take the same suffix - `RuleApiRequest` inside `CreateCodeApiRequest`
+- **nested body models take `*Dto`, not `*ApiRequest`** - only the top-level endpoint body is an `*ApiRequest` (a form-bind request); a nested `CodeStyleDto` / `CodeRuleDto` is a data shape. A request-specific nested `*Dto` lives in the API project + maps to its application model; otherwise reference the shared `*Dto`
 - no validation attributes - business validation is the application request's, in the pipeline ([validation.md](../foundation/validation.md))
 
 ### Examples
@@ -38,7 +40,7 @@
 
 ```csharp
 /// <summary>Represents the create-namespace request body.</summary>
-public sealed record CreateNamespaceApiRequest
+public sealed record NamespaceCreateApiRequest
 {
     /// <summary>Gets the namespace slug.</summary>
     public required string Slug { get; init; }
@@ -77,13 +79,13 @@ The application request is built **at the edge** by an extension method co-locat
 #### Good
 
 ```csharp
-/// <summary>Provides mapping for <see cref="CreateNamespaceApiRequest"/>.</summary>
-public static class CreateNamespaceApiRequestExtensions
+/// <summary>Provides mapping for <see cref="NamespaceCreateApiRequest"/>.</summary>
+public static class NamespaceCreateApiRequestExtensions
 {
-    /// <summary>Maps the request to its <see cref="CreateNamespaceCommand"/>.</summary>
-    public static CreateNamespaceCommand ToCommand(this CreateNamespaceApiRequest request, string actor)
+    /// <summary>Maps the request to its <see cref="NamespaceCreateCommand"/>.</summary>
+    public static NamespaceCreateCommand ToCommand(this NamespaceCreateApiRequest request, string actor)
     {
-        return new CreateNamespaceCommand(request.Slug, request.Name, actor);
+        return new NamespaceCreateCommand(request.Slug, request.Name, actor);
     }
 }
 ```

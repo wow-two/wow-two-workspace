@@ -17,6 +17,7 @@
       "name": "smart-qr",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["-C", "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services", "dev", "--port", "7025", "--strictPort"],
+      "env": { "VITE_HTTPS": "false" },
       "port": 7025
     },
     {
@@ -75,6 +76,12 @@
       "runtimeExecutable": "pnpm",
       "runtimeArgs": ["-C", "workbench/ventures/whiteout/engineering/codebase/whiteout-zone-builder.frontend-services", "dev"],
       "port": 5182
+    },
+    {
+      "name": "transcript-forge",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["-C", "workbench/ventures/10x-ventures-transcript-forge/engineering/codebase/transcript-forge.frontend-services", "dev", "--port", "8237", "--strictPort"],
+      "port": 8237
     }
   ]
 }

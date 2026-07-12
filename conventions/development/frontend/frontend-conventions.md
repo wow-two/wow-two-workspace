@@ -1,10 +1,10 @@
 # Conventions — Development — Frontend (React / TypeScript)
 
-*Last updated: 2026-07-03*
+*Last updated: 2026-07-10*
 
 > React 19 / TypeScript (strict) / Vite / Tailwind v4 / `@wow-two-beta/ui` code-style conventions for
 > every frontend under `wow-two-ws/`. Lookup table — open a file when the task touches it; do not
-> pre-read. Repo layout is one level up: [../repo/repo-structure.md](../repo/repo-structure.md). The .NET
+> pre-read. Repo layout is one level up: [../repo/structure/repo-structure.md](../repo/structure/repo-structure.md). The .NET
 > sibling: [../backend/](../backend/).
 
 ## code-style/
@@ -12,12 +12,13 @@
 | File | What it covers |
 |---|---|
 | [naming.md](code-style/naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
+| [imports.md](code-style/imports.md) | `import` layout — 5 group order (side-effect / third-party / SDK / `@/` / relative) blank-line-separated · alphabetical intra-group · inline vs standalone `type` · published-subpath + `@/`-over-relative rules |
 | [documentation.md](code-style/documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
 | [code-organization.md](code-style/code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, React named-type imports (no UMD `React.*`), file-internal order |
-| [models.md](code-style/models.md) | Domain model vs `*Dto` (declare only on shape mismatch) + mapper · `*Content`/`*Values`/`*Draft` · fields (`T` / `T?`) · `interface`/`type` · doc rules (`Defines` / `Gets or sets`, blank line between members) |
+| [models.md](code-style/models.md) | The `*Dto` family (entity/form/sub-model) · `*Content` · `*Request` · descriptor/catalog · fields (`T` / `T?`) · `interface`/`type` · doc rules (`Defines` type / `The …` member, blank line between members) |
 | [type-mapping.md](code-style/type-mapping.md) | The .NET ↔ wire ↔ TS scalar contract — `Guid`/`number`/`boolean` · `Temporal.*` dates wired by one global reviver · enums · `ReadonlyArray<T>` (never `T[]`) · `?`-nullability |
 | [enums.md](code-style/enums.md) | const object `as const` — PascalCase key / camelCase value · derived `type` · `Unresolved` first · `//` comment · `Displays` (presentation) + `Payloads` (backend) extensions |
-| [constants.md](code-style/constants.md) | `UPPER_SNAKE` scalars / data · `as const` · JSDoc one-liner · const-vs-enum decision |
+| [constants.md](code-style/constants.md) | PascalCase scalars / data · `as const` · JSDoc one-liner · const-vs-enum decision |
 | [extensions.md](code-style/extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
 
 ## architecture/
@@ -31,8 +32,9 @@
 
 | File | What it covers |
 |---|---|
-| [components.md](presentation/components.md) | One-component-per-folder, props (`readonly`, no destructure), file structure, UI terminology, variants |
-| [forms.md](presentation/forms.md) | String form state (`EditableFields`), resolve-on-submit, enum-as-string |
+| [components.md](presentation/components.md) | One-component-per-folder, props (`readonly`, **destructure** w/ inline defaults), file structure, UI terminology, variants |
+| [component-catalog.md](presentation/component-catalog.md) | The reference frontend's components by **kind** (screens · views · controls · fields · displays) — a "what exists" lookup |
+| [forms.md](presentation/forms.md) | `useAppForm` engine pin (`src/form.ts`) · `*Values` + zod schema · `form.Field` × `Field` chrome · ProblemDetails → field errors · `validateOn` · arrays · `form.engine` escape hatch · house-engine `play()` stories |
 | [hooks.md](presentation/hooks.md) | `use*` naming, object vs tuple return, `Manages`/`Provides access to`, abort on unmount |
 | [styling.md](presentation/styling.md) | Tailwind v4 `@import`/`@theme`/`@source`-ing `@wow-two-beta/ui`, tokens, `cn()`, `tailwind-variants`, dark mode |
 

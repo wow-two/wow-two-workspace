@@ -4,13 +4,14 @@
 
 > .NET conventions for every backend service under `wow-two-ws/`. Lookup table — open a file when the
 > task touches it; do not pre-read. Organized by **sub-domain** (one folder per concern; scales as the
-> surface grows). Repo layout is one level up: [../repo/repo-structure.md](../repo/repo-structure.md).
+> surface grows). Repo layout is one level up: [../repo/structure/repo-structure.md](../repo/structure/repo-structure.md).
 > How to write a doc here → template + rules in [../../conventions.md](../../conventions.md) (cite symbols + paths, never namespaces).
 
 ## Sub-domains
 
 | Folder | Concern | Status |
 |---|---|---|
+| `build/` | MSBuild layer — solution-root `Directory.{Packages,Build}.props` (CPM + shared props) | Active |
 | `code-style/` | Layer-agnostic authoring — files, docs, models | Active |
 | `architecture/` | Layering, host wiring, service shape | Active |
 | **`persistence/`** | Schema, EF Core, Dapper, entities, migrations | **Focus** |
@@ -40,6 +41,14 @@ Tracks where each doc stands. `baseline` = pre-session (Haven-lifted, untouched)
 | `messaging/mediator.md` · `architecture/startup-defaults.md` · `presentation/problem-details.md` · `identity/jwt-auth.md` | drafted |
 | `code-style/members.md` · `code-style/idioms.md` | drafted |
 | `code-style/*` · `architecture/{service-architecture,domain-structuring,host-configuration,services}` · `presentation/controllers` · `runtime/*` · `testing/testing.md` | baseline |
+
+## build/ — MSBuild layer  (solution-root props)
+
+| File | What it covers |
+|---|---|
+| [build.md](build/build.md) | Sub-domain lead — the two solution-root files, the minimal-`.csproj` invariant |
+| [central-package-management.md](build/central-package-management.md) | `Directory.Packages.props` — CPM: one `PackageVersion` per package, `.csproj` refs by name (no `Version`); add/bump; SDK ref + `FrameworkReference` |
+| [directory-build-props.md](build/directory-build-props.md) | `Directory.Build.props` — shared props (`net10.0` · `Nullable` · `ImplicitUsings` · `LangVersion latest`); opt-in warnings-as-errors + NuGet-audit stance; packaging props SDK-only |
 
 ## code-style/ — layer-agnostic authoring
 

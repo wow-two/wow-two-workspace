@@ -42,9 +42,9 @@ affects how you spell the path.
 | Stagger launches | `DELAY=1 scripts/active.sh` |
 
 Project names are the first column of `scripts/active.sh -l` — currently `drydock`, `secrets-vault`,
-`smart-qr`, `trademark-watcher`, `acquisition-explorer`, `yt-scraper`, `pdf-editor`, `backend-beta`,
+`smart-qr`, `trademark-watcher`, `acquisition-explorer`, `transcript-forge`, `pdf-editor`, `backend-beta`,
 `frontend-beta`. Map fuzzy references to these (e.g. "the QR thing" → `smart-qr`, "yt scraper" →
-`yt-scraper`, "the beta libs" → `backend-beta frontend-beta`).
+`transcript-forge`, "the beta libs" → `backend-beta frontend-beta`).
 
 ## Default behavior: preview before the swarm
 

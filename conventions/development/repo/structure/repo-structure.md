@@ -3,8 +3,8 @@
 *Last updated: 2026-06-24*
 
 > **Scope:** the on-disk layout + naming for **product / venture repos** under `wow-two-ws/workbench/`.
-> The *structural* layer — folders + names, not code style (that lives in [`backend/`](../backend/) and
-> [`frontend/`](../frontend/)).
+> The *structural* layer — folders + names, not code style (that lives in [`backend/`](../../backend/) and
+> [`frontend/`](../../frontend/)).
 >
 > **Reference implementation:** `workbench/ventures/10x-ven-haven` (most built-out; this standard
 > generalizes its shape). **Template:** `workbench/wow-two-sdk-beta/wow-two-sdk-beta.product-template`
@@ -15,7 +15,7 @@
 | Archetype | Shape | Examples | Governed by |
 |---|---|---|---|
 | **Product / venture** | `product/` + `engineering/` (code under `engineering/codebase/`) | haven, drydock, smart-qr, secrets-vault | **this standard** |
-| **SDK / library** | package-shaped (`src/` = the library; no product/engineering split) | `wow-two-sdk.*`, `wow-two-sdk-beta.ui` | SDK docs + `.claude/rules/templates/CLAUDE-sdk.md` |
+| **SDK / library** | doc-bearing package — `engineering/` at root, the npm package under `engineering/codebase/{slug}/`, no `product/` | `wow-two-sdk.*`, `wow-two-sdk-beta.ui` | [sdk-structure.md](sdk-structure.md) |
 
 A product repo *ships a thing to users*; a library repo *is consumed by other repos*. Don't force one shape into the other.
 
@@ -107,7 +107,7 @@ business/                          ← the venture layer — model · positionin
 1. **Top-level dirs are exactly `product/` and `engineering/`** (lowercase). Plus root `README.md`, `CLAUDE.md`, `.claude/`.
 2. **All code lives under `engineering/codebase/`.** Always a `codebase/` wrapper — never services directly under `engineering/`.
 3. **The code dirs are exactly `codebase/{slug}.backend-services/` and `codebase/{slug}.frontend-services/`** (dot-prefixed with the repo `{slug}`; + optional `database/`, `pipelines/`). Never bare `backend-services`/`frontend-services`, never `backend`/`frontend`, never `{name}.backend`, never a loose dir outside `codebase/`. **Rationale:** the `{slug}.` prefix keeps the two folders uniquely named so several repos open side-by-side in IDEs never collide on identical `backend-services/` / `frontend-services/` folder names. (`{slug}` = the repo's distinctive lowercase hyphenated name — its last dot-segment, e.g. `secrets-vault`, `drydock`; product-template = `sample`.)
-4. **`{slug}.backend-services/` holds the solution + projects directly — solution file is `{slug}.backend-services.slnx`.** Exactly `.slnx` (the XML format, **not** legacy `.sln`), named after its folder so it opens in the IDE under the matching name (e.g. `smartqr.backend-services.slnx`, `drydock.backend-services.slnx`). Projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.slnx` encoding) → [`backend/service-architecture.md`](../backend/architecture/service-architecture.md). (Apps only — library/SDK repos use their own package layout.)
+4. **`{slug}.backend-services/` holds the solution + projects directly — solution file is `{slug}.backend-services.slnx`.** Exactly `.slnx` (the XML format, **not** legacy `.sln`), named after its folder so it opens in the IDE under the matching name (e.g. `smartqr.backend-services.slnx`, `drydock.backend-services.slnx`). Beside it sit `Directory.Packages.props` (Central Package Management) + `Directory.Build.props` (shared MSBuild props) — the MSBuild layer, inherited by every project → [`backend/build/build.md`](../../backend/build/build.md). Projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.slnx` encoding) → [`backend/service-architecture.md`](../../backend/architecture/service-architecture.md). (Apps only — library/SDK repos use their own package layout.)
 5. **`{slug}.frontend-services/` holds the app directly (single) or a pnpm workspace (multi)** — app folders (lowercase) + `packages/` for shared (`@{brand}/common`, `@{brand}/ui`).
 6. **Per-repo `development/` guidelines defer to shared conventions** (`wow-two-ws/conventions/*.md`) — only repo-specific deltas live in the repo.
 
@@ -153,7 +153,7 @@ The two code dirs carry the repo `{slug}.` prefix (`{slug}.backend-services/`, `
 | smart-qr | ✗ | ✗ | ✗ | ✓ | full conform (next) |
 | haven | ✗ (`business/`+`platform/`) | ✗ (`src/`) | ✗ | ✓ | top-level rename; `src`→`codebase`; folder-docs |
 | drydock | ✗ | ✗ | ✗ | ✓ | top-level; `*.backend`→`codebase/{slug}.backend-services`; folder-docs |
-| trademark · yt-scraper · acquisition · pdf-editor | ✗ | ✗ | ✗ | ✗ | scaffold to standard |
+| trademark · transcript-forge · acquisition · pdf-editor | ✗ | ✗ | ✗ | ✗ | scaffold to standard |
 
 > The 2026-06-09 audit is **superseded** — the top-level names changed (`business-logic/`+`platform-development/` → `product/`+`engineering/`) and `src/`→`codebase/`, plus the no-README rule.
 

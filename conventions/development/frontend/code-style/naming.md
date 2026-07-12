@@ -1,6 +1,6 @@
 # Naming
 
-*Last updated: 2026-06-12*
+*Last updated: 2026-07-08*
 
 ## Files — PascalCase (one rule, one exception)
 
@@ -52,6 +52,22 @@ Non-component utility files co-located in a folder use **descriptive PascalCase 
 
 The `*Extensions` suffix is borrowed from .NET extension methods — a deliberate divergence from JS's camelCase-utilities norm, for consistency with the .NET-heavy wow-two ecosystem. **Internal** = absent from `index.ts`, not a naming signal.
 
+## Resource-access abstractions — `*Broker`
+
+A swappable app-side seam over a **client-side resource** — `localStorage`, `sessionStorage`, a Redux store, an in-memory map — is a **`*Broker`**: the contract `StorageBroker`, its instances `localStorageBroker` / `memoryBroker`, and the injected dependency a `broker` param / option. It borrows the backend **`Broker`** term ([component-names.md](../../backend/foundation/component-names.md) — "app-side seam over an external dependency"), so the same word names the same idea on both sides of the stack. Reach for it only for a resource seam; a plain helper stays `*Helpers` / `*Extensions`.
+
+## App-shell baseline components — `App*`
+
+The framework singletons every app has exactly one of — the router root, the shell, the root error boundary — take an **`App*`** prefix so they group together and read as the app's *frame*, not feature UI. They live in `bootstrap/` and are the seam that extracts to `@wow-two-beta/app` — the names are the stable contract.
+
+| Component | Role | Home |
+|---|---|---|
+| `AppRoot` | router root element — `<ScrollRestoration>` + title sync + `<Outlet>` | `bootstrap/router/` |
+| `AppLayout` | the visible shell — SDK `AppShell` + sidebar/header + `<Outlet>` | `bootstrap/` |
+| `AppErrorBoundary` | root route `errorElement` | `bootstrap/router/` |
+
+**Bare (not `App*`):** a **page** the router renders keeps a plain page name — `NotFound` (the `*` catch-all), the `*Page` places — and a **utility** stays descriptive — `DocumentTitle`, `createAppRouter`. `App*` marks the singleton *frame* pieces, not every routing file. See [routing.md](../architecture/routing.md).
+
 ## Exports
 
 - **Named exports preferred** — avoid `export default` except for React page/view components used with lazy loading.
@@ -63,9 +79,20 @@ Prop **names** follow a fixed vocabulary so any component reads the same way. (P
 
 | Kind | Prefix / shape | Examples |
 |---|---|---|
-| Standalone boolean | `is*` / `has*` / `can*` | `isDisabled`, `isInvalid`, `isLoading`, `hasError`, `canResize` |
+| Standalone boolean | `is*` / `has*` / `can*` / `show*` | `isDisabled`, `isInvalid`, `isLoading`, `hasError`, `canResize`, `showLabel` |
 | Event handler | `on*` | `onClick`, `onSelect`, `onValueChange` |
 | Render-prop | `render*` | `renderItem`, `renderEmpty`, `renderTrigger` |
+
+`show*` names a boolean for **visibility / display intent** (`showLabel`, `showFooter`) — it joins `is*` / `has*` / `can*` as a standalone-boolean prefix.
+
+**`on*` is inbound-only — a method the consumer calls is an imperative verb.** `on*` names an **inbound event-handler prop** — a callback *passed into* a component. A hook / view-model **method the consumer calls** is an imperative verb (`setSearchKeyword`, `selectEmoji`, `clearSelection`) — never `on*`-prefixed. `onClearSelection` for something you call reads as a prop you'd wire up; `clearSelection` reads as the action it is.
+
+Within a single-purpose inner component an unambiguous abstract method name (`clear`, `select`) is fine; disambiguate (`clearSelection`, `selectEmoji`) only when the surrounding scope makes the bare verb ambiguous.
+
+| Do | Avoid |
+|---|---|
+| `onSelect` (prop) · `selectEmoji` (method you call) | `onSelectEmoji` for a method the consumer calls |
+| `clearSelection`, `setSearchKeyword` | `onClearSelection`, `onSetSearchKeyword` (method dressed as a prop) |
 
 **Controlled triad — the one exception to `is*`.** A value a parent may own ships as a fixed trio that reads as a unit. The controlled member keeps the **bare root** — it is *not* `is*`-prefixed — so the three names line up:
 
@@ -119,13 +146,16 @@ interface InfoBannerProps {
 | Type export | PascalCase | `Listing` |
 | Domain enum / label Record | PascalCase, singular, no `Enum` suffix | `ContactType`, `ContactTypeLabels` |
 | UI value-set (const `as const`) | PascalCase, singular, no labels | `HtmlElement`, `ButtonType`, `Key` |
-| Constant — scalar / data | `UPPER_SNAKE`, `as const` for objects | `PRESET_ICON_SIZE`, `ANGLES`, `DEFAULT_RADIUS` |
-| Standalone boolean prop | `is*` / `has*` / `can*` | `isDisabled`, `isInvalid`, `hasIcon` |
-| Handler / render prop | `on*` / `render*` | `onValueChange`, `renderItem` |
+| Constant — scalar / data | PascalCase, `as const` for objects | `PresetIconSize`, `Angles`, `DefaultRadius` |
+| Standalone boolean prop | `is*` / `has*` / `can*` / `show*` | `isDisabled`, `isInvalid`, `hasIcon`, `showLabel` |
+| Handler prop (inbound) / render prop | `on*` / `render*` | `onValueChange`, `renderItem` |
+| Hook / view-model method (consumer calls) | imperative verb, never `on*` | `selectEmoji`, `clearSelection`, `setSearchKeyword` |
 | Controlled triad (bare root) | `x` / `defaultX` / `onXChange` | `open` / `defaultOpen` / `onOpenChange` |
 | Prop idiom carve-out | as-is | `asChild` |
 | Folder | camelCase | `propertyInfo/` |
 | Barrel | lowercase | `index.ts` |
+
+**Constants are PascalCase** — a scalar / data const is the same category as an enum / value-set, so it takes the same casing (`PresetIconSize`, `DefaultRadius`), not `UPPER_SNAKE`. Existing `UPPER_SNAKE` constants migrate gradually; new code is PascalCase.
 
 ## See also
 

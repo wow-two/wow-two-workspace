@@ -4,7 +4,7 @@
 Hard-blocks agent-run history/publish ops so the human stays the ONLY one who
 commits + pushes. Agents stage (`git add` / `git restore --staged`) and hand the
 commit message to the human in chat. Rationale + protocol:
-conventions/development/repo/git.md.
+conventions/development/repo/version-control/git.md.
 
 Blocks: git commit, git push, git reset --hard/--merge/--keep, git stash drop/clear/pop.
 Allows: git add, git restore --staged, git reset (plain/soft), status/diff/log, etc.
@@ -16,7 +16,7 @@ import shlex
 import sys
 
 DENY = (
-    "BLOCKED — wow-two git protocol (conventions/development/repo/git.md).\n"
+    "BLOCKED — wow-two git protocol (conventions/development/repo/version-control/git.md).\n"
     "Agents never run `git {sub}` — the human is the only one who commits + pushes.\n"
     "Instead: stage with `git add` / `git restore --staged`, then print the commit\n"
     "message in chat and STOP. The human reviews, commits, and pushes."

@@ -1,6 +1,6 @@
 # Conventions — wow-two
 
-*Last updated: 2026-06-22*
+*Last updated: 2026-07-10*
 
 > **The single index to every convention.** When a task touches *how we build* — code, repo structure,
 > naming, versioning — search HERE first, then open only the file(s) you need. Lookup table,
@@ -65,9 +65,9 @@ Rules:
 | **development** (below) | how we build — repo shape, backend & frontend code style | Active |
 | **planning** (below) | how we plan — version docs (grows over time) | Active |
 | **agentic-workflow** (below) | how parallel chats / agents share a repo — lanes · no-revert · scope containment | Active |
-| **marketing** (below) | how we name & brand — name selection · scoring rubric · verification · domains | Active |
+| **marketing** (below) | how we name, brand & go to market — naming/domains · GTM · channels · SEO · content formats | Active |
 | **design** (below) | how we design — variant-driven exploration · per-app specs · light/dark parity | Active |
-| deployment | VPS, Docker, Traefik, CI/CD, release | Planned |
+| **deployment** (below) | how we ship & host — single-host serving · dev-port ledger (Docker · CI/CD · release to come) | Active |
 | security | secrets handling, auth patterns, threat model | Planned |
 
 ---
@@ -75,16 +75,15 @@ Rules:
 ## development — index: [development/development-conventions.md](development/development-conventions.md)
 
 Cross-area: **[dev-cycle.md](development/dev-cycle.md)** — 2-cycle app↔SDK maturation (implement in-app → extract to SDK + conventions → adopt across the named active apps).
+Cross-area: **[swappable-modules.md](development/swappable-modules.md)** — engine-wrapping SDK modules: house contract + adapter subpaths (optional peers) + one shared conformance suite + app-side one-line engine pin.
 
 ### repo/ — repo shape & setup · [repo-conventions.md](development/repo/repo-conventions.md)
 
 | Need | File |
 |---|---|
-| Repo layout · `product/` + `engineering/` · code under `engineering/codebase/{slug}.{backend,frontend}-services` · naming · folder-docs (no README below root) · archetypes · **image-publish contract** (§13) · **audit** | [development/repo/repo-structure.md](development/repo/repo-structure.md) |
-| Tech stack — backend + frontend + beta SDKs | [development/repo/tech-stack.md](development/repo/tech-stack.md) |
-| Port ledger — allocated dev ports | [development/repo/ports.md](development/repo/ports.md) |
-| Single-host serving — SPA baked into the backend `wwwroot` (vite `outDir` + static-serve + `BuildSpa` target + dev proxy) · CORS posture | [development/repo/single-host-serving.md](development/repo/single-host-serving.md) |
-| Commit-message format (`{type}: {past-tense verb} {subject}`, not imperative · one cohesive change) **+ commit protocol** — agent stages + drafts the message only; the human commits + pushes (hook-enforced) | [development/repo/git.md](development/repo/git.md) |
+| Repo layout (product / venture) · `product/` + `engineering/` · code under `engineering/codebase/{slug}.{backend,frontend}-services` · naming · folder-docs (no README below root) · archetypes · **image-publish contract** (§13) · **audit** | [development/repo/structure/repo-structure.md](development/repo/structure/repo-structure.md) |
+| SDK / library repo shape · `engineering/` + npm package under `engineering/codebase/{slug}/` · `src/` source-only + `tests/{unit,stories}` · config repoint · dist-only publish | [development/repo/structure/sdk-structure.md](development/repo/structure/sdk-structure.md) |
+| Commit-message format (`{type}: {past-tense verb} {subject}`, not imperative · one cohesive change) **+ commit protocol** — agent stages + drafts the message only; the human commits + pushes (hook-enforced) | [development/repo/version-control/git.md](development/repo/version-control/git.md) |
 
 ### backend/ — .NET conventions (by sub-domain) · [backend-conventions.md](development/backend/backend-conventions.md)
 
@@ -92,6 +91,7 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 
 | Sub-domain | Docs |
 |---|---|
+| `build/` | `central-package-management` · `directory-build-props` — solution-root `Directory.{Packages,Build}.props` (CPM + shared MSBuild) |
 | `code-style/` | `documentation` · `naming` · `code-organization` · `members` · `models` · `idioms` |
 | `architecture/` | `service-architecture` · `domain-structuring` · `host-configuration` · `services` |
 | **`persistence/`** (focus) | `database` · `entities` · `enums` · `data-access` · `migrations/` (`migrations` · `bespoke-migrations` · `migration-dialects` · `ef-migrations` · `dbup-migrations` · `migration-tooling`) |
@@ -108,9 +108,9 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 
 | Group | File |
 |---|---|
-| `code-style/` | `naming` · `documentation` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
+| `code-style/` | `naming` · `documentation` · `imports` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
 | `architecture/` | `architecture` · `state-and-data` |
-| `presentation/` | `components` · `forms` · `hooks` · `styling` |
+| `presentation/` | `components` · `component-catalog` (SDK component inventory + app instances) · `forms` · `hooks` · `styling` |
 
 ---
 
@@ -132,14 +132,25 @@ Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
 
 | Need | File |
 |---|---|
-| Brand-name + domain selection — style taxonomy · house scoring rubric · verification runbook (TM · RDAP · handles · cross-language) · domain strategy · decision workflow + checklist | [marketing/brand-naming-and-domains.md](marketing/brand-naming-and-domains.md) |
-| Go-to-market — channel taxonomy · launch sequence · SEO-for-commodity · activation/retention · pricing & CRO (fee-efficiency) · metrics · GTM workflow + checklist | [marketing/marketing-strategy.md](marketing/marketing-strategy.md) |
+| Brand-name + domain selection — taxonomy · scoring rubric · verification runbook (TM · RDAP · handles · cross-language) · domain strategy · checklist | [marketing/brand-naming-and-domains.md](marketing/brand-naming-and-domains.md) |
+| Go-to-market meta — laws · launch sequence · activation/retention · pricing & CRO (fee-efficiency) · metrics · workflow · checklist | [marketing/go-to-market.md](marketing/go-to-market.md) |
+| Channels catalog — audience-fit + effort/payoff per channel (SEO · short-form · Pinterest · directories · integrations · communities · partnerships) | [marketing/channels/channels.md](marketing/channels/channels.md) |
+| SEO — intents · comparison pages · programmatic SEO | [marketing/channels/seo.md](marketing/channels/seo.md) |
+| Content formats — short-form video + content library (viral · sell · educate) | [marketing/channels/content-formats.md](marketing/channels/content-formats.md) |
+| Meme templates — reusable meme/cultural/trending-audio shells (Nobody's-gonna-know · two-button · expanding-brain · POV …) | [marketing/channels/meme-templates.md](marketing/channels/meme-templates.md) |
 
 ## design — index: [design/design-conventions.md](design/design-conventions.md)
 
 | Need | File |
 |---|---|
 | Design exploration — variant-driven (a few in-context options → pick → lock → cascade → spec) · other modes · mode-selection · per-app spec shape | [design/research/design-exploration.md](design/research/design-exploration.md) |
+
+## deployment — index: [deployment/deployment-conventions.md](deployment/deployment-conventions.md)
+
+| Need | File |
+|---|---|
+| Single-host serving (product / venture) — SPA baked into the backend `wwwroot` (vite `outDir` + static-serve + `BuildSpa` target + dev proxy) · CORS posture | [deployment/hosting/single-host-serving.md](deployment/hosting/single-host-serving.md) |
+| Port ledger — allocated dev ports | [deployment/hosting/ports.md](deployment/hosting/ports.md) |
 
 ## Scaffolding
 

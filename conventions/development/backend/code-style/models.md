@@ -85,6 +85,14 @@ Per the starter table in [documentation.md](documentation.md):
 - **Results** — suffix with `Result` (`ChannelGetAllResult`)
 - **Query/Command** — suffix with `Query` / `Command` (`ChannelGetAllQuery`, `PipelineExecuteCommand`)
 
+## Polymorphic models
+
+A discriminated union over a `type` field — never hand-author the discriminator strings in `[JsonDerivedType]` attributes; they drift from the enum (`nameof` yields PascalCase, a typed value goes stale, casing slips — `vCard` vs `vcard`).
+
+- must drive the polymorphism from the discriminator **enum** — a `DefaultJsonTypeInfoResolver` modifier builds `JsonPolymorphismOptions.DerivedTypes`, each type's discriminator = its enum value serialized through the wire's string-enum converter (so `[JsonStringEnumMemberName]` overrides are honored — the enum member stays the single source)
+- must not scatter `[JsonPolymorphic]` / `[JsonDerivedType]` on the base — the resolver is the one place
+- reference impl: `SmartQr` `CodeContentPolymorphism`; extract the reusable resolver to `WoW.Two.Sdk.Backend.Beta` once a 2nd union appears
+
 ## See also
 
 - [entities.md](../persistence/entities.md) — entity-specific modeling rules

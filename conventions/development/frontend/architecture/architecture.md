@@ -1,6 +1,6 @@
 # Frontend Architecture
 
-*Last updated: 2026-07-03*
+*Last updated: 2026-07-07*
 
 A React/TS app is a Clean-Arch stack — layers at `src/` root, each sliced by domain, one inward dependency direction. Drill down: **layer → domain → sub-domain → file**.
 
@@ -30,14 +30,14 @@ Five layers at `src/` root (no `layers/` wrapper). Dependency runs **inward**: `
 - e.g. `domain/codes/core/` (module · finder · preview · rule) · `domain/codes/content/` (one module per content type).
 - a sub-domain may itself **divide by concern** as it grows — `presentation/codes/core` → `design` · `shape` · `routing` · `preview` (a noun per concern).
 - a component sub-domain may hold its components **directly** (`core/design/FillControls.tsx`); the `components/` wrapper is optional — use it only to separate non-component files (hooks, helpers). Keep one style within a domain.
-- **two kinds of folder** inside a domain: a **sub-domain** (a model noun — `core` · `content` · `design`) and a **role-group** (a role word — `screens/` · `components/` · `hooks/`). A role-group is never a sub-domain.
+- **two kinds of folder** inside a domain: a **sub-domain** (a model noun — `core` · `content` · `design`) and a **role-group** (a role word — `models/` · `screens/` · `components/` · `hooks/`). A role-group is never a sub-domain. Model files live in a `models/` role-group, symmetric with `components/` / `hooks/`.
 - **domain-level `common/`** — the home for whatever belongs to no single sub-domain: cross-sub-domain **shared** components/hooks (e.g. a `PresetIconButton` used by `design` + `shape`) **and** the domain's **composition** role-groups. Symmetric with the layer-level `common/` (cross-domain).
 - **routed screens** compose sub-domains, so they belong to none — they live under domain-`common/`: `presentation/{domain}/common/screens/`, never as a peer to the sub-domains.
 
 ## Files — where general naming applies
 
 - files `PascalCase`, folders `camelCase`, one lowercase `index.ts` **barrel** per slice (its only public surface) — per [naming.md](../code-style/naming.md).
-- one component per its own folder ([components.md](../presentation/components.md)); hooks `use{Noun}` ([hooks.md](../presentation/hooks.md)); types `*Dto` / `*Content` / `*Values` ([models.md](../code-style/models.md)).
+- one component per its own folder ([components.md](../presentation/components.md)); hooks `use{Noun}` ([hooks.md](../presentation/hooks.md)); types — `*Dto` (entity · form · sub-model) / `*Content` / `*Request` ([models.md](../code-style/models.md)).
 - **role-specific naming** (component-role suffixes, type/api/const markers) → the [Naming](#naming--role--suffix) section below.
 
 ## Naming — role → suffix
@@ -96,9 +96,9 @@ Name a **component** by its role (SDK-grounded categories):
 
 - modifiers: `Overlay*` prefix (positioned variant) · `*Compact` suffix (condensed).
 - **hooks** — `use{Noun}`; data `use{Entity}` returns a `{Entity}State` object, UI `use{Feature}`.
-- **types** — `*Dto` (wire) · `*Request`/`*Response` · `*Content` (wire variant) · `*Draft` (transient) · `*Props` · `*State` (hook) · mapped entity = **bare** · enum = const-as-type + `{Enum}Labels`, no `*Enum`.
+- **types** — `*Dto` marks every data model (entity `CodeDto` · form `CreateEdit*Dto` · sub-model · `*RowDto` · `*QueryDto`), placed by role in `domain` / `application` / `integration` · `*Request` (write contract, `integration`) · `*Content` (variant) · `*Props` · `*State` (hook) · enum bare + `{Enum}Labels`. Full scheme → [models.md](../code-style/models.md).
 - **api** — `integration/{domain}` exports `{domain}Api`; fns `{verb}{Noun}`; `ApiError`; private `request<T>`.
-- **constants** — `UPPER_SNAKE`; **extensions** — `{Noun}Extensions` (`as const`).
+- **constants** — PascalCase; **extensions** — `{Noun}Extensions` (`as const`).
 - **unresolved forks:** hook file casing (`useX.ts` vs `UseX.ts`) · enum labels (`{Enum}Labels` vs `{ENUM}_LABEL`) · api object (`{domain}Api` vs `api`).
 
 ### Compound (namespaced) components
@@ -118,6 +118,16 @@ export default Modal;                                // optional back-compat; no
 ```
 
 - **anti-pattern (banned):** `type XComponent = typeof X & {…}; (X as XComponent).Sub = …; export default X as XComponent;` — the statics' type lands only on `default`, so the barrel-exported *named* `X` is untyped and `<X.Sub>` fails to type-check for consumers **and** stories.
+
+## Routing & responsive surfaces
+
+A **place** is a URL; a **route renders the same place at every breakpoint** — never fork routes or redirect by device width.
+
+- **places → pages** (`*Page`, one route) — a record, a detail view, `new-*`, settings. Deep-linkable, refreshable, shareable (a permalink relies on this).
+- **actions → modals** (`*Modal` / sheet, **no route**) — format pickers, confirms, quick-filters. Ephemeral, no URL → no cross-size mismatch.
+- must **not** render the same place as a modal on desktop and a page on mobile — that mismatch is what breaks copy-paste / refresh / back.
+- a direct hit / refresh / new tab on any place-route must resolve to a **standalone page**. A desktop "modal-over-context" for a place is allowed **only** via intercepting-routes carrying that standalone-page fallback — otherwise default to a page.
+- responsiveness lives in the **component, not the route**: a `*Modal` presents as `Modal` (desktop) ↔ `BottomSheet` / full-height sheet (mobile); a `*Page` reflows. Same route, adaptive render.
 
 ## Discriminated dispatch
 
@@ -166,7 +176,7 @@ Two shapes, by app count — both under `engineering/codebase/{slug}.frontend-se
 
 ## Dev server
 
-- must run HTTPS via `vite-plugin-mkcert`; bind an **even** port (track in [../repo/ports.md](../../repo/ports.md)).
+- must run HTTPS via `vite-plugin-mkcert`; bind an **even** port (track in [ports.md](../../../deployment/hosting/ports.md)).
 - must proxy `/api` → the backend's HTTPS (even) port (`secure: false`, `changeOrigin: false`) — see [state-and-data.md](state-and-data.md).
 - gate mkcert behind `VITE_HTTPS=false` for a headless HTTP fallback (+ a matching `*-http` launch config); normal dev stays HTTPS.
 

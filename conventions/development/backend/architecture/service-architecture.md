@@ -1,6 +1,6 @@
 # Service architecture
 
-*Last updated: 2026-06-14*
+*Last updated: 2026-07-06*
 
 ## Solution organization
 
@@ -38,6 +38,8 @@ Every backend service follows **layered Clean Architecture**:
 | Infrastructure | `Infrastructure/Services/`, `Infrastructure/Settings/`, `Infrastructure/Scheduling/` | Implementations, config classes, background services |
 | Persistence | `Persistence/Repositories/` | Data access (Dapper, EF Core repository-style) |
 
+**Each layer is its own class-library project** — `{Brand}.Domain`, `{Brand}.Application`, `{Brand}.Infrastructure`, `{Brand}.Persistence`, `{Brand}.Api` (SmartQr's shape). The `Folder` column above is the folder layout **inside each layer's own project**, never folders inside `Api`. Separate projects make the dependency rule compiler-enforced and let a capability lift to the SDK as a **move + namespace-rename** (see §Solution organization), not a rewrite.
+
 ## Rules
 
 - `Program.cs` is a slim 3-liner: `builder.Configure()` → `app.Configure()` → `app.Run()`
@@ -65,7 +67,7 @@ Persistence     (implements Application repository interfaces)
 
 ## When to deviate
 
-- **Modular monolith / single-process services** — same 5 layers, just within one assembly
+- **Throwaway spikes only** — a short-lived proof (≲2 KLOC, no extraction or second-consumer roadmap) may inline the 5 layers as folders in one project. Any service that will ship, grow, or feed the SDK uses **separate layer projects from day one** — never default to layers-as-folders
 - **Pure SDK packages** (the beta SDK) — Application/Infrastructure/Persistence split doesn't apply; SDK packages are libraries, not services
 - **CLI tools** — `Application` + `Domain` only; no `Api`, no `Persistence` unless reading/writing files
 

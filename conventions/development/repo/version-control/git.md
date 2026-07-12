@@ -30,10 +30,10 @@
 
 ## Discipline
 
-- **must not** ever run `git commit`, `git push`, `git reset --hard`, force-push, or `git stash drop/pop` — the human is the **only** one who commits + pushes. Enforced by the `guard-git` PreToolUse hook ([../../../.claude/hooks/guard-git.py](../../../.claude/hooks/guard-git.py)).
+- **must not** ever run `git commit`, `git push`, `git reset --hard`, force-push, or `git stash drop/pop` — the human is the **only** one who commits + pushes. Enforced by the `guard-git` PreToolUse hook ([../../../../.claude/hooks/guard-git.py](../../../../.claude/hooks/guard-git.py)).
 - **may** run `git add`, `git restore --staged`, `git status`, `git diff`, `git log` — staging + inspection are the agent's job.
 - must treat "commit this" / "push it" / "get it pushed" as the cue to **prepare** (stage + draft the message), **not** authorization to run the command.
-- parallel-lane rules (assume-intentional · no-revert · stage only your own files): [../../agentic-workflow/agentic-workflow.md](../../agentic-workflow/agentic-workflow.md).
+- parallel-lane rules (assume-intentional · no-revert · stage only your own files): [../../../agentic-workflow/agentic-workflow.md](../../../agentic-workflow/agentic-workflow.md).
 
 ---
 

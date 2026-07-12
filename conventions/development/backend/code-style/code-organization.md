@@ -46,7 +46,7 @@ Nested types (sealed inner classes, value-object records inside a parent) live i
 
 ## Source folders
 
-- **Backend source folders are PascalCase**, matching their namespace segment 1:1 (`Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`). Distinct from the top-level **project** dir `{slug}.backend-services/`, which stays kebab — that's the IDE-collision-proof project folder, not a source folder ([repo/repo-structure.md](../../repo/repo-structure.md) §3).
+- **Backend source folders are PascalCase**, matching their namespace segment 1:1 (`Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`). Distinct from the top-level **project** dir `{slug}.backend-services/`, which stays kebab — that's the IDE-collision-proof project folder, not a source folder ([repo/structure/repo-structure.md](../../repo/structure/repo-structure.md) §3).
 
 ## Acronyms
 

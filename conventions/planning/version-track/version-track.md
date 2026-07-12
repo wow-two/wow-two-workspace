@@ -1,6 +1,6 @@
 # Version Track
 
-*Last updated: 2026-06-27*
+*Last updated: 2026-07-11*
 
 A per-version progress doc — the iterations and capabilities a product ships in one version.
 
@@ -28,6 +28,7 @@ A per-version progress doc — the iterations and capabilities a product ships i
 
 - must group `### Iteration {N} — {noun}` → `[ ]` tasks; the iteration name is its focus noun, no `: {goal}` clause
 - must write each task as a capability the version delivers — abstract, user-POV: `Ability to log in as a guest`, not `Mint a guest cookie`
+- may break a task into indented `- [ ]` **sub-steps** when the how needs itemizing — a sub-step is one concrete action (the *what* + *where*), never a paragraph
 - must open each task with the Type verb — `Ability to` / `Fix`; `Extract … → SDK` / `Adopt …`
 - must keep one capability per task on one line — no `— detail` clause; join closely-related with `and`, split unrelated
 - must follow the shared **Task form** — verb-first, one action per bullet, fewest words ([planning-conventions.md](../planning-conventions.md))
@@ -39,12 +40,17 @@ A per-version progress doc — the iterations and capabilities a product ships i
 
 - `⏳ Planned` → `🚧 In Progress` → `✅ Complete`
 - must open a version when planning it and close it when its tasks are done — set `Completed`, flip `Status`; one active at a time
+- must not advance to the next version until the current is `✅ Complete` **and** the developer explicitly says to proceed — never pre-declare, queue, or auto-begin the next version (in chat or in the plan); finish, report, and stop
+- must **verify completion with the developer** before marking a version / iteration complete — never self-declare it
+- may **drop a completed iteration's tasks + steps** once verified — keep the bare `### Iteration N — Name` heading; git holds the detail
 
 ## Rules
 
 - must write a transient plan at `engineering/planning/version-track/v{X.Y}/{iter-slug}.md` at iteration start (what + how), review before implementing, delete when done
 - must record green (build / test counts) only in the `Verification` iteration — never on a build iteration
 - must not put a status emoji on an iteration heading — the `[ ]` / `[x]` checkboxes carry done-state
+- must keep the iteration heading a **bare name** — just the focus noun; no trailing `(done)` / `(final)` / parenthetical / status / version tag
+- must not frame or report the work as *closing* / *finalizing* the version — report per iteration (*did X, Y; Z remaining*); a track is open-ended, extend it freely, never push it toward closure
 - must cover only this repo — another app's rollout lives in that app's version doc
 - must not keep a `## Log` — git is the history
 
