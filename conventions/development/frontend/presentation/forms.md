@@ -1,10 +1,26 @@
 # Forms
 
-*Last updated: 2026-07-11*
+*Last updated: 2026-07-13*
 
-> Form state, validation, and server-error wiring — every form runs on the `@wow-two-beta/ui` `/forms-engine` facade (`useAppForm`) composed
+> Form state, validation, server-error wiring, and the control catalog — every form runs on the `@wow-two-beta/ui` `/forms-engine` facade (`useAppForm`) composed
 > with the presentation `Field` chrome; supersedes hand-rolled `useState`-per-field forms. The engine architecture behind the facade
 > (contract · adapters · conformance): [../../swappable-modules.md](../../swappable-modules.md).
+
+## Entities
+
+The surface a form touches — all from `@wow-two-beta/ui/forms-engine` (engine-free) unless noted.
+
+| Entity | Kind | Role |
+|---|---|---|
+| `useAppForm` | hook | creates the form (`{ defaultValues, schema, onSubmit }`); imported from the app's pinned `@/form` |
+| `AppForm` · `AppFieldApi` · `AppFormState` | types | the form / field / state contract types |
+| `form.Field` | render-prop | binds one field; composes the presentation `Field` chrome |
+| `form.Subscribe` · `form.useFormState` | selector | slice-subscribe (`isSubmitting`, `submitError`, `isDirty`, …) |
+| `useFieldArray<TItem>` | hook | typed row collections (`rows`, `key`, `push`/`remove`/`move`) |
+| `StandardSchemaV1` | type | the validation seam (zod 4 default; valibot per-form swap) |
+| `{Model}Schema` · `empty{Model}` | app | the whole-form schema + init-values const, in `application/{domain}/` |
+| `*ApiRequest` / `*Dto` | app | the shape the form **produces** — bind `defaultValues` to it |
+| `ApiError` | type | thrown from `onSubmit`; drives auto field-error mapping (`foundation/http`) |
 
 ## Engine pin
 
@@ -76,6 +92,30 @@ const form = useAppForm({
   )}
 </form.Field>
 ```
+
+---
+
+## Controls
+
+All `presentation/forms` controls read `FormControlContext`, so inside `form.Field` they inherit id / aria / disabled / required wiring for free (§Field wiring). Import from `@wow-two-beta/ui/presentation/forms`; per-control detail lives in the SDK component catalog (`engineering/architecture/component-catalog.md` §presentation/forms). **74 controls**, by family:
+
+| Family | Controls |
+|---|---|
+| Field chrome | `Field` · `Fieldset` · `Legend` · `Label` · `LabeledInput` · `FormErrorMessage` · `FormHelperText` · `CharacterCount` · `PasswordStrength` · `InputGroup` · `InputAddon` |
+| Text | `TextInput` · `TextAreaInput` · `PasswordInput` · `EmailInput` · `UrlInput` · `TelInput` · `PhoneInput` · `SearchInput` · `MaskedInput` · `PinInput` · `Editable` |
+| Numeric | `NumberInput` · `CurrencyInput` · `PercentInput` · `Stepper` · `Knob` · `Slider` |
+| Selection | `Select` · `MultiSelect` · `Combobox` · `Listbox` · `ChoiceCard` |
+| Boolean & choice groups | `Checkbox` · `CheckboxField` · `CheckboxGroup` · `Radio` · `RadioField` · `RadioGroup` · `Switch` · `SwitchField` |
+| Date & time | `Calendar` · `RangeCalendar` · `DateField` · `DatePicker` · `DateRangePicker` · `DateTimeField` · `TimeField` · `TimePicker` · `RecurrenceEditor` · `CronInput` |
+| Color | `ColorArea` · `ColorField` · `ColorPicker` · `ColorSlider` · `ColorSwatch` · `ColorSwatchPicker` · `ColorWheel` · `GradientPicker` |
+| File | `FileUpload` · `FilePicker` |
+| Code & rich text | `CodeEditor` · `JSONEditor` · `MarkdownEditor` |
+| Specialized pickers | `EmojiPicker` · `EmojiSizeControl` · `IconPicker` · `FontPicker` · `KeyboardShortcutPicker` · `ReactionPicker` · `TagsInput` |
+| Composite / flow | `AddressForm` · `Wizard` · `ChatComposer` |
+
+- the `*Field` variants (`CheckboxField` · `RadioField` · `ColorField` · `SwitchField` · `DateField` · `TimeField`) pair a control with the `Field` chrome for the common labelled-single-control case; drop to the bare control inside `<Field>` when you need custom chrome
+- date & time controls speak `Temporal.PlainDate` / `PlainTime` (§Values and schema), never a native `Date`
+- `Wizard` drives multi-step forms — gate each step with `form.validate()` (§Validation timing), one form spanning the steps, not per-step mini-forms
 
 ---
 
