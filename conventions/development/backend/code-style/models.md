@@ -85,6 +85,17 @@ Per the starter table in [documentation.md](documentation.md):
 - **Results** — suffix with `Result` (`ChannelGetAllResult`)
 - **Query/Command** — suffix with `Query` / `Command` (`ChannelGetAllQuery`, `PipelineExecuteCommand`)
 
+## Introducing a model — the exclusive-members bar
+
+Reuse the model you have. A new type earns its place only by carrying **exclusive members** — data the existing model can't express. A type whose members are a **subset** of an existing one is a lean copy: it adds no information, and every field becomes a second place to change.
+
+- must not introduce a model whose members are a subset of an existing model — pass the existing type
+- must justify a new model by an **exclusive member**: a field the source lacks (a derived/resolved value, a precomputed order, a caller-supplied knob) — "fewer fields" / "a lighter shape" is not a justification
+- **serialization is a real reason, but only once real** — a lean shape to cache / put on a wire earns its keep when something actually caches or sends it; a projection built for a store nothing writes to is speculative, delete it and reintroduce it with the cache
+- prefer the **entity** on read paths that already load it; project only at a boundary that can't take the entity (the wire — that's a `Dto`; see § Naming)
+
+Counter-example (smart-qr, removed): `CodeRouteConfig` mirrored `CodeEntity` (`CodeId`·`IsActive`·`NeverExpires`·`ExpiresAt`·`Rules`) with no exclusive member — its `Slug`/`ScanCount` were dead in the resolver, and its stated reason (a Redis cache payload) never materialized: nothing wrote the key. The redirect resolves on `CodeEntity` instead. A routing model would have earned its place by carrying something the entity lacks — e.g. rules pre-ordered for the hot path.
+
 ## Polymorphic models
 
 A discriminated union over a `type` field — never hand-author the discriminator strings in `[JsonDerivedType]` attributes; they drift from the enum (`nameof` yields PascalCase, a typed value goes stale, casing slips — `vCard` vs `vcard`).

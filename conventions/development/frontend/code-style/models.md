@@ -20,7 +20,10 @@ Every client-side data model carries a **`*Dto`** suffix — it marks "a data sh
 - **list row** — `{Noun}RowDto` (`CodeRowDto`) · when a list projects a lighter shape than the full entity
 - **list query** — `{Noun}QueryDto` (`CodesQueryDto`) · the search + paging params a list read takes
 - **content variant** — `{Noun}Content` (`WifiContent`; union `CodeContent`) · `domain` — a discriminated-union member on a `type` field; **no `Dto`** (mirrors the backend; content names don't clash with enums)
-- **descriptor / catalog** — `{Noun}Descriptor` (`ContentTypeDescriptor`) + a `{noun}Catalog` collection · `domain` — config that *describes* a domain variant for the UI / dispatch (id + display + behavior flags); not a wire shape, so **no `*Dto`**. (`Descriptor`, not `Spec` — `Spec` collides with `*.spec` tests / behavior specs.)
+- **descriptor + catalog** — a declared variant-set's lookup / dispatch table · `domain`; not a wire shape → **no `*Dto`**:
+  - `{Noun}Descriptor` — **one entry**: a variant's identity + display + behavior (`ContentTypeDescriptor` = `{ id, label, mode }`)
+  - `{noun}Catalog` — the **exhaustive static list** of descriptors + a `{noun}(id)` lookup; lets the UI *enumerate* the set and *resolve a per-type fact without a switch*
+  - `Descriptor` not `Spec` (`.spec` / behavior-test collision); `Catalog` not `Registry` (implies runtime registration). File named after the descriptor, in the slice's `models/`
 
 - a **write** sends its `*Request`, never a form / entity Dto — the entity carries server-owned fields (id · slug · scanCount) a write must not.
 - a **read** returns its `*Dto` directly; `*Response` is reserved for a genuine wrapper (paging), never a plain entity read.
@@ -42,10 +45,10 @@ Every client-side data model carries a **`*Dto`** suffix — it marks "a data sh
 ## 3. Shape + doc
 
 - must use `interface` for an object shape; `type` only for a union / alias / enum value-set.
-- must open the type doc with **`Defines`** — one line.
+- must open the type doc with **`Represents`** for a data model (an interface that holds data) — one line; **`Defines`** only for an abstraction / contract / enum. (We have no classes; a data interface *represents* its data — mirrors [../backend/code-style/documentation.md](../../backend/code-style/documentation.md) + the frontend [documentation.md](documentation.md) verb table.)
 
 ```typescript
-/** Defines an issued invoice and its lifecycle status. */
+/** Represents an issued invoice and its lifecycle status. */
 export interface Invoice {
 ```
 
