@@ -1,6 +1,6 @@
 # Validation
 
-*Last updated: 2026-06-20*
+*Last updated: 2026-07-17*
 
 Input validation runs through the SDK `IValidator<T>` seam, backed by FluentValidation and assembly-scanned at startup.
 
@@ -62,7 +62,7 @@ What the extension wires (in `ValidationServiceCollectionExtensions`):
 - `AddValidatorsFromAssembly(..., includeInternalTypes: true)` — registers each `AbstractValidator<T>` as `FluentValidation.IValidator<T>`.
 - `TryAddTransient(typeof(IValidator<>), typeof(FluentValidationAdapter<>))` — binds the **SDK** `IValidator<T>` to `FluentValidationAdapter<T>`, which fans out over the registered `FluentValidation.IValidator<T>[]`.
 
-Consumers depend only on the SDK `WoW.Two.Sdk.Backend.Beta.Validation.IValidator<T>` — the FluentValidation type stays an implementation detail behind the adapter.
+Consumers depend only on the SDK `IValidator<T>` (`src/Foundation/Validation/`) — the FluentValidation type stays an implementation detail behind the adapter.
 
 ## Consume
 
@@ -96,6 +96,20 @@ A `ValidationError` is an `AppError` (`Type = Validation`) → `400` with an `er
 - Validators produce structured, HTTP-mappable `ValidationError`s for caller-supplied input.
 
 Do not run boundary input through `Guard.Against`, and do not model argument preconditions as `AbstractValidator<T>`.
+
+---
+
+## Open
+
+Unresolved — this convention does not yet rule on either. Do not infer a rule from silence.
+
+- **two-layer validation (presentation + persistence/infra)** — one validation pass at the representation boundary, a second before the write. Closes two gaps a single boundary pass
+  leaves open: input validated at presentation then mutated internally and persisted unvalidated; input that never crossed presentation (a job, a consumer, a seeder) reaching infra
+  unvalidated. Open: where the second pass binds (entity vs command), how error paths stay wire-shaped, and whether the two share rules.
+- **caller-selected validation scope** — `AddMediatorValidationBehavior()` is generic and calls `ValidateAndThrow(T)`; the SDK `IValidator<T>` exposes no
+  `Action<ValidationStrategy<T>>` overload, so FluentValidation **RuleSets are unreachable through the pipeline**. Blocks any scenario-scoped validation (`OnCreate` / `OnUpdate`,
+  per-discriminator rules). Needs a whole-feature analysis before a rule lands; adopting rulesets requires an SDK change (strategy overload on `IValidator<T>` +
+  `FluentValidationAdapter<T>`). Traced in `smart-qr-poc/engineering/planning/validation.md`.
 
 ## See also
 
