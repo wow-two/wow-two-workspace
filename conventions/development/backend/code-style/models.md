@@ -89,10 +89,17 @@ Per the starter table in [documentation.md](documentation.md):
 
 Reuse the model you have. A new type earns its place only by carrying **exclusive members** — data the existing model can't express. A type whose members are a **subset** of an existing one is a lean copy: it adds no information, and every field becomes a second place to change.
 
-- must not introduce a model whose members are a subset of an existing model — pass the existing type
+- must not introduce a model whose members are a subset of an existing model — pass the existing type — **unless the existing model can't fill that role**
+- the bar targets a **second representation of the same instance** — a projection / lean copy that exists *instead of* the source at another boundary
+- **role-distinct types are exempt**: siblings in a discriminated union co-exist *alongside* each other in one collection, as different things, not one thing twice
+- the subset relation is then accidental; the discriminator is the load-bearing member
+- test: could the existing type carry this instance? subset + **yes** → lean copy, delete it. subset + **no** → distinct role, keep it
+- forcing the reuse would add nullable members that only exist to be absent — a signal the roles differ (e.g. a default rule needs no `Order` / `Condition`)
 - must justify a new model by an **exclusive member**: a field the source lacks (a derived/resolved value, a precomputed order, a caller-supplied knob) — "fewer fields" / "a lighter shape" is not a justification
 - **serialization is a real reason, but only once real** — a lean shape to cache / put on a wire earns its keep when something actually caches or sends it; a projection built for a store nothing writes to is speculative, delete it and reintroduce it with the cache
 - prefer the **entity** on read paths that already load it; project only at a boundary that can't take the entity (the wire — that's a `Dto`; see § Naming)
+
+Exempt example (smart-qr): `DefaultRule { Content }` is a strict subset of `ConditionalRule { Order, Condition, ConditionValue?, Content }`, and stays. They're siblings in the `CodeRule` union — a code holds both at once, so neither can carry the other's instance. Reusing `ConditionalRule` for a default would force `Order` and `Condition` nullable on a rule that is never matched and never ordered.
 
 Counter-example (smart-qr, removed): `CodeRouteConfig` mirrored `CodeEntity` (`CodeId`·`IsActive`·`NeverExpires`·`ExpiresAt`·`Rules`) with no exclusive member — its `Slug`/`ScanCount` were dead in the resolver, and its stated reason (a Redis cache payload) never materialized: nothing wrote the key. The redirect resolves on `CodeEntity` instead. A routing model would have earned its place by carrying something the entity lacks — e.g. rules pre-ordered for the hot path.
 

@@ -1,4 +1,4 @@
-> Last Updated: 2026-07-16 (GMT+5)
+> Last Updated: 2026-07-18 (GMT+5)
 
 # Response Style
 
@@ -33,6 +33,10 @@
 - must keep a truth-changing qualifier on the claim's own line -- `works` + 6 lines later `only tested on net8.0` -> `works -- verified net8.0 only`
 - should pad a counter-expectation claim with 1 confirming clause -- terse + surprising reads as a typo: `cold start slower after the fix -- direction real, 1.2 -> 2.1s`
 - must not bold inside bullets -- <=1 bold verdict phrase per section, or none
+- must cap a bullet at **~15 words / 1 clause** -- over that, split or cut. The hard ceiling the other Atoms rules assume but never state
+- must not append an em-dash appositive that restates the clause before it -- `ids are stable; orders are not` after already saying ids don't drift. Keep an em-dash that adds a NEW fact (`grepped 2 repos -- neither references it`)
+- must not narrate own reasoning quality -- `I asserted safety I hadn't earned`, `my claim was wrong because`, `the difference matters`. State the corrected fact; drop the post-mortem
+- must shape a fork as claim -> 1 bullet per option -> the pick -- never a prose paragraph. The claim leads, each option gets its own bullet, the recommendation closes
 
 ---
 
@@ -137,6 +141,7 @@
 | numbered steps | sequential actions, references like `#3 in parallel with #4` |
 | arrows | navigation chains, transformations, before -> after -- `GitHub → wow-two-sdk → Actions → workflow → run` replaces 3-4 sentences |
 | code fences | multi-line code / config / commands; single-line -> backticks |
+| option bullets + closing verdict | forks / recommendations -- 1 option per bullet, the pick last |
 | `###` per item + `---` between | multiple comments / findings / options -- one header each |
 
 ---
