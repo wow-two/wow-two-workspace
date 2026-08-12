@@ -1,21 +1,43 @@
 #!/bin/bash
-# UserPromptSubmit hook: short style line every turn, FULL response-style.md every Nth turn.
-# Counters long-session attention fade: the per-turn line keeps recency, the periodic
+# UserPromptSubmit hook: short style pulse every turn, FULL response-style.md every Nth turn.
+# Counters long-session attention fade: the per-turn pulse keeps recency, the periodic
 # full reinject restores the complete ruleset into recent context.
-N=10
+#
+# HARD RULE -- NO QUOTED PROSE IN THIS FILE.
+# The injected text lives in .claude/hooks/style-pulse.md and is emitted with `cat`.
+# Reason: an apostrophe inside an inline `echo '...'` ends the quote -> bash parse error
+# -> exit 2, and UserPromptSubmit treats exit 2 as "block the prompt AND erase it".
+# Edit the .md, never inline the text back into this script.
 
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+N=10   # full-ruleset reinject every Nth turn; N=0 disables it (pulse only)
+
+# Never exit non-zero: UserPromptSubmit treats exit 2 as "block AND erase the prompt".
+# Failure is reported as a loud stdout line instead -- silence would hide a dead hook.
+cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || {
+  printf 'STYLE HOOK BROKEN: cannot cd to "%s" -- style enforcement OFF this turn.\n' "${CLAUDE_PROJECT_DIR:-.}"
+  exit 0
+}
 
 input=$(cat)
 sid=$(printf '%s' "$input" | sed -n 's/.*"session_id"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
 sid=${sid:-global}
-f="${TMPDIR:-/tmp}/claude-style-turns-${sid}"
-n=$(( $(cat "$f" 2>/dev/null || echo 0) + 1 ))
-printf '%s' "$n" > "$f"
 
-if [ $(( n % N )) -eq 0 ] && [ -f .claude/rules/response-style.md ]; then
-  echo "STYLE RECHARGE (turn $n -- full ruleset, re-read and apply):"
-  cat .claude/rules/response-style.md
+f="${TMPDIR:-/tmp}/claude-style-turns-${sid}"
+n=$(cat "$f" 2>/dev/null)
+case "$n" in ''|*[!0-9]*) n=0 ;; esac
+n=$((n + 1))
+printf '%s' "$n" > "$f" 2>/dev/null
+
+full=.claude/rules/response-style.md
+pulse=.claude/hooks/style-pulse.md
+
+if [ "$N" -gt 0 ] && [ $((n % N)) -eq 0 ] && [ -f "$full" ]; then
+  printf 'STYLE RECHARGE (turn %s -- full ruleset, re-read and apply):\n' "$n"
+  cat "$full"
+elif [ -f "$pulse" ]; then
+  cat "$pulse"
 else
-  echo 'STYLE (enforce): verdict = line 1. Findings / analysis / progress -> bullet atoms: 1 claim per line, MAX ~15 words / 1 clause per bullet -- over that, split or cut. No em-dash appositive that restates the clause before it. No narrating own reasoning quality ("my claim was wrong because", "I asserted X I hadn'"'"'t earned") -- state the corrected fact only. Front-load the keyword, split "and" chains, compact each bullet (drop linkers / given subjects / motive windups), no pre-action narration, <=1 bold per section. Prose only for <=2-sentence conversational answers. Backtick every identifier. No agreement openers, praise inflation ("brilliant"), headline labels ("Bottom line:"), importance superlatives ("the most important..."), good/bad-news framing, minimizers ("just"), hedge stacks, unverified completion claims ("should now work"). A reply with >=2 sections -> a ### header per section AND a --- rule between; 1 topic -> tight bullets, no header. Close <=1 line, 1 question max. Expand only when asked.'
+  printf 'STYLE HOOK BROKEN: no "%s" under "%s" -- style enforcement OFF this turn.\n' "$pulse" "$PWD"
 fi
+
+exit 0

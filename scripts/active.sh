@@ -36,6 +36,7 @@ DELAY="${DELAY:-0.4}"
 #   backend  = .sln/.slnx path relative to workbench/, or '-' if none
 #   frontend = folder (with package.json) relative to workbench/, or '-' if none
 PROJECTS=(
+  "tbs|ventures/track-2-transportbrain/engineering/codebase/tbs.backend-services/tbs.backend-services.slnx|ventures/track-2-transportbrain/engineering/codebase/tbs.frontend-services"
   "drydock|wow-two-platform/wow-two-platform.drydock/engineering/codebase/drydock.backend-services/Drydock.slnx|wow-two-platform/wow-two-platform.drydock/engineering/codebase/drydock.frontend-services"
   "secrets-vault|wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.backend-services/Wow-Two-Platform.Secrets-Vault.sln|wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.frontend-services"
   "smart-qr|ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/smartqr.backend-services.slnx|ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services"
@@ -43,11 +44,13 @@ PROJECTS=(
   "acquisition-explorer|-|ventures/acquisition-explorer-poc/platform/acquisition-explorer-frontend"
   "transcript-forge|ventures/10x-ventures-transcript-forge/engineering/codebase/transcript-forge.backend-services/transcript-forge.backend-services.slnx|ventures/10x-ventures-transcript-forge/engineering/codebase/transcript-forge.frontend-services"
   "pdf-editor|ventures/pdf-editor/platform/pdf-editor.backend-services/PdfEditor.BackendServices.sln|-"
-  "backend-beta|wow-two-sdk-beta/wow-two-sdk.backend.beta/src/WoW.Two.Sdk.Backend.Beta.slnx|-"
+  "backend-beta|wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/WoW.Two.Sdk.Backend.Beta.slnx|-"
   "frontend-beta|-|wow-two-sdk-beta/wow-two-sdk-beta.ui/engineering/codebase/wow-two-front-beta-sdk"
   "sift|ventures/sift/engineering/codebase/sift.backend-services/Sift.sln|ventures/sift/engineering/codebase/sift.frontend-services"
   "prism|-|ventures/10x-ventures-prism/engineering/codebase/prism.frontend-services"
   "arcade|ventures/ventures.arcade/engineering/codebase/arcade.backend-services/Arcade.sln|ventures/ventures.arcade/engineering/codebase/arcade.frontend-services"
+  "museums-gallery|ventures/ventures.museums-gallery/engineering/codebase/museums-gallery.backend-services/MuseumsGallery.sln|ventures/ventures.museums-gallery/engineering/codebase/museums-gallery.frontend-services"
+  "tnis|ventures/ventures.tnis/engineering/codebase/tnis.backend-services/tnis.backend-services.slnx|ventures/ventures.tnis/engineering/codebase/tnis.frontend-services"
 )
 
 MODE="both"     # both | backend | frontend

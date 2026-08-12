@@ -95,7 +95,7 @@ workbench/wow-two-sdk/wow-two-sdk.language.core/CLAUDE.md   ← repo-specific ov
 | [`wow-two-refinement.md`](docs/wow-two-refinement.md) | Vision, roadmap, current phase, task list |
 | [`branching-strategy.md`](docs/branching-strategy.md) | Trunk-based dev/main flow, CI publish channels |
 | [`versioning-strategy.md`](docs/versioning-strategy.md) | .NET-aligned versioning, pre-release suffixes |
-| [`.claude/rules/repo-registry.md`](.claude/rules/repo-registry.md) | Full index of all repos by org, purpose, and status |
+| [`.claude/repo-registry.md`](.claude/repo-registry.md) | Full index of all repos by org, purpose, and status |
 
 ## Tech stack
 

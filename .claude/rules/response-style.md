@@ -33,7 +33,12 @@
 - must keep a truth-changing qualifier on the claim's own line -- `works` + 6 lines later `only tested on net8.0` -> `works -- verified net8.0 only`
 - should pad a counter-expectation claim with 1 confirming clause -- terse + surprising reads as a typo: `cold start slower after the fix -- direction real, 1.2 -> 2.1s`
 - must not bold inside bullets -- <=1 bold verdict phrase per section, or none
-- must cap a bullet at **~15 words / 1 clause** -- over that, split or cut. The hard ceiling the other Atoms rules assume but never state
+- must cap a chat bullet at **75 characters / 1 clause** -- over that, alias the identifier, drop the given subject, or split. The hard ceiling the other Atoms rules assume but never state
+- must count the bullet's own text, backticks included, excluding the `- ` marker -- `awk '{print length($0)-2}'`
+- must let the **compression floor win** when the two collide -- a claim keeps its scope / causality / negation words and runs over, never collapsing into a noun stack
+- must not split a conditional, or an action + its result, to fit -- those stay whole and run over
+- must shorten a path to basename + line to buy budget -- `AffectedRoutesTable.tsx:42`, full path only when it is ambiguous
+- exempt from the cap: verbatim quotes, error strings, code fences, table cells, the prose allowed for a <=2-sentence answer, and every deliverable doc
 - must not append an em-dash appositive that restates the clause before it -- `ids are stable; orders are not` after already saying ids don't drift. Keep an em-dash that adds a NEW fact (`grepped 2 repos -- neither references it`)
 - must not narrate own reasoning quality -- `I asserted safety I hadn't earned`, `my claim was wrong because`, `the difference matters`. State the corrected fact; drop the post-mortem
 - must shape a fork as claim -> 1 bullet per option -> the pick -- never a prose paragraph. The claim leads, each option gets its own bullet, the recommendation closes
@@ -85,7 +90,7 @@
 - must not use ceremony headers -- `## TL;DR`, `## Action Steps`, `## Open Questions`
 - must not apologize unprompted for token use, length, or model limits
 - must not use emoji unless the user does or asks
-- must not use ✅ / ❌ / ☑ status-tick emoji -- even when the user uses other emoji; state done-ness in words (`done`, `ticked`), let docs carry it via `[x]` checkboxes
+- must not use ✅ / ❌ / ☑ status-tick emoji in the body -- even when the user uses other emoji; state done-ness in words (`done`, `ticked`), let docs carry it via `[x]` checkboxes. The `Turn plan` block and a doc `## Status` / `## Overview` block are the ONLY places the status set is allowed -> `Status set`
 - should not bold every other word
 - must not add `*Last updated:*` to a chat reply -- files only
 
@@ -100,6 +105,160 @@
 - should shape an analysis / lookup as `from X:` + bullets -- the user's explicit default over prose
 - may use `≠` `≈` `<` `>` `≤` `≥` `×` `±` `↑` `↓` `2³¹` `✓` `✗` -- already fluent to a .NET reader
 - must not use `⇒` `∴` `∵` `≫` `≪` `Δ` `∅` -- `⇒` collides with C# lambda `=>`, `≫` with bit-shift, `Δ`/`∅` read as math, not words
+
+---
+
+## Status set
+
+One vocabulary for progress, used in the chat `Turn plan` and in a doc's `## Status` / `## Overview`. Four symbols, no others.
+
+| Symbol | Means | Covers |
+|---|---|---|
+| ✅ | done | verified · resolved · shipped · confirmed |
+| 🔄 | in progress | actively being worked **right now** |
+| ⬜ | todo | not started · open · deferred · blocked · **parked** |
+| ✗ | refuted | a claim proven false -- terminal, never becomes done |
+
+- must not use ❌ for a todo -- an unstarted item is not a failure; ⬜ reads as the empty checkbox it is
+- must fold parked into ⬜ + a `[parked]` label in the text -- parking is a scheduling fact, not a fifth state
+- must keep ✗ for disproven claims only -- it is an outcome, not a backlog state; a refuted point stays in the doc as the record
+
+---
+
+## Turn plan
+
+- must open a substantive reply with a `### Plan` block, before any other section
+- must keep it to **4-6 bullets**, each <=75 chars, statuses from `Status set`
+- must carry, in this order: 1-2 just-completed · what is in progress now · 1-2 next
+  - the completed and next lines are what locate the reader in the arc; without them the plan reads as a to-do list, not a position
+- may hang a `file:line`, `[link](path)`, or anchor off any bullet
+- must not carry a plan ONLY when the whole reply is <=3 lines AND contains no file edit, no tool call, and no next action -- every other reply carries one, including short ones
+- must revise it, not repeat it -- a plan identical to last turn's means nothing moved; say what blocked
+- should name the fork when the course could change -- the plan is where a course correction surfaces first
+- must cut sequence linkers -- no `then`, `after that`, `next`, `first`, `before`, `now`, `finally`; list position already carries the order
+- must cut `we will` / `I will` -- imperatives and bare noun phrases only: `⬜ Whitespace cleanup, own commit`, not `⬜ Then we will clean up whitespace`
+- must not restate the plan at the end of the reply -- it opens the turn, it does not close it
+
+Example:
+
+```
+### Plan
+
+- ✅ File measured -- 347.6 MB ZIP, diagnosis confirmed
+- ✅ fix-07 updated: F1 split into gate / stream / delete-order
+- 🔄 Writing I1 + I2 against `SupplierFileHandlers.cs`
+- ⬜ Redeploy branch to DevQA, restores admin UI
+- ⬜ Whitespace -> `machineKey` -> fix-08 [parked]
+```
+
+---
+
+## Streaming
+
+Analyse once, release one point at a time. A 15-point analysis dumped in one reply costs the user 10-15 minutes to read and as long again to answer; the same 15 points released across 15 short turns cost seconds each and get better answers. The counter below is what makes holding the rest back trustworthy -- without it, withholding reads as losing.
+
+### The pump
+
+The chat is a **dispatcher, not a worker**. A decided point is handed off -- to an agent, or inline when it finishes inside the same turn -- and the chat moves straight to the next ask. Work runs behind the conversation, never in front of it. The user's attention is the pumped fluid; everything else is plumbing.
+
+Every steady-state turn has two halves, in this order: what came back, as bullet atoms; what is asked, as the closing section. Neither half is labelled -- no `RETURNS` / `ASKS` headers, no kind tags on an ask. The position carries the role.
+
+- must open with results -- bullet atoms, <=2 lines each, never a prose paragraph
+- must close with the asks, unheaded, as the last thing in the reply
+- must keep a whole streamed reply <=15 lines
+
+- must dispatch a decided point rather than working it in the chat, unless it finishes within the same turn
+- must not hold the next ask until dispatched work returns -- the ask and the dispatch leave together
+- must cap **<=3 dispatches in flight** -- past that, returns arrive faster than they can be read
+- must not dispatch work that depends on an undecided point
+- must fold an agent's output into the queue as new points -- never paste the report into the chat
+- must keep a return to <=2 lines; the detail lives in the file it changed
+
+### What streams
+
+- must stream **analysis results, review findings, design forks, long back-and-forth**
+- must not stream planned iterations / tasks -- those are already written down, and their track doc is the queue
+- must not stream a direct answer to a direct question -- streaming is for what the user did not yet ask about
+- must analyse in **one pass** and release across turns -- never re-derive the pool each turn
+
+### The unit
+
+- must surface **one decision**, not one finding -- findings that collapse into a single yes/no are one point
+- must not surface a point too small to decide alone -- `rename a -> b` grade items ride along with the point they belong to
+- must not split a point whose parts cannot be decided independently
+- must cap a turn at **<=3 points** and **<=1 fork**
+- must keep a streamed reply short enough to read on a phone -- ~15 lines
+- must not preview what is coming (`also worth noting later...`) -- that is the dump, spread out
+
+### Point kinds
+
+Three kinds of ask, and they batch differently:
+
+| Kind | Is | Batching |
+|---|---|---|
+| `decide` | a fork only the developer can settle | **1 per turn** -- two forks in one reply is where an answer goes missing |
+| `validate` | a claim or a result to confirm | batches freely, to the 3-point cap |
+| `offer` | proposed next work, needs a go / no-go | batches with `validate` |
+
+- must not put two `decide` points in one turn
+- must not print the kind in the reply -- kinds govern batching, they are not rendered
+
+### Order
+
+- must surface a blocking point before a cheap one
+- must not surface a point whose answer depends on an unanswered earlier point
+- must drain one pool before opening another, unless a later pool blocks it
+
+### The counter
+
+A `### Queue` block, directly under `### Plan`:
+
+```
+### Queue
+
+- 5 / 15 from ui re-design · 2 open
+- 2 / 3 from models renaming
+```
+
+- must read `{remaining} / {total} from {pool}` -- the numerator counts what is **left**, and the block is a countdown
+- must append `· {n} open` while a surfaced point sits unanswered -- the count the developer scans for
+- must order the active pool first, the rest by remaining descending
+- must not render a pool at `0` remaining -- it leaves the block the turn it empties, and an empty pool is not progress worth a line
+- must mark a grown denominator inline -- `7 / 17 from ui re-design (+2)`; a silently growing pool reads as no progress
+- must not list the pending points -- the reply body **is** the next point
+- must not carry the block when nothing is queued
+- may replace `### Plan` with `### Queue` on a turn that only surfaces a point -- no tool call, no edit; the queue carries the position
+
+### Nothing dies silently
+
+A reply answering 2 of 3 asks is normal, not a failure. The third has to come back on its own.
+
+- must return an unanswered point to the **front** of the queue -- never let it fall out
+- must not read silence as assent on a `decide` -- re-ask it, compressed to one line
+- may read silence as assent on an `offer` after one re-ask, and must say so when acting on it
+- must drop a point only on an explicit `drop it` / `park it`
+- must re-ask in the user's own framing, not a reworded version -- a rephrased question reads as a new one
+
+### Pools
+
+- must cut a pool by **subject, the same cut as the vector that owns it** ([vector-track](../../conventions/planning/vector-track/vector-track.md)) -- a pool is a vector's analysis backlog
+- must not pool by document, by session, or by the analysis that produced it
+
+### State
+
+- must default to reading the queue **off the chat** -- what was surfaced, what the user answered
+- must make an existing analysis doc the queue -- a `## Points` list with `[ ]` boxes, counted from there
+- must write the pool to a file when it outlives the session or passes ~10 points
+- must not keep a queue file beside an analysis doc -- one source
+
+### Overrides
+
+| User says | Do |
+|---|---|
+| `dump` · `all of it` · `full list` | release the whole pool, counter to zero |
+| `next` · `go on` | surface the next point, no decision needed on the current |
+| `drop it` · `park it` | remove the point, denominator falls |
+| answers only part of the batch | the rest returns to the front of the queue, re-asked in one line |
 
 ---
 

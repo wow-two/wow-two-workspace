@@ -5,7 +5,8 @@ Full-stack .NET + React developer ecosystem. `wow-two-ws` is a meta-repo (worksp
 ## Lazy loading
 
 - Don't pre-read or scan at startup — open a file only when the task needs it; read the minimum.
-- `.claude/rules/repo-registry.md` and `conventions/conventions.md` are lookup tables, not reading lists.
+- `.claude/repo-registry.md` and `conventions/conventions.md` are lookup tables, not reading lists.
+- `.claude/rules/` is an **auto-load directory** — every `.md` in it enters context each session, so a lookup table never goes there; indexes live one level up in `.claude/`.
 
 ## Response style
 
@@ -13,11 +14,13 @@ Full-stack .NET + React developer ecosystem. `wow-two-ws` is a meta-repo (worksp
 
 Most-violated cuts (enforce hard; full list lives in that file):
 
+- **Open a substantive reply with a `### Plan` block** — 4–6 bullets, statuses from the `Status set` (`✅ 🔄 ⬜ ✗`). Revise it each turn, never restate it at the end.
 - **No self-narration — pre OR post-action.** Pre: "Let me check…", "I'll search…". Post: "Searched the registry:", "Checked the doc:". Both shapes cut — just give the result.
 - **Compact format for analyses / lookups** — `from X:` + bullets over prose.
 - **No scaffolding openers / closing recap.** "Looked through…", "So to summarize…" → delete.
 - **Imperatives over first-person.** "I'll bump the version" → `Directory.Packages.props:12 → 2.0.0`.
 - **Multiple items** (comments / findings / options) → one `###` header each + `---` between groups.
+- **Stream analysis, never dump it.** ≤3 points + ≤1 fork per turn; a `### Queue` block under the plan carries `{remaining} / {total} from {pool}`, a countdown that never renders a pool at `0`. Planned iterations never queue — their track doc is the queue.
 
 A reply violating any of these is a style miss regardless of correctness.
 
@@ -29,17 +32,18 @@ A reply violating any of these is a style miss regardless of correctness.
 ## SDK doctrine — build the whole vector
 
 - The SDK's main frame: a product's need is the **trigger** to build a vector, **not** its scope. Ship the essential slice for that product, then **complete the whole vector** in a dedicated pass — inventory every capability, build to completeness — so the *next* product finds it already there. A known domain (forms, validation, auth, tables) is built proactively; the real cost is integration, paid once in the SDK. Full rule: `conventions/development/dev-cycle.md` § *Vector completeness*. Applies to both the backend and frontend SDKs.
+- **The SDK is ours, and breaking it is cheap.** A product blocked on a missing or wrong SDK API fixes the SDK rather than working around it in the product — add the export, correct the type, widen the prop. Both SDKs are beta-forever; the developer publishes and the consumer re-pins. A workaround in a product is the more expensive outcome, because it hides the gap from every later consumer.
 
 ## Layout
 
 ```
-CLAUDE.md · .claude/rules/ (response-style · repo-registry · behavior-rules · templates/) · conventions/ (how we build)
+CLAUDE.md · .claude/repo-registry.md (lazy index) · .claude/rules/ (auto-load: response-style · behavior-rules · templates/) · conventions/ (how we build)
 docs/ (strategy, playbooks) · system/sessions/ · ideas/ · scripts/ · workbench/ (all repos, gitignored)
 ```
 
 ## Orgs & repos
 
-- 7 orgs, folder = org name: `wow-two` (core) · `-meta` (off-ecosystem) · `-platform` (infra) · `-sdk` (public libs) · `-sdk-beta` (beta libs) · `-kb` (knowledge base) · `-apps` (products). Full index: `.claude/rules/repo-registry.md`.
+- 7 orgs, folder = org name: `wow-two` (core) · `-meta` (off-ecosystem) · `-platform` (infra) · `-sdk` (public libs) · `-sdk-beta` (beta libs) · `-kb` (knowledge base) · `-apps` (products). Full index: `.claude/repo-registry.md`.
 
 ## Sessions
 

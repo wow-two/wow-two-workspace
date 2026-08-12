@@ -4,84 +4,222 @@
     {
       "name": "airfryer-3d",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4173", "--directory", "workbench/labs/airfryer-3d"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4173",
+        "--directory",
+        "workbench/labs/airfryer-3d"
+      ],
       "port": 4173
     },
     {
       "name": "prism",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "workbench/ventures/10x-ventures-prism/engineering/codebase/prism.frontend-services"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "workbench/ventures/10x-ventures-prism/engineering/codebase/prism.frontend-services"
+      ],
       "port": 5180
     },
     {
       "name": "smart-qr",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services", "dev", "--port", "7025", "--strictPort"],
-      "env": { "VITE_HTTPS": "false" },
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services",
+        "dev",
+        "--port",
+        "7025",
+        "--strictPort"
+      ],
+      "env": {
+        "VITE_HTTPS": "false"
+      },
       "port": 7025
     },
     {
       "name": "smart-qr-http",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services", "dev", "--port", "7026", "--strictPort"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.frontend-services",
+        "dev",
+        "--port",
+        "7026",
+        "--strictPort"
+      ],
       "port": 7026,
-      "env": { "VITE_HTTPS": "false" }
+      "env": {
+        "VITE_HTTPS": "false"
+      }
     },
     {
       "name": "smart-qr-static",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4180", "--directory", "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/SmartQr.Api/wwwroot"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4180",
+        "--directory",
+        "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/SmartQr.Api/wwwroot"
+      ],
       "port": 4180
     },
     {
       "name": "smart-qr-api",
       "runtimeExecutable": "dotnet",
-      "runtimeArgs": ["run", "--no-build", "--project", "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/SmartQr.Api/SmartQr.Api.csproj", "--launch-profile", "https"],
+      "runtimeArgs": [
+        "run",
+        "--no-build",
+        "--project",
+        "workbench/ventures/smart-qr-poc/engineering/codebase/smartqr.backend-services/SmartQr.Api/SmartQr.Api.csproj",
+        "--launch-profile",
+        "https"
+      ],
       "port": 7020
     },
     {
       "name": "ui-showcase",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/apps/showcase", "dev"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/apps/showcase",
+        "dev"
+      ],
       "port": 5174,
       "autoPort": true
     },
     {
       "name": "ui-theme-studio",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/apps/theme-studio", "dev"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/apps/theme-studio",
+        "dev"
+      ],
       "port": 5175,
       "autoPort": true
     },
     {
       "name": "secrets-vault",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "workbench/wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.frontend-services"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "workbench/wow-two-platform/wow-two-platform.secrets-vault/engineering/codebase/secrets-vault.frontend-services"
+      ],
       "port": 5173
     },
     {
       "name": "whiteout",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/whiteout/engineering/codebase/whiteout.frontend-services", "dev"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/whiteout/engineering/codebase/whiteout.frontend-services",
+        "dev"
+      ],
       "port": 5181
     },
     {
       "name": "whiteout-2",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/whiteout/engineering/codebase/whiteout.frontend-services", "dev", "--port", "5188"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/whiteout/engineering/codebase/whiteout.frontend-services",
+        "dev",
+        "--port",
+        "5188"
+      ],
       "port": 5188
     },
     {
       "name": "whiteout-zone-builder",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/whiteout/engineering/codebase/whiteout-zone-builder.frontend-services", "dev"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/whiteout/engineering/codebase/whiteout-zone-builder.frontend-services",
+        "dev"
+      ],
       "port": 5182
     },
     {
       "name": "transcript-forge",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["-C", "workbench/ventures/10x-ventures-transcript-forge/engineering/codebase/transcript-forge.frontend-services", "dev", "--port", "8237", "--strictPort"],
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/10x-ventures-transcript-forge/engineering/codebase/transcript-forge.frontend-services",
+        "dev",
+        "--port",
+        "8237",
+        "--strictPort"
+      ],
       "port": 8237
+    },
+    {
+      "name": "museums-gallery",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "workbench/ventures/ventures.museums-gallery/engineering/codebase/museums-gallery.frontend-services"
+      ],
+      "env": {
+        "VITE_HTTPS": "false"
+      },
+      "port": 8229
+    },
+    {
+      "name": "tnis-studio",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/ventures.tnis/engineering/codebase/tnis.frontend-services/apps/studio",
+        "dev",
+        "--port",
+        "8240",
+        "--strictPort"
+      ],
+      "port": 8240
+    },
+    {
+      "name": "tnis-showcase",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "-C",
+        "workbench/ventures/ventures.tnis/engineering/codebase/tnis.frontend-services/apps/showcase",
+        "dev",
+        "--port",
+        "8244",
+        "--strictPort"
+      ],
+      "port": 8244
+    },
+    {
+      "name": "tbs-studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "workbench/ventures/track-2-transportbrain/engineering/codebase/tbs.frontend-services",
+        "run",
+        "dev:studio"
+      ],
+      "port": 8249
+    },
+    {
+      "name": "tbs-demo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "workbench/ventures/tbs.demo/engineering/codebase/frontend-services/demo",
+        "run",
+        "dev"
+      ],
+      "port": 8248
     }
   ]
 }

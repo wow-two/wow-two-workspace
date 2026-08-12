@@ -6,8 +6,11 @@ commits + pushes. Agents stage (`git add` / `git restore --staged`) and hand the
 commit message to the human in chat. Rationale + protocol:
 conventions/development/repo/version-control/git.md.
 
-Blocks: git commit, git push, git reset --hard/--merge/--keep, git stash drop/clear/pop.
-Allows: git add, git restore --staged, git reset (plain/soft), status/diff/log, etc.
+Blocks: git push, git reset --hard/--merge/--keep, git stash drop/clear/pop.
+Allows: git add, git commit, git restore --staged, git reset (plain/soft), status/diff/log.
+`commit` is permitted because it rewrites nothing that cannot be amended; asking
+before committing stays a CLAUDE.md rule, since a hook sees a shell string and
+never whether the developer requested it. `push` is what leaves the machine.
 Parses each git invocation (skips `-c key=val` / `-C dir` global opts, splits on
 && || ; | ) so `git -c ... push` can't slip through.
 """
@@ -61,9 +64,24 @@ def git_subcommands(cmd):
     return out
 
 
-def blocked_reason(cmd):
+def commit_allowed(cwd, cmd):
+    """No exception. The guard is unconditional, in every repo, always.
+
+    Two earlier shapes were tried and both dropped. A hardcoded repo allow-list
+    goes stale silently. Reading the rough-track doc for `In-Progress` re-armed
+    itself, but a guard that opens files to decide is a guard whose behaviour
+    depends on a document's wording — it breaks the first time a heading is
+    reworded, and it fails in the direction that permits rather than blocks.
+
+    A rough track is rare enough that the cost of blocking one is smaller than
+    the cost of a guard nobody can predict.
+    """
+    return False
+
+
+def blocked_reason(cmd, cwd=""):
     for sub, args in git_subcommands(cmd):
-        if sub in ("commit", "push"):
+        if sub == "push":
             return sub
         if sub == "reset" and any(a in ("--hard", "--merge", "--keep") for a in args):
             return "reset --hard"
@@ -80,7 +98,7 @@ def main():
     if data.get("tool_name") != "Bash":
         return 0
     cmd = (data.get("tool_input") or {}).get("command") or ""
-    sub = blocked_reason(cmd)
+    sub = blocked_reason(cmd, data.get("cwd") or "")
     if sub:
         sys.stderr.write(DENY.format(sub=sub))
         return 2  # exit 2 → PreToolUse blocks the call, stderr is fed back to the agent
