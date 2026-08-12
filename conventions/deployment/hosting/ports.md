@@ -1,6 +1,6 @@
 # Port Ledger
 
-*Last updated: 2026-06-19*
+*Last updated: 2026-07-31*
 
 > Single source of truth for allocated dev ports — **check here before picking one** to avoid collisions.
 > Backend rule: a **single `https` profile** binds two ports per service — **HTTPS on the even port, HTTP on the adjacent odd port** (`even`, `even + 1`); TLS terminated upstream in prod — see [backend/launch-profiles.md](../../development/backend/runtime/launch-profiles.md). Frontend (Vite) = an **even** port (HTTPS via mkcert).
@@ -24,5 +24,15 @@
 | sift | API · Vite | 8230 https / 8231 http · 8226 |
 | 10x-ventures-transcript-forge | API · Vite | 8232 https / 8233 http · 8227 |
 | arcade | API · Vite | 8234 https / 8235 http · 8228 |
+| museums-gallery | API · Vite | 8236 https / 8237 http · 8229 |
+| nth26 | API | 8238 https / 8239 http |
+| nth26 | field PWA — rider + driver (Vite) | 8240 |
+| nth26 | operator console (Vite) | 8242 |
+| nth26 | pitch — solution presentation (Vite) | 8244 |
+| nth26 | ideas-iterator frontend (Vite) | 5184 |
 
-**Next free backend even port: 8236.** Append a row whenever you allocate.
+| transportbrain (hackathon Track 2 submission) | API | 8246 https / 8247 http |
+| tbs.demo | demo — jury-facing solution page, own repo + Vercel (Vite) | 8248 |
+| transportbrain | Transport Brain Studio — planner console (Vite) | 8249 |
+
+**Next free backend even port: 8250.** Append a row whenever you allocate.

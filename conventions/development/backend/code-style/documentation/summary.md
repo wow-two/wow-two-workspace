@@ -23,8 +23,9 @@ The first word of every `<summary>` is fixed by type-kind. This is the canonical
 | Query/Command (concrete CQRS message) | **Represents** | `Represents a query to get all channels with their pipelines and sources.` |
 | Query/Command handler | **Handles `<see cref="X"/>`** | `Handles <see cref="ChannelGetAllQuery"/>.` |
 | Static constants class | **Contains** | `Contains the canonical kebab-case slugs for every channel.` |
+| Constant field (`const` / `static readonly`) | **Holds** | `Holds the token an open network carries in a WIFI payload.` |
 | Static registry class | **Tracks** or **Holds** | `Tracks live pipeline executions keyed by pipeline id.` |
-| Extension class | **Provides** | `Provides registration extensions for the time wrapper.` |
+| Extension class | **Extends** | `Extends <see cref="WifiEncryption"/> with its WIFI-URI spelling.` |
 | Extension method | (verb at start: `Adds`, `Uses`, `Maps`, `Configures`) | `Adds the JWT bearer authentication scheme with sane defaults.` |
 | Configuration class (settings record) | **Configuration for** | `Configuration for AI classification pipeline behavior.` |
 | EF `IEntityTypeConfiguration<T>` class | **Configures** | `Configures the listings table mapping and relationships.` |
@@ -58,9 +59,51 @@ A doc violating the starter table is a style miss regardless of content quality.
 - Don't spill member-level detail into the type summary — the members carry it.
 - Drop filler: `the SDK convention`, `with a custom X type` (the type parameter is already visible in the signature).
 
+## Constants
+
+`Holds` — a member-sized verb, matching how properties take `Gets`. **Not `Defines` / `Represents`**: those are type-kind starters, and a `const` is a member. It has no accessor either, so no `Gets`.
+
+- **must not restate the value** — `= "WPA"` is on the line; `Represents the WPA token` says nothing the reader can't see
+- **must name the authority that fixes the value** when one exists — a spec, a wire format, a third-party contract. That is the fact the literal alone hides: `"nopass"` is unguessable until you know the WIFI URI scheme mandates it
+- **may omit the summary entirely** when the enclosing type already carries the authority and the name is plain. A `private const` is an internal member; a comment on each one restates the group's summary N times
+- **a format-string constant documents its shape, never its slots** — `Holds the payload shape of a WIFI URI.` The `{0}`…`{n}` are visible; what a reader needs is which spec the shape comes from
+- **must not comment a constant that exists only to name a magic number in place** — `private const int MaxNameLength = 200;` is already self-describing
+
+## Extract a format string when the literal has structure
+
+A literal with fixed structural parts is a **contract shape**, not an implementation detail.
+
+- must lift a payload / URI / template literal into a named `const` and build it with `string.Format` once it carries any constant segment beyond a single prefix
+- the constant then shows the whole shape in one place, which interpolation scatters across the expression
+- a bare prefix (`$"tel:{phone}"`) stays inline — there is no shape to see
+- keep the segments that appear conditionally as their own constants, so the parent shape stays readable
+
+## Extension classes
+
+`Extends`, not `Provides`. An extension class hosts methods bolted onto a type it does not own — it supplies no behaviour of its own, so the service starter overstates it.
+
+`Extends <see cref="X"/> for {purpose}.` — the target, then the **purpose category**.
+
+- `Extends <see cref="WifiContentValueObject"/> for payload encoding.`
+- **name the purpose, not the additions** — what a class adds changes every time a method lands; why it exists does not
+- **cref the target when there are one or two** — the reader clicks through
+- **use an abstract name when the targets are many or open** — `Extends the host builder for observability wiring.` A list of crefs stops being readable past two, and an open target set has nothing to cref
+- individual extension methods keep a verb start (`Adds`, `Maps`, `Builds`)
+
+## Expression body vs block
+
+- **block body by default.** An expression body is for a single trivial delegation or a direct member return
+- ✅ `public override string Encode() => this.ToPayload();`
+- ✅ `public string Slug => _slug;`
+- ❌ an expression body whose expression wraps across lines, takes several parameters, or contains a conditional — that wants a block
+- the tell: if the `=>` expression needs line breaks to read, it is a method body pretending to be an expression
+
 ## Properties on entities + DTOs
 
 - Start with `Gets` or `Gets or sets` — always state what the property holds, even if obvious from name
+- **`{ get; init; }` takes `Gets`** — the setter closes after construction, so a consumer only ever gets
+- **Applies to every C# model kind**, value objects included. A bare noun phrase (`The network name.`) is the TypeScript style — TS has fields, C# has properties, and the accessor is what the starter names. Don't carry the frontend's phrasing across
+- **A method that produces a formatted payload gets `<inheritdoc />` + `<remarks>`, not a re-described `<summary>`.** The format string lives in the code; a summary spelling it out (`Builds the <c>WIFI:T:…;S:…;;</c> payload`) restates it and goes stale. `<remarks>` carries only what the code doesn't show — escaping rules, an omitted segment, a spec quirk
 - Always state the parent entity context: `Gets or sets the kebab-case slug of the channel`, not `Gets or sets the slug`
 - PKs / FKs: `<summary>` like every other member — state what the key identifies
 - **State what the value is — not who sets it, when, or how.** No "stamped by the interceptor", "populated by the DB", "set at construction". An entity-trait contract describes the field; the population mechanism (interceptor, trigger, app code) is the implementer's choice and must not leak in.

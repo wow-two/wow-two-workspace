@@ -53,6 +53,8 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - must not frame or report the work as *closing* / *finalizing* the version — report per iteration (*did X, Y; Z remaining*); a track is open-ended, extend it freely, never push it toward closure
 - must cover only this repo — another app's rollout lives in that app's version doc
 - must not keep a `## Log` — git is the history
+- must **move** an item that changes iteration, never leave a forwarding stub (`→ moved to Iteration N`). The destination line is the record; a stub duplicates state and goes stale the moment the item moves again
+- must not name the current iteration in the doc — it is the first one with open boxes. A `(current)` tag is a second source of truth that rots on every advance
 
 ## Template — copy below the line
 

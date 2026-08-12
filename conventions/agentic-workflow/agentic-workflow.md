@@ -34,5 +34,7 @@
 ## Commit discipline
 
 - Git is **human-managed** — agents **never** run `git commit` / `git push` (hook-enforced: `.claude/hooks/guard-git.py`). Agents stage + draft the message; the human commits + pushes. Full protocol: [../development/repo/version-control/git.md](../development/repo/version-control/git.md).
+- **The index is shared, one per repo — not per lane.** Two agents staging at once produce one index holding both. Staging is therefore **opt-in**: leave the tree dirty, report your paths, stage only when asked.
+- Stage by explicit path, never `git add -A` / `-u` / `.` — a pathless add sweeps in another lane's half-done work.
+- `git restore --staged` is allowed on **paths you staged this session**; unstaging someone else's de-carves their prepared commit. Foreign paths already staged → report, don't touch.
 - Large uncommitted work in a shared tree is **fragile** — flag it for the human to commit so a later agent (or a careless revert) can't lose it.
-- When a tree mixes lanes, commit **deliberately** (stage by lane / path) — never a blind `git add -A` that bundles another lane's half-done work.

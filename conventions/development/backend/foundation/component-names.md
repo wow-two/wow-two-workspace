@@ -32,7 +32,7 @@ Detail (shape, docs, lifetime) stays in the authority; cite it, don't duplicate 
 | `Factory` | runtime instance creation | builds instances dynamically (per-key, per-request) | `services.md` |
 | `Registry` | lookup of pre-registered items | resolves from a fixed set populated at startup | `services.md` |
 | `Tracker` | in-proc mutable state | holds live state in memory, not DB I/O | `services.md` |
-| `Extensions` | static / DI helper methods | `IServiceCollection` / host / target-type helpers | `naming.md` |
+| `Extensions` | static / DI helper methods | `IServiceCollection` / host / target-type helpers; **or a closed family** — see below | `naming.md` |
 | `Handler` + `Command`/`Query`/`Event` | CQRS message + its handler | a dispatched use-case (read / write / fan-out) | `mediator.md` |
 | `Validator` | input validation | `IValidator<T>` for a request | `validation.md` |
 | `Controller` | HTTP delivery surface | thin dispatcher at the API edge | `controllers.md` |
@@ -99,6 +99,18 @@ controller action binds. A body **sub-block nested inside** a request carries no
 
 - top-level → `PreviewCodeApiRequest`, `CreateCodeApiRequest` (verb-first — the action).
 - nested sub-block → `StyleApiRequest`, `LogoApiRequest`, `RuleApiRequest` (noun-first — a `Style`/`Logo`/`Rule` block; `StyleApiRequest` is shared across `PreviewCodeApiRequest`/`CreateCodeApiRequest`/`UpdateCodeApiRequest`). `smart-qr-poc/platform/src/backend/SmartQr.Api/Requests/`.
+
+### `Extensions` — per target, or per family
+
+Default: name the **target type** — `IServiceCollectionExtensions`, `WifiEncryptionExtensions`.
+
+**Exception — a closed family.** When several types form one modelled family (a discriminated union's variants plus the enums they carry), one `{Family}Extensions` class may host the extensions for all of them.
+
+- must apply only to a **closed** set the codebase owns — a union with a fixed variant list, not an open bag of related types
+- must name the family, not one member: `WifiContentExtensions`, not `WifiEncryptionExtensions` when it also extends the content type
+- the family class owns the family's format constants too, keeping wire spellings out of the model
+- rationale: a per-target split gives 2+ files per family and scatters one wire contract; per-family gives one place to look and one place for the spec's literals to live
+- summary starter is `Extends` — see [documentation/summary.md](../code-style/documentation/summary.md) § *Extension classes*
 
 ---
 

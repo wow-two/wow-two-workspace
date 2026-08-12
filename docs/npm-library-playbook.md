@@ -209,4 +209,4 @@ Single-package repos (e.g. `ui.tokens`) skip `packages/` + `pnpm-workspace.yaml`
 - `docs/branching-strategy.md` — .NET/NuGet side (kept separate, different constraints)
 - `docs/versioning-strategy.md` — .NET/NuGet versioning
 - `docs/wow-two-refinement.md` — overall project state & roadmap
-- `.claude/rules/repo-registry.md` — live list of all repos
+- `.claude/repo-registry.md` — live list of all repos

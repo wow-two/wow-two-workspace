@@ -1,6 +1,6 @@
 # wow-two — Workspace Planning
 
-*Last updated: 2026-06-17*
+*Last updated: 2026-08-09*
 
 > Cross-cutting work that spans repos — **SDK** (`wow-two-sdk-beta.backend.beta`) extracts + **conventions**.
 > App-specific tasks live in each app's `engineering/planning/backlog.md`, not here.
@@ -38,6 +38,15 @@ Ordered, top = next. Type: `feature` · `issue` · `check` · `idea`.
 | `ToCommand` / `ApiRequest` support (source-gen mapper? base type?) | idea | evaluate once the convention is adopted in apps |
 | remaining v0.2 extract items (13-item list) | feature | detail in drydock `engineering/planning/backlog.md` |
 
+### Workspace
+
+| Item | Type | Notes |
+|---|---|---|
+| Decide how `w2` work gets planned — pull-point vs own session | check | No ritual today: no dated logs, no task IDs, no scoring. `10x-ws` merged planning session needs a defined pull-point. Options: (a) top of this backlog only, (b) active repo's `engineering/planning/backlog.md`, (c) a `w2` session doc |
+| Refresh this doc — 8 weeks stale | issue | Last touched `2026-06-17`; conventions pass and beta-SDK extracts have moved since |
+| Mint task IDs for pulled items | idea | A `w2` item slotted into the `10x` daily log has no ID to carry. Minimal shape: `w2:{repo}-t-{NNN}` assigned at slot time |
+
 ## Log
 
 - **2026-06-17:** workspace planning created — scope: SDK extracts + conventions (apps tracked per-repo). Presentation-layer convention pass underway.
+- **2026-08-09:** `Workspace` group added — `w2` is the only vector of the three with no planning ritual; multi-vector planning analysis in `10x-ws` flagged it as the missing pull-point.

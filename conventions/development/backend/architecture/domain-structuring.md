@@ -50,6 +50,9 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 
 - **Domain folder** — PascalCase plural (`Listings/`, `Channels/`, `Locations/`)
 - **Subdomain folder** — PascalCase gerund or noun describing the concern (`Capturing/`, `Processing/`, `Core/`)
+- **Role-group folder** — a **plural role noun**, naming the type-role it holds, never the activity: `Entities/` · `Enums/` · `Models/` · `Services/` · `Validators/` · `Mappers/` · `Commands/` · `Queries/` · `Handlers/`
+  - ✅ `Validators/` holds validators · `Mappers/` holds mappers
+  - ❌ `Validation/` · `Mapping/` — an activity reads as a subdomain, and every sibling names a role
 - **Avoid generic names** — `Helpers/`, `Utils/`, `Misc/` are banned. If it doesn't fit a subdomain, it belongs in `Core/`
 - **Mirror across layers** — if Domain has `Listings/ListingCapturing/`, Infrastructure has `Listings/Capturing/` (drop redundant prefix)
 

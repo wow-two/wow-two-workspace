@@ -84,7 +84,7 @@ WoW 2.0 is "done" when the core .NET + React stack has full coverage (libs + doc
 **Analyze how we integrate Claude across the ecosystem.**
 
 - [x] Create root `CLAUDE.md` — workspace-level context, layout, tech stack, working rules
-- [x] Create `.claude/rules/repo-registry.md` — full index of all repos across all orgs
+- [x] Create `.claude/repo-registry.md` — full index of all repos across all orgs
 - [x] Create `.claude/rules/behavior-rules.md` — lookup rules, cross-repo workflow, naming conventions
 - [x] Create `.gitignore` — meta repo tracks only Claude config, ignores child repos
 - [x] Create `CLAUDE.md` templates for each repo type (platform lib, sdk package, kb module, app)
@@ -100,7 +100,7 @@ WoW 2.0 is "done" when the core .NET + React stack has full coverage (libs + doc
 
 **Analyze how repos are organized and what role each plays.**
 
-- [x] Create a repo registry — done in `.claude/rules/repo-registry.md`
+- [x] Create a repo registry — done in `.claude/repo-registry.md`
 - [x] Define repo naming convention — `{category}.{domain}`, lowercase, dot-separated. See Org Structure section.
 - [x] Categorize repos into 5 orgs: wow-two, wow-two-platform, wow-two-sdk, wow-two-kb, wow-two-apps
 - [ ] Decide: monorepo vs multi-repo per area (currently multi-repo — is that right?)
