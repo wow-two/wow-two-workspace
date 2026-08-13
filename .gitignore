@@ -9,3 +9,6 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Rapid-building marker — local, expiring session flag read by .claude/hooks/guard-git.py
+.claude/.rapid-build

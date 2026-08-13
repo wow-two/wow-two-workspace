@@ -20,7 +20,7 @@ Repo shape by archetype — product / venture (both stacks, one repo) vs SDK / l
 
 | File | Covers |
 |---|---|
-| [version-control/git.md](version-control/git.md) | Commit-message format — `{type}: {past-tense verb} {subject}`, one cohesive change per commit — **+ the agent⇄human commit protocol** (agent stages + drafts; the human commits + pushes, hook-enforced) |
+| [version-control/git.md](version-control/git.md) | Commit-message format — `{type}: {past-tense verb} {subject}`, one cohesive change per commit — **+ the agent⇄human commit protocol** (agent stages + commits; the human pushes, hook-enforced) |
 
 ## Tech stack
 

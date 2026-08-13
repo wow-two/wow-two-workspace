@@ -7,7 +7,7 @@
 ## XML doc format
 
 - **One-liner by default** — `<summary>`, `<remarks>` content is a compact single line
-- **Inline tags** — opening and closing tags on the same line as the content, never on separate lines
+- **Inline tags** — opening and closing tags on the same line as the content
 - **`and`, not `+`** — write `and` in prose (summaries, remarks, inline comments); never `+`, which reads as a code operator — `PG and SQLite`, not `PG + SQLite`
 
 ```csharp
@@ -15,11 +15,32 @@
 /// <summary>Defines a handler for extracting phone numbers from a listing via HTTP.</summary>
 /// <remarks>Single responsibility — no image extraction, no browser dependency.</remarks>
 
-// ❌ Wrong — multi-line summary, tags on separate lines
+// ❌ Wrong — multi-line summary for content that fits on one line
 /// <summary>
 /// Defines an extraction handler for browser-based data.
 /// Each channel implements its own logic.
 /// </summary>
+```
+
+## Three gates, in order (REQUIRED)
+
+A doc block passes three gates, and **length is the last one**. An over-long block is usually a symptom — it earns its length by failing gate 1 or 2, so fixing it at the bottom (wrapping) hides the real defect.
+
+1. **Convention** — does the block obey its per-tag rule? `<summary>` = the tightest accurate sentence (`documentation/summary.md`); `<remarks>` = directive, not explanatory (`documentation/remarks.md`); `<param>` / `<returns>` say what the name doesn't. A block carrying rationale, tech-facts, or a restatement of the member name fails here, and the cut usually solves the length by itself.
+2. **Compaction** — verb over nominalization (`performs validation of` → `validates`), actor as subject, one term per concept, and drop the em-dash appositive that restates the clause before it.
+3. **Line length** — 120 chars (`code-organization.md` § *Line length*). Only a block that survives gates 1 and 2 and still exceeds 120 may go multi-line, with the tags on their own lines.
+
+- **Never wrap to satisfy gate 3 without running gates 1 and 2 first.** Wrapping is the last resort, not the fix.
+- **Multi-line is the earned exception.** It says "every word here is load-bearing and there are more than 120 characters of them" — a claim most blocks cannot make.
+
+```csharp
+// ❌ Wrong — wrapped straight to gate 3; the appositive after the em-dash is the real defect
+/// <summary>
+/// Gets the storage table name for the code entity — the single source of truth for hand-written SQL.
+/// </summary>
+
+// ✅ Correct — gate 1 cut the appositive, and the sentence fits
+/// <summary>Gets the storage table name for the code entity.</summary>
 ```
 
 ## Required tags per type-kind

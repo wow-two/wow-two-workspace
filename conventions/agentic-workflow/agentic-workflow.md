@@ -1,6 +1,6 @@
 # Agentic workflow
 
-*Last updated: 2026-06-17*
+*Last updated: 2026-08-13*
 
 > How parallel Claude chats / agents share one repo without clobbering each other — lane discipline, no-revert, scope containment.
 > Purpose — multiple chats edit the same working tree at once; a wrong "cleanup" silently destroys another lane's uncommitted work.
@@ -33,8 +33,8 @@
 
 ## Commit discipline
 
-- Git is **human-managed** — agents **never** run `git commit` / `git push` (hook-enforced: `.claude/hooks/guard-git.py`). Agents stage + draft the message; the human commits + pushes. Full protocol: [../development/repo/version-control/git.md](../development/repo/version-control/git.md).
+- Publishing is **human-managed** — agents stage and commit, but **never** run `git push` (hook-enforced: `.claude/hooks/guard-git.py`, which also blocks worktree destruction, gates history rewrites behind a rapid-building marker, and lane-checks `commit` / `pull` / `stash push` against files this session never wrote). Full protocol: [../development/repo/version-control/git.md](../development/repo/version-control/git.md).
 - **The index is shared, one per repo — not per lane.** Two agents staging at once produce one index holding both. Staging is therefore **opt-in**: leave the tree dirty, report your paths, stage only when asked.
-- Stage by explicit path, never `git add -A` / `-u` / `.` — a pathless add sweeps in another lane's half-done work.
-- `git restore --staged` is allowed on **paths you staged this session**; unstaging someone else's de-carves their prepared commit. Foreign paths already staged → report, don't touch.
+- A pathless `git add -A` / `-u` / `.` is fine — staging only copies into the index and is trivially reversible; it changes no working-tree content. The hazard is the **commit** after it, which would ship another lane's work under this lane's message. The `guard-git` lane check stops `commit` / `pull` / `stash push` and names the foreign files before that happens; answer its question and re-run.
+- Unstaging is not available: `git restore --staged` is hook-blocked, and `git reset <path>` only runs in a rapid-building session — both de-carve another lane's prepared commit. Foreign paths already staged → report, don't touch.
 - Large uncommitted work in a shared tree is **fragile** — flag it for the human to commit so a later agent (or a careless revert) can't lose it.

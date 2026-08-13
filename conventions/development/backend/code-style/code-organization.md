@@ -139,6 +139,30 @@ var sql = $"""
     """;
 ```
 
+## Line length (REQUIRED)
+
+**120 characters, hard.** Rider and ReSharper draw their right margin there by default, so the guide is already on screen; the limit is what keeps two files legible side by side on a 1920 display.
+
+- Applies to every line — code, XML doc comments, string literals in source.
+- **Doc comments break the limit most often, and this limit is the *last* gate they pass.** Run the three gates in `documentation.md` § *Three gates* first — convention, then compaction, then length. A block wrapped without that pass hides the defect that made it long.
+- Only a block that survives both earlier gates and still exceeds 120 goes multi-line, tags on their own lines:
+
+```csharp
+// ✅ Correct — the block wraps, each line under 120
+/// <summary>
+/// Shared payload-encoding primitives for the static <see cref="CodeContent"/> types — escaping and formatting
+/// helpers ported byte-for-byte from the frontend's <c>contentTypes.ts</c>, so a code encoded here decodes
+/// identically to one the builder previewed.
+/// </summary>
+
+// ❌ Wrong — one 240-char line, unreadable in a split pane and in a diff
+/// <summary>Shared payload-encoding primitives for the static <see cref="CodeContent"/> types — escaping and formatting helpers ported byte-for-byte from the frontend's <c>contentTypes.ts</c>, so a code encoded here decodes identically to one the builder previewed.</summary>
+```
+
+- **Code over 120** wraps at the natural boundary — one argument per line, one LINQ operator per line, one object-initializer member per line. No justification needed; the chain's shape is the reason.
+- **Exempt:** a single string literal or URL that cannot be split without changing its value (a user-agent, a connection string, a token in a comment), and generated code. Concatenating one across lines to satisfy the limit costs more than it buys.
+- No second, looser tier. 150 is outside every mainstream standard (Prettier 80 · Black 88 · Google Java 100 · rustfmt 100 · ktlint 120), and two 150-char panes no longer fit a 1920 display.
+
 ## SQL line length
 
 - **Long SQL clauses** — break into one column/condition per line when a line exceeds ~120 chars
