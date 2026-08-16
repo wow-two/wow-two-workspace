@@ -53,7 +53,7 @@ pipelines evolve.
 - EF Core generates client-side via `Guid.NewGuid()` — do NOT add `DEFAULT gen_random_uuid()` on ID columns; the DB default never fires (EF always
   provides the value).
 - Every persisted type implements the `IEntity` marker (empty); the `Guid Id` member comes from `IKeyedEntity<Guid>`. Keyed/custom-id entities use
-  `IKeyedEntity<TId>` directly (see [entities.md](../../components/entity.md)). Both live in the SDK's `Data.Abstractions`.
+  `IKeyedEntity<TId>` directly (see [entities.md](../../components/data/entity.md)). Both live in the SDK's `Data.Abstractions`.
 
 ---
 
@@ -63,7 +63,7 @@ pipelines evolve.
 |---|---|---|
 | `Guid` | `uuid` | EF Core generates client-side |
 | `DateTime` / `DateTimeOffset` | `timestamptz` | Always `timestamptz`, never `timestamp` |
-| `DateOnly` | `date` | Needs a Dapper handler for raw queries — see [data-access.md](../../components/repository.md) |
+| `DateOnly` | `date` | Needs a Dapper handler for raw queries — see [data-access.md](../../components/behavior/repository.md) |
 | `string` | `text` / `varchar(n)` | Prefer `text`; `varchar(n)` only when a hard limit is meaningful |
 | `bool` | `boolean` | |
 | `List<TEnum>` | `tenant_type[]` | Use the PG enum array type, not `TEXT[]` |
@@ -131,7 +131,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : AppDb
   `EnableRetryOnFailure(maxRetryCount: 6)` + `CommandTimeout(30)`.
 - Connection string comes from `DatabaseOptions.ConnectionString`, bound via `AddDatabaseOptions` (`Database` config section by default).
 - A shared `NpgsqlDataSource` is registered once via `AddNpgsqlDataSource` (`PostgresServiceCollectionExtensions`) — built from
-  `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper, and the place enums attach (`MapEnums` — see [enums.md](../../components/enum.md)).
+  `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper, and the place enums attach (`MapEnums` — see [enums.md](../../../lla/components/enums.md)).
 
 ```csharp
 services.AddDatabaseOptions(configuration);
@@ -150,7 +150,7 @@ services.AddEntityFrameworkCore<AppDbContext>((sp, builder) =>
 
 - `{Repo}.Persistence/Configurations/{Name}Configuration.cs` — one `IEntityTypeConfiguration<T>` per entity.
 - Multiple configs may share a file when entities are tightly coupled (e.g. `ChannelEntityConfiguration` + `ChannelSourceEntityConfiguration`) — but
-  [code-organization.md](../../../lla/code-organization.md)'s file-per-type rule still says split by default; merge only when very tightly coupled.
+  [code-organization.md](../../../lla/notation/style/style.md)'s file-per-type rule still says split by default; merge only when very tightly coupled.
 - All configs are picked up by the base's `ApplyConfigurationsFromAssembly`.
 
 ---
@@ -217,14 +217,14 @@ builder
 ### Enum mapping (Postgres)
 
 Do NOT use `.HasConversion()` per property — enums are registered globally at the Npgsql data-source level via `MapEnums` (driver-level C#↔PG enum
-mapping). Full details in [enums.md](../../components/enum.md).
+mapping). Full details in [enums.md](../../../lla/components/enums.md).
 
 ---
 
 ### Audit & soft-delete
 
 Cross-cutting timestamps/actors (`ICreationAuditable`, `IModificationAuditable`) and soft-delete (`ISoftDeletable`) are handled by SDK interceptors,
-not per-config — entity contracts and what each marker stamps live in [entities.md](../../components/entity.md):
+not per-config — entity contracts and what each marker stamps live in [entities.md](../../components/data/entity.md):
 
 - `AuditInterceptor` — register via `AddEfCoreAuditInterceptor()` (use the `<TAccessor>` overload to populate `CreatedBy` / `UpdatedBy` on the
   `…AuditableBy<TUserId>` variants), wire with `UseAuditInterceptor(sp)`.
@@ -250,7 +250,7 @@ Optimistic-concurrency markers map via provider conventions called from `OnModel
 
 ### Section order inside a configuration
 
-Organize in this order, separated by lightweight comment headers (see [code-organization.md](../../../lla/code-organization.md)):
+Organize in this order, separated by lightweight comment headers (see [code-organization.md](../../../lla/notation/style/style.md)):
 
 1. Table + Key — `.ToTable()`, `.HasKey()`.
 2. Column type overrides — `.HasColumnType("jsonb")` etc.
@@ -288,9 +288,67 @@ builder
 
 ### Documentation
 
-Single `/// <summary>` one-liner starting with "Configures" — per [documentation/summary.md](../../../lla/documentation/summary.md) starter table. No `<remarks>`.
+Single `/// <summary>` one-liner starting with "Configures" — per [documentation/summary.md](../../../lla/notation/documentation/summary.md) starter table. No `<remarks>`.
 
 ```csharp
 /// <summary>Configures the listings table mapping and relationships.</summary>
 public class ListingEntityConfiguration : IEntityTypeConfiguration<ListingEntity> { }
 ```
+
+## Enum column mapping
+
+> **Standard:** native PostgreSQL enum types. Text columns are the fallback for non-PG providers (SqlServer / Sqlite) only — see *Text-column
+> fallback*.
+
+### Postgres (native enum types) — default
+
+- **Storage** — PostgreSQL custom enum types (`CREATE TYPE listing_type AS ENUM (...)`).
+- **C# ↔ PG case mapping** — PascalCase C# values map to snake_case PG labels (`ApartmentRent` ↔ `'apartment_rent'`).
+- **Registration** — **one bulk call**, not per-enum, not per-property `.HasConversion()`. Call `MapEnums(CaseStyle.Snake, namespaceFilter,
+  assemblies)` (`NpgsqlEnumMappingExtensions`) inside the `configure` delegate of `AddNpgsqlDataSource` (`PostgresServiceCollectionExtensions`).
+- Npgsql requires enum mappings at the data-source (driver) level — `MapEnums` runs on the builder before `Build()`, scans the given assemblies, and
+  registers every public non-nested enum that passes `namespaceFilter`.
+
+```csharp
+// Registration — once at startup
+services.AddNpgsqlDataSource(builder =>
+    builder.MapEnums(
+        CaseStyle.Snake,
+        ns => ns.StartsWith("Drydock.Domain"),
+        typeof(ChannelType).Assembly));
+```
+
+**Why bulk, why a translator:**
+
+- `MapEnums` derives the PG type name from the enum type name via `CaseConverter.ToCase(name, style)`.
+- It routes both type and member names through a single `CaseStyleNameTranslator(style)` (an `INpgsqlNameTranslator`).
+- Driver-level label mapping and any string-based mapping therefore agree *by construction* — they can't drift.
+- No more listing each enum twice (`MapEnum<T>` on both `NpgsqlDataSourceBuilder` and `UseNpgsql`).
+- **Per-enum PG type override** — pass the optional `pgTypeName` delegate to `MapEnums` (`Func<Type, string?>`; return `null` to keep the styled
+  default).
+
+---
+
+### Text-column fallback (SqlServer / Sqlite)
+
+- When the provider has no native enum types, store the enum as a **case-styled string** — reversibly, via the SDK converters.
+- Never hand-roll `nameof(...).ToSnakeCase()` + `Enum.Parse`: that underscore-stripping pair is lossy on multi-word members. The SDK builds its
+  reverse map from the enum's own members.
+- **EF Core** — `EnumPropertyBuilderExtensions.HasEnumStringConversion<TEnum>()` (defaults `CaseStyle.Snake`):
+
+```csharp
+builder.Property(e => e.Status).HasEnumStringConversion();        // snake_case text column
+```
+
+- Applies `EnumCaseConverter<TEnum>` (a `ValueConverter<TEnum, string>`); reads are case-insensitive on the label, writes emit the configured style.
+- **Dapper** — `DapperServiceCollectionExtensions.AddEnumTypeHandler<TEnum>()` (defaults `CaseStyle.Snake`):
+
+```csharp
+services.AddEnumTypeHandler<OrderStatus>();                       // registers EnumTypeHandler<OrderStatus>
+```
+
+- Both paths round-trip through `EnumNameConverter<TEnum>` (`ToLabel` / `Parse` / `TryParse`) — the single source of truth for label ↔ member,
+  cached per `(enum, style)`.
+
+> **Forward note:** a future text-enum-default mode (text as the standard, native PG opt-in) lands with the SQLite track. Until then, native PG
+> enums are the standard and text columns are the non-PG fallback only.

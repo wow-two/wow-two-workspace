@@ -35,4 +35,4 @@
 
 ## See also
 
-- [result-pattern.md](../components/result.md) · [validation.md](../components/validator.md) · [controllers.md](../components/controller.md)
+- [result-pattern.md](../components/data/result.md) · [validation.md](../components/behavior/validator.md) · [controllers.md](../components/behavior/controller.md)

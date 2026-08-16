@@ -58,7 +58,7 @@ Validation repeats down the stack; layers do not delegate to each other.
 
 Validators are FluentValidation `AbstractValidator<T>` — one per validated type, `public sealed`, plain FluentValidation, no SDK base class.
 
-- **Name** `{Concept}Validator` — `WifiContentValidator`, `ProductCreateCommandValidator`. **Co-locate** with the type it validates (same folder as the command; see [mediator.md](../domains/messaging/mediator.md)).
+- **Name** `{Concept}Validator` — `WifiContentValidator`, `ProductCreateCommandValidator`. **Co-locate** with the type it validates (same folder as the command; see [mediator.md](../../domains/messaging/mediator.md)).
 - **Track the type name only when the concept has more than one model.** A validator names the *concept*, not the class. `WifiContentValueObject` gets `WifiContentValidator` — there is one wifi-content model, so nothing is ambiguous, and dragging a role suffix into the validator name buys a longer identifier and no information.
 - **When a concept does have several models across layers** (`ProductEntity` + `ProductDto` + `ProductCreateRequest`), each validator carries the full type name so the target is unambiguous. That is the case the `{Type}Validator` shape exists for.
 - a role suffix on the model (`Entity` / `Dto` / `ValueObject`) is a **statement about the model**, not about what validates it — renaming the model must not force a validator rename.
@@ -125,11 +125,11 @@ if (error is not null)
 
 ### Throw for the pipeline
 
-`ValidateAndThrow(T)` raises a `ValidationException` (a `ValidationException : AppException` whose `.Error` is the `ValidationError`) when any rule fails — used by the mediator `ValidationBehavior`; the terminal `ExceptionToResultBehavior` converts the throw to an `AppResult.Failure` ([problem-details.md](../platform/problem-details.md)).
+`ValidateAndThrow(T)` raises a `ValidationException` (a `ValidationException : AppException` whose `.Error` is the `ValidationError`) when any rule fails — used by the mediator `ValidationBehavior`; the terminal `ExceptionToResultBehavior` converts the throw to an `AppResult.Failure` ([problem-details.md](../../platform/problem-details.md)).
 
 ## Map to HTTP
 
-A `ValidationError` is an `AppError` (`Type = Validation`) → `400` with an `errors:[{property,code,message}]` extension (from its `Failures`), rendered by the shared `AppErrorProblemDetailsFactory`. The controller just `.Match`es the `AppResult`; nothing hand-maps. See [problem-details.md](../platform/problem-details.md).
+A `ValidationError` is an `AppError` (`Type = Validation`) → `400` with an `errors:[{property,code,message}]` extension (from its `Failures`), rendered by the shared `AppErrorProblemDetailsFactory`. The controller just `.Match`es the `AppResult`; nothing hand-maps. See [problem-details.md](../../platform/problem-details.md).
 
 **Carry the field path at every layer.** A machine-readable location is the cross-ecosystem norm — JSON:API `source.pointer`, AIP-193 `FieldViolation.field`, ASP.NET `ValidationProblemDetails.errors`, Laravel dot keys, Zod `path`. Dropping it is the outlier.
 
@@ -169,7 +169,7 @@ A rule that should guide without blocking is `.WithSeverity(Severity.Warning)` �
 English in the other.
 
 > **Ships as `IErrorMessageResolver` / `IFieldErrorMessageResolver`** until the SDK sweep lands the `Resolver → Mapper` fold
-> ([component-names.md](components.md) § *Folds*). The canonical name is written here; the shipped name is what compiles today.
+> ([component-names.md](../components.md) § *Folds*). The canonical name is written here; the shipped name is what compiles today.
 
 - must map a field message through `IFieldErrorMessageMapper` (`src/Foundation/Validation/`) — the SDK registers a passthrough default, so
   the seam is wired and the translation is opt-in.
@@ -203,7 +203,7 @@ Unresolved — this convention does not yet rule on either. Do not infer a rule 
 
 ## See also
 
-- [result-pattern.md](result.md) — `Result`/`AppResult` carrying `AppError` · [problem-details.md](../platform/problem-details.md) — `errors[]` rendering
+- [result-pattern.md](../data/result.md) — `Result`/`AppResult` carrying `AppError` · [problem-details.md](../../platform/problem-details.md) — `errors[]` rendering
 - `src/Foundation/Validation/` (SDK) — `IValidator<T>`, `FieldError`, `ValidationError`, `ValidationException`, `FluentValidationAdapter<T>`, `AddFluentValidatorsFromAssemblies`
 - `src/Foundation/Guards/` (SDK) — `Guard.Against`, `IGuardClause`, `NotSlug` / `NotUlid`
 - [FluentValidation docs](https://docs.fluentvalidation.net/)

@@ -6,7 +6,7 @@ Application and infrastructure services that contain business logic, data access
 
 ## Location
 
-Services live in the layer that matches their responsibility (see [service-architecture.md](../layers/layers.md)):
+Services live in the layer that matches their responsibility (see [service-architecture.md](../../layers/layers.md)):
 
 | Layer | Folder | Examples |
 |---|---|---|
@@ -21,12 +21,12 @@ Interface in `Application/`, implementation in `Infrastructure/` — the Clean A
 ### Class shape
 
 - **Non-static** class
-- **Primary constructor** for DI injection (allowed exception to the body-property rule for records — see [models.md](../../lla/models.md))
+- **Primary constructor** for DI injection (allowed exception to the body-property rule for records — see [models.md](../../../lla/constructs/records.md))
 - **Sealed** unless intentionally designed for inheritance — `sealed` should be the default
 
 ### Lifetime
 
-Register in the appropriate `HostConfigurationExtensions` method (see [host-configuration.md](../platform/host-configuration.md)):
+Register in the appropriate `HostConfigurationExtensions` method (see [host-configuration.md](../../platform/host-configuration.md)):
 - **Singleton** — stateless, thread-safe, expensive to construct
 - **Scoped** — request-scoped state, holds DbContext or similar
 - **Transient** — lightweight, no caching benefit
@@ -34,19 +34,19 @@ Register in the appropriate `HostConfigurationExtensions` method (see [host-conf
 ## Naming
 
 The canonical suffix→role vocabulary — keep-list, folds, banned list, and the new-suffix gate — is
-[component-names.md](components.md), and it is the only authority. This doc adds no rows and restates none;
+[component-names.md](../components.md), and it is the only authority. This doc adds no rows and restates none;
 a suffix question is answered there.
 
 This doc governs what a `Service` **is** and how it is shaped, not what the suffix set contains.
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../lla/documentation/summary.md):
+Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
 
 ### Service class
 
 - `/// <summary>` starts with **Provides**
-- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../lla/documentation/remarks.md) § *What it carries*) — never required
+- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../../lla/notation/documentation/remarks.md) § *What it carries*) — never required
 
 ```csharp
 /// <summary>Provides channel and pipeline seeding on application startup.</summary>
@@ -86,12 +86,12 @@ public static class ChannelSlugs { }
 
 - `/// <summary>` one-liner — start with a verb (`Gets`, `Sends`, `Creates`, `Builds`)
 - Multi-step methods may add `/// <remarks>` with a numbered flow — capped at 5 lines, tags included, and only after gates 1 and 2
-  ([remarks.md](../../lla/documentation/remarks.md) § *Multi-line — the same three gates*)
+  ([remarks.md](../../../lla/notation/documentation/remarks.md) § *Multi-line — the same three gates*)
 
 ## See also
 
 - [clients.md](client.md) — HTTP API wrappers
 - [data-access.md](repository.md) — Dapper repositories
-- [host-configuration.md](../platform/host-configuration.md) — DI registration
-- [documentation/summary.md](../../lla/documentation/summary.md) — the canonical `<summary>` starter table
-- [documentation.md](../../lla/documentation.md) — XML doc format + the three gates
+- [host-configuration.md](../../platform/host-configuration.md) — DI registration
+- [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table
+- [documentation.md](../../../lla/notation/documentation/documentation.md) — XML doc format + the three gates

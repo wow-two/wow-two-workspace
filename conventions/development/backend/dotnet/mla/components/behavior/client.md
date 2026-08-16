@@ -47,7 +47,7 @@ builder.Services.AddHttpClient<TelegramClient>(c =>
 ### Configuration
 
 - Settings injected via `IOptions<TSettings>` — base URL, API key, timeout
-- Settings type follows [settings.md](settings.md) rules — `sealed record`, `init`-only
+- Settings type follows [settings.md](../data/settings.md) rules — `sealed record`, `init`-only
 - Never hard-code base URLs or credentials in the client
 
 ---
@@ -147,13 +147,13 @@ These layer onto the same `IHttpClientBuilder`; chain after the registration hel
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../lla/documentation/summary.md):
+Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
 
 ### Client class
 
 - `/// <summary>` starts with **Connects** — a `Client` speaks the provider's model, so it *connects to* the provider's API
-- a `Broker` (the app-side seam, speaking our model) starts with **Integrates** — see [component-names.md](components.md) § *`Client` vs `Broker` — whose model does it speak*
-- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../lla/documentation/remarks.md) § *What it carries*)
+- a `Broker` (the app-side seam, speaking our model) starts with **Integrates** — see [component-names.md](../components.md) § *`Client` vs `Broker` — whose model does it speak*
+- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../../lla/notation/documentation/remarks.md) § *What it carries*)
 
 ```csharp
 /// <summary>Connects to the Telegram Bot API for messages and topics.</summary>

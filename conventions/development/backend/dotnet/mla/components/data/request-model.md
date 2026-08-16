@@ -2,7 +2,7 @@
 
 *Last updated: 2026-08-15*
 
-> **API request** — the presentation-layer body a client sends, named `{Verb}{Noun}ApiRequest`; a controller binds it and maps it to its **application request** (the mediator `Command` / `Query` — see [mediator.md](../domains/messaging/mediator.md)).
+> **API request** — the presentation-layer body a client sends, named `{Verb}{Noun}ApiRequest`; a controller binds it and maps it to its **application request** (the mediator `Command` / `Query` — see [mediator.md](../../domains/messaging/mediator.md)).
 > Both are requests — the `Api` / `Application` qualifier tells the layers apart.
 
 ## Request shape
@@ -11,7 +11,7 @@
 
 #### Summary
 
-- [Summary doc block conventions](../../lla/documentation/summary.md)
+- [Summary doc block conventions](../../../lla/notation/documentation/summary.md)
 - keyword - `Represents the {verb}-{noun} request body.`, e.g. `Represents the create-code request body.`
 
 #### Remarks
@@ -21,7 +21,7 @@
 ### Declaration
 
 - must be a `public sealed record`
-- must be named `{Verb}{Noun}ApiRequest`, **verb-first** — `CreateCodeApiRequest`, `UpdateCodeApiRequest`. An api request exists for one controller action, so it reads like the action it binds to; the **application request** is the noun-first one, because those are searched by domain ([mediator.md](../domains/messaging/mediator.md) § *The application request*)
+- must be named `{Verb}{Noun}ApiRequest`, **verb-first** — `CreateCodeApiRequest`, `UpdateCodeApiRequest`. An api request exists for one controller action, so it reads like the action it binds to; the **application request** is the noun-first one, because those are searched by domain ([mediator.md](../../domains/messaging/mediator.md) § *The application request*)
 - the **noun** is the entity, or the **domain / subdomain** when the action isn't scoped to one entity (a multi-entity create/update) - not forced to a single entity
 - must **merge** create + update into one `{Noun}CreateUpdateApiRequest` - the id rides the route, not the body, so the two bodies are identical; split into `{Noun}Create` / `{Noun}Update` only once they diverge
 - `Api` marks the presentation layer - never bare `Request` or `Dto` (the response suffix)
@@ -30,9 +30,9 @@
 ### Members
 
 - **body-only** - only what the client sends; never the actor, source IP, route id, or a server timestamp (those are caller context, merged in the mapping)
-- `required` on every non-nullable property; each carries a `Gets {what}.` summary (property doc rule → [documentation/summary.md](../../lla/documentation/summary.md))
+- `required` on every non-nullable property; each carries a `Gets {what}.` summary (property doc rule → [documentation/summary.md](../../../lla/notation/documentation/summary.md))
 - **nested body models take `*Dto`, not `*ApiRequest`** - only the top-level endpoint body is an `*ApiRequest` (a form-bind request); a nested `CodeStyleDto` / `CodeRuleDto` is a data shape. A request-specific nested `*Dto` lives in the API project + maps to its application model; otherwise reference the shared `*Dto`
-- no validation attributes - business validation is the application request's, in the pipeline ([validation.md](validator.md))
+- no validation attributes - business validation is the application request's, in the pipeline ([validation.md](../behavior/validator.md))
 
 ### Examples
 
@@ -70,12 +70,12 @@ The application request is built **at the edge** by an extension method co-locat
 
 - one `static` extensions class per request, in the request's file - `{Request}Extensions`
 - method named by the target's role - `ToCommand(...)` / `ToQuery(...)`
-- class summary starts with **Extends** - `Extends <see cref="{Request}"/> for application-request mapping.` ([documentation/summary.md](../../lla/documentation/summary.md) § *Extension classes*)
+- class summary starts with **Extends** - `Extends <see cref="{Request}"/> for application-request mapping.` ([documentation/summary.md](../../../lla/notation/documentation/summary.md) § *Extension classes*)
 - method summary refs the target via `cref` - `Maps the request to its <see cref="{Command|Query}"/>.`
 - pass caller context + route ids explicitly - `request.ToCommand(callerContext, id)`; never read them in the handler
 - the application request **never references the api request** - the dependency points one way (api request → application request)
-- the mapping method **builds + returns** the application request — block body, not `=>` ([members.md](../../lla/members.md))
-- the controller binds the api request, then maps at the edge — `request.ToCommand(callerContext, id)` → send ([controllers.md](controller.md))
+- the mapping method **builds + returns** the application request — block body, not `=>` ([members.md](../../../lla/notation/style/members.md))
+- the controller binds the api request, then maps at the edge — `request.ToCommand(callerContext, id)` → send ([controllers.md](../behavior/controller.md))
 
 #### Good
 

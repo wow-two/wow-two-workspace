@@ -1,8 +1,12 @@
-# Code organization
+# Style
 
-*Last updated: 2026-08-15*
+*Last updated: 2026-08-16*
 
-## One file per type (REQUIRED)
+> What the text inside a file looks like — its order, its wrapping, its width.
+> Purpose — remove every per-file judgment call about layout so a diff shows meaning, not formatting.
+> Use case — reach here while writing or reviewing the body of any file.
+
+## One file per type [REQUIRED]
 
 Every public type lives in its own `.cs` file. The file name matches the type name.
 
@@ -43,18 +47,6 @@ Nested types (sealed inner classes, value-object records inside a parent) live i
 - File name = primary type name + `.cs` (`Channel.cs`, `IEntity.cs`, `ChannelGetAllQuery.cs`)
 - For the generic+non-generic exception, the non-generic name wins (`IEntity.cs`, not `IEntity{T}.cs`)
 - Generic-only types use the simple base name (`Repository.cs` for `Repository<T>`)
-
-## Source folders
-
-- **Backend source folders are PascalCase**, matching their namespace segment 1:1 (`Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`). Distinct from the top-level **project** dir `{slug}.backend-services/`, which stays kebab — that's the IDE-collision-proof project folder, not a source folder ([repo/structure/repo-structure.md](../../../repo/structure/repo-structure.md) §3).
-
-## Acronyms
-
-- **Acronyms are always PascalCase, never all-caps** — `Id` not `ID`, `Ai` not `AI`, `Api` not `API`, `Sql`, `Http`, `Json`, `Io`, `Ui`, `Mqtt`, `Grpc`.
-- First letter capital, rest lowercase, **even when it distorts an established acronym** — consistency over original styling.
-- Applies to type / namespace / folder / member names.
-- This governs *all-caps runs* only — a mixed-case proper name with no all-caps run (`OAuth`, `SendGrid`, `MailKit`) is unaffected.
-- Canonical for the whole ecosystem — the backend-beta SDK follows this rule too (its package-id grammar in `docs/architecture/package-layout.md` notes the same case-sensitive-CI trap).
 
 ## Section dividers
 
@@ -139,7 +131,7 @@ var sql = $"""
     """;
 ```
 
-## Line length (REQUIRED)
+## Line length [REQUIRED]
 
 **120 characters, hard.** Rider and ReSharper draw their right margin there by default, so the guide is already on screen; the limit is what keeps two files legible side by side on a 1920 display.
 
@@ -207,17 +199,23 @@ public interface IEntity { Guid Id { get; } }
 
 - `System.*` first, then `Microsoft.*`, then third-party, then project namespaces — IDE auto-sort handles this; do not hand-order
 - No unused `using` statements (analyzer enforces)
-- **`using static` is banned** — it strips the owning class off the call site; call through the class or make the method a real extension method. Rule + rationale: [naming.md](naming.md) § *`using static` is banned*
+- **`using static` is banned** — it strips the owning class off the call site; call through the class or make the method a real extension method. Rule + rationale: [naming.md](../naming/naming.md) § *`using static` is banned*
 
-## Banned symbols
+## Banned
 
-- `var` for non-obvious types (let analyzers complain)
-- Hungarian notation (`m_`, `s_`, `_`)
-- Suffix `Helper`, `Util`, `Utils`, `Common`, `Manager` — banned outright, public or internal ([component-names.md](../mla/components/components.md) § *Banned*). They name the absence of a role; an internal type needs a role as much as a public one
-- `dynamic` (use generics or polymorphism)
-- `BinaryFormatter` (security)
+- `dynamic` — reach for generics or polymorphism.
+- `BinaryFormatter` — unsafe deserialization, no supported replacement path.
+- `using static` — write the type name at the call site ([../naming/naming.md](../naming/naming.md) § *`using static` is banned*).
+- `.GetAwaiter().GetResult()` · `.Result` · `.Wait()` — `await`, or the async host hook
+  ([../../mla/platform/host-configuration.md](../../../mla/platform/host-configuration.md) § *Async startup*).
+
+## `var` — preferred, with one exception
+
+- must use `var` when the initializer names the type — `var codes = new List<CodeEntity>();` repeats nothing.
+- must write the type when the initializer does **not** show it — a method call returning an unobvious type, a ternary, a chained LINQ result.
+- the rule is not a ban: `var` is the default, and spelling the type is the exception it earns.
 
 ## See also
 
-- [documentation.md](documentation.md) — XML doc rules
-- [models.md](models.md) — record style
+- [../organization/organization.md](style.md) — which file the code goes in
+- [../shape/shape.md](../../constructs/constructs.md) — what form the declaration takes

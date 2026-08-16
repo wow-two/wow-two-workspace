@@ -85,5 +85,5 @@ export class ApiError extends Error {
 
 - [hooks.md](../presentation/hooks.md) — data-fetching hooks
 - [models.md](../code-style/models.md) — DTO ↔ domain mapping
-- [../backend/presentation/response-models.md](../../backend/dotnet/mla/components/response-model.md) — the `ApiResponse<T>` success envelope this consumes
+- [../backend/presentation/response-models.md](../../backend/dotnet/mla/components/data/response-model.md) — the `ApiResponse<T>` success envelope this consumes
 - [../backend/presentation/problem-details.md](../../backend/dotnet/mla/platform/problem-details.md) — the `Problem()` / ProblemDetails error shape this consumes

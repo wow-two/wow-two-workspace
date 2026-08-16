@@ -123,7 +123,7 @@ ALTER TYPE code_status ADD VALUE IF NOT EXISTS 'archived';
 - Creating a brand-new enum type (`CREATE TYPE … AS ENUM (…)`) inside `CREATE TABLE`-adjacent DDL **can** run in a normal transactional migration —
   only `ADD VALUE` against an existing type forces `@no-transaction`.
 - The C#/EF side (mapping the enum, `NpgsqlDataSourceBuilder.MapEnums(CaseStyle.Snake, …)` via `PostgresServiceCollectionExtensions`, snake_case
-  labels) → [../enums.md](../../../components/enum.md). PascalCase C# `Archived` ↔ PG label `'archived'` — author the SQL label in snake_case to match.
+  labels) → [../enums.md](../../../../lla/components/enums.md). PascalCase C# `Archived` ↔ PG label `'archived'` — author the SQL label in snake_case to match.
 
 ---
 

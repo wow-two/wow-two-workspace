@@ -96,7 +96,7 @@ Static class with extension methods on `WebApplicationBuilder`. Each method regi
 | `AddSignalR()` | Adds SignalR hub services |
 | `AddCors()` | Configures CORS from settings |
 
-## Async startup (REQUIRED)
+## Async startup [REQUIRED]
 
 **Never block on async work.** `.GetAwaiter().GetResult()`, `.Result`, and `.Wait()` are banned in host configuration and everywhere else.
 
@@ -149,7 +149,7 @@ Startup tasks (DB init, seeding, warm-up) move host-side too — into `Configure
 
 - the class + the two `Configure` overloads use the **locked** summaries shown above (don't reword per app).
 - each private `Add*` extension gets a one-liner `<summary>` starting with **"Registers"** (or "Configures"). No `<remarks>` on host wiring.
-- the `Configure` chain carries **no trailing per-method comments** — the method names self-document. Inline comments only where a step's *why* isn't obvious (imperative one-liner, per [documentation.md](../../lla/documentation.md)).
+- the `Configure` chain carries **no trailing per-method comments** — the method names self-document. Inline comments only where a step's *why* isn't obvious (imperative one-liner, per [documentation.md](../../lla/notation/documentation/documentation.md)).
 
 ## Rules
 

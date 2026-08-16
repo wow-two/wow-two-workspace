@@ -36,7 +36,7 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - may close with a `### Verification` iteration — always last, bare noun, ordered `[ ] {action} → {expected}` checks
 - must carry meta `**Status:** … · **Type:** … · **Started:** … · **Completed:** …` (those four only); declare a `Type`; title is a plain noun phrase
 
-## Prose inside a version doc (REQUIRED)
+## Prose inside a version doc [REQUIRED]
 
 The task-form rules govern task lines. This governs everything else on the page, which is where residue actually accumulates.
 

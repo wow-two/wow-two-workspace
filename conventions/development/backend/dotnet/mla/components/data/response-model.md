@@ -2,12 +2,12 @@
 
 *Last updated: 2026-08-15*
 
-> Response models — the `{Entity}Dto` payload an action returns, wrapped in the `ApiResponse<T>` success envelope. Errors are never wrapped (they go out as ProblemDetails — see [problem-details.md](../platform/problem-details.md)).
+> Response models — the `{Entity}Dto` payload an action returns, wrapped in the `ApiResponse<T>` success envelope. Errors are never wrapped (they go out as ProblemDetails — see [problem-details.md](../../platform/problem-details.md)).
 
 ## The envelope rule
 
 - **Success → wrapped** in `ApiResponse<T>` — the client always reads `.data`.
-- **Error → never wrapped** — RFC-7807 ProblemDetails ([problem-details.md](../platform/problem-details.md)). The envelope never carries an error shape.
+- **Error → never wrapped** — RFC-7807 ProblemDetails ([problem-details.md](../../platform/problem-details.md)). The envelope never carries an error shape.
 - Disjoint channels: a 2xx body is always `ApiResponse<T>.Success`; a non-2xx body is always `ProblemDetails`. The client branches on status, not a flag in the body.
 - `204 No Content` / file streams aren't wrapped — no payload for `.data`.
 
@@ -39,14 +39,14 @@ public abstract record ApiResponse<T> : ApiResponse
 
 - `Success.Data` (`required T`) — the typed payload, serialized as `.data`.
 - `Failure` — **client-side only**: how an API client deserializes a non-2xx body to pattern-match instead of catching. Servers never emit `Failure` (that channel is ProblemDetails).
-- `ApiResponse<T>.Ok(data)` — the **only** way a controller builds a success body; used in the success arm of `.Match` → see [controllers.md](controller.md).
+- `ApiResponse<T>.Ok(data)` — the **only** way a controller builds a success body; used in the success arm of `.Match` → see [controllers.md](../behavior/controller.md).
 - `Success` carries `Data` and nothing else — no `message` / `meta`. Anything beyond the payload belongs in the DTO.
 
 ---
 
 ## Response shape — the DTO
 
-The payload `T`. Pure data, entity-first; record + property style is owned by [models.md](../../lla/models.md), the summary starter (`Represents …`) by [documentation/summary.md](../../lla/documentation/summary.md).
+The payload `T`. Pure data, entity-first; record + property style is owned by [models.md](../../../lla/constructs/records.md), the summary starter (`Represents …`) by [documentation/summary.md](../../../lla/notation/documentation/summary.md).
 
 ### Naming
 
@@ -57,7 +57,7 @@ The payload `T`. Pure data, entity-first; record + property style is owned by [m
 
 ### Members
 
-- `sealed record`, `required` on every non-nullable property; each carries a `Gets {what}.` summary ([documentation/summary.md](../../lla/documentation/summary.md))
+- `sealed record`, `required` on every non-nullable property; each carries a `Gets {what}.` summary ([documentation/summary.md](../../../lla/notation/documentation/summary.md))
 - flat - no nesting unless the entity genuinely has a sub-object
 - no metadata - pagination / status / timestamps that aren't entity fields don't go in the DTO or the envelope
 - location - `Application/{Feature}/Models/{Name}.cs`

@@ -4,10 +4,10 @@
 
 > The `<typeparam>` block — carried when a substitution can be got wrong, skipped when the name already says it.
 
-## Role decides, not presence (REQUIRED)
+## Role decides, not presence [REQUIRED]
 
 A `<typeparam>` says what may be substituted and what role it plays here. A conventional name already says that, so documenting it restates the
-name — the Redundant comment anti-pattern ([../documentation.md](../documentation.md) § *Comment anti-patterns*).
+name — the Redundant comment anti-pattern ([../documentation.md](documentation.md) § *Comment anti-patterns*).
 
 - must skip a **conventional** parameter — `T` · `TKey` · `TValue` · `TResult` · `TRequest` · `TResponse`. The name is the convention, and the `where` clause carries the rest.
 - must document a **domain-meaningful** parameter — `TAggregate`, `TDiscriminator`, `TUserId`: name the role it plays in this type.

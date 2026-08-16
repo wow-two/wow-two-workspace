@@ -19,7 +19,7 @@
 - SDK markers rebase onto `IRequest` / `INotification`; SDK handler interfaces refine `IRequestHandler` / `INotificationHandler` — same DI scan, same
   pipeline, no extra wiring.
 - **Result** — result-carrying requests return `AppResult<TSuccess>` as their `TResult` — construction, shape and `.Match` collapse in
-  [result-pattern.md](../../components/result.md). Cannot-fail: a value type directly (query) or no value (`ICommand`, returns `Unit`).
+  [result-pattern.md](../../components/data/result.md). Cannot-fail: a value type directly (query) or no value (`ICommand`, returns `Unit`).
 
 ### Query
 
@@ -60,18 +60,18 @@ XML doc summaries — byte-identical to the SDK marker source.
 
 ## The application request
 
-> **Application request** — the mediator message a handler executes: concretely a `Command` or `Query`. It maps in from the presentation **api request** (the request body — see [request-models.md](../../components/request-model.md)) plus caller context.
+> **Application request** — the mediator message a handler executes: concretely a `Command` or `Query`. It maps in from the presentation **api request** (the request body — see [request-models.md](../../components/data/request-model.md)) plus caller context.
 
 - **Inputs ride the application request; collaborators come from DI.** Replay test: *could a cold handler run it off a queue?* If yes it's an **input** → on the request. Repos, clock, brokers are **collaborators** → handler ctor (DI), never inputs.
 - **Caller context is an input.** The actor (`UserId`), source IP, etc. are server-authoritative inputs → they ride the application request too; the handler never reads them from `ICurrentUser` / `HttpContext`. Sourced at the edge, merged in the mapping (never by a pipeline).
 - It's still a `Command` / `Query` — **application request** is the role it plays opposite the **api request**; the `Api` / `Application` qualifier disambiguates (both implement `IRequest<T>`).
 - must name an application request **noun-first** — `CodeCreateCommand`, `CodeListQuery`. A domain prefix sorts a concern's messages together, and binding one to its handler is a search; a verb prefix scatters them.
-- an **api request** is verb-first for the opposite reason — it serves one controller action and reads like it ([request-models.md](../../components/request-model.md)).
+- an **api request** is verb-first for the opposite reason — it serves one controller action and reads like it ([request-models.md](../../components/data/request-model.md)).
 
 ### One model or two
 
 - **Body == application request** (no server-only inputs) → **one model**: bind the `Command` / `Query` directly (`[FromBody] TCommand`); no api request.
-- **Application request ⊃ body** (needs actor / source IP / a route id) → **two models**: an api request + the `Command` / `Query`; the api request maps in at the edge (`request.ToCommand(...)` → [request-models.md](../../components/request-model.md)).
+- **Application request ⊃ body** (needs actor / source IP / a route id) → **two models**: an api request + the `Command` / `Query`; the api request maps in at the edge (`request.ToCommand(...)` → [request-models.md](../../components/data/request-model.md)).
 
 ---
 
@@ -91,7 +91,7 @@ Never inject concrete `Mediator`. Pick the narrowest abstraction:
 | `IMediator` (= `ISender` + `IPublisher`) | both        | only when a type genuinely needs both       |
 
 - **Dispatch** — `ISender.SendAsync` — strongly-typed `IRequest<TResponse>` overload returns `ValueTask<TResponse>`; no-response `IRequest` overload returns `ValueTask<Unit>`. Events → `IPublisher.PublishAsync` (`ValueTask`). Handlers implement `HandleAsync`.
-- Controllers dispatch via `ISender.SendAsync` then `.Match` — see [../presentation/controllers.md](../../components/controller.md).
+- Controllers dispatch via `ISender.SendAsync` then `.Match` — see [../presentation/controllers.md](../../components/behavior/controller.md).
 - A query/command **is** an `IRequest<T>`, so `SendAsync` binds to it natively — no extension layer.
 
 ---

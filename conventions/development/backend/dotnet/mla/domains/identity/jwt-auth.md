@@ -101,7 +101,7 @@ Refresh tokens, revocation, asymmetric issuance (RS*/ES*), and key rotation are 
 
 ## See also
 
-- [settings.md](../../components/settings.md) — bind `Issuer`/`Audience`/key from config + secret store, not literals
-- [result-pattern.md](../../components/result.md) — surface auth failures as `AppError`, not thrown exceptions, in app code
+- [settings.md](../../components/data/settings.md) — bind `Issuer`/`Audience`/key from config + secret store, not literals
+- [result-pattern.md](../../components/data/result.md) — surface auth failures as `AppError`, not thrown exceptions, in app code
 - [conventions.md](../../../../../../conventions.md) § *Authoring a convention* — the cite-the-symbol rule these citations follow
 - SDK `wow-two-sdk.backend.beta` → `src/Identity/Jwt/README.md` (validation) + `src/Identity/Jwt/Issuance/README.md` (issuance) — quickstarts + JWKS examples

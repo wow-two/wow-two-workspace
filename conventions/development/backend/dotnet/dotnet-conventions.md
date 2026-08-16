@@ -19,6 +19,10 @@ Where a type lives → `mla/layers/`. How the service builds and starts → `mla
 technology or use case → `mla/domains/{domain}/`. A rule spanning services we both own → `hla/`.
 
 **The test between `mla/` and `hla/`:** do we own both ends? A third party is adapted in `mla/`, never contracted in `hla/`.
+**The three levels, and where each lands.** A C# construct is `lla/shape/language-constructs.md`. A role's shape and its
+documentation land wherever the rule reaches: **does it need a service around it?** No → `lla/` (`Constants`, `Extensions`).
+Yes → `mla/components/` (`Entity`, `Controller`, `Broker`). A ban follows its rule — construct bans in `lla/`, role bans with the role.
+
 **The test between baseline and a domain:** would the rule survive if the feature were deleted? Yes → baseline. No → the domain that owns it.
 
 ## What each scope owns
@@ -48,35 +52,52 @@ single-service default every later service inherits by accident.
 
 ### `lla/` — language level
 
-| File | What it covers |
-|---|---|
-| [banned-constructs.md](lla/banned-constructs.md) | Language-level prohibitions in one list — `event`, `using static`, sync-over-async, positional data records |
-| [code-organization.md](lla/code-organization.md) | One file per type, section dividers, parameter formatting, raw strings, SQL line length |
-| [documentation.md](lla/documentation.md) | XML doc index — format, the three gates (convention → compaction → length), required tags, anti-patterns |
-| [documentation/remarks.md](lla/documentation/remarks.md) · [params.md](lla/documentation/params.md) · [typeparams.md](lla/documentation/typeparams.md) · [returns.md](lla/documentation/returns.md) · [exceptions.md](lla/documentation/exceptions.md) | Per-block rules for the remaining XML doc tags |
-| [documentation/summary.md](lla/documentation/summary.md) | **The canonical `<summary>` starter table** per type-kind + the falsifiability test; every other file links here |
-| [idioms.md](lla/idioms.md) | Idiomatic C# sugar — method groups (`IDE0200`); room to grow (target-typed `new`, collection expressions) |
-| [members.md](lla/members.md) | Member bodies — block `{ }` over expression `=>`, debuggability rationale |
-| [models.md](lla/models.md) | Record style (`{ get; init; }`), member rules, naming |
-| [naming.md](lla/naming.md) | Symbol naming — no brand/product prefix on types/members/extensions; predicates `Is`/`Has`/`Can`, never `Be` |
+Three levels, and they never share a folder ([../../../conventions.md](../../../conventions.md) § *One level per folder*).
+
+| Level | Answers | Lives in |
+|---|---|---|
+| **construct** | what C# offers, and which of it we use or forbid — `record` · `class` · `interface` · `enum` · `struct` · `delegate` | [constructs/](lla/constructs/constructs.md) |
+| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components.md](lla/components/components.md) |
+| **definition** | the whole component — folder, file, type doc, type name, member doc, content | each component's own file, via the six-section template |
+
+**The role level fixes the starters.** A data model — `record`, `struct` — takes **Represents**. An interface over a data
+model takes **Defines**. A behavior type takes its role's verb. A data model may carry behavior, but never complex
+behavior: the moment a flow appears, the type has stopped being a model.
+
+| Level | Folder | Holds |
+|---|---|---|
+| the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/event.md) · [records](lla/constructs/records.md) |
+| the service-free role | [components/](lla/components/components.md) | [constants](lla/components/constants.md) · [extensions](lla/components/extensions.md) — the only two that pass the gate |
+| how it is written down | [notation/](lla/notation/notation.md) | [naming](lla/notation/naming/naming.md) · [documentation](lla/notation/documentation/documentation.md) · [style](lla/notation/style/style.md) |
+
+**Membership in `components/`** — a role passes only when it owns **both its shape and its role with no service around it**.
+The gate is a demonstration: show it declared *and used* in a program that has no services. An `Entity` fails, because an entity
+is a model and a model needs a store and a domain. An `enum` fails, because any role an enum plays gathers logic around it.
+A role that fails belongs in [`mla/components/`](mla/components/components.md).
+
+**Notation is a default set** — every rule there applies to every symbol, and a component may override it in its own file.
+A component that does not override cites `notation/` rather than restating it.
 
 ### `mla/components/` — a kind of type you declare
 
+Split by what the type is for: [data/](mla/components/data/entity.md) holds, [behavior/](mla/components/behavior/service.md) does.
+The lead is [components.md](mla/components/components.md) — the suffix keep-list, the folds, and the coining gate.
+
 | File | What it covers |
 |---|---|
-| [broker.md](mla/components/broker.md) | The app-side seam — broker/client peering, degradation policy, `Integrates` starter |
-| [client.md](mla/components/client.md) | HTTP API wrappers — `HttpClient` injection, resilience pipeline (`AddSdkResilience`), Refit |
+| [broker.md](mla/components/behavior/broker.md) | The app-side seam — broker/client peering, degradation policy, `Integrates` starter |
+| [client.md](mla/components/behavior/client.md) | HTTP API wrappers — `HttpClient` injection, resilience pipeline (`AddSdkResilience`), Refit |
 | [components.md](mla/components/components.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
-| [controller.md](mla/components/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
-| [entity.md](mla/components/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
-| [enum.md](mla/components/enum.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
-| [repository.md](mla/components/repository.md) | Dapper, `IDbConnectionFactory`, `SqlNaming`, generic repositories |
-| [request-model.md](mla/components/request-model.md) | `*ApiRequest` bodies + the edge mapping method to the application request |
-| [response-model.md](mla/components/response-model.md) | `ApiResponse<T>` success envelope + DTO rules (`{Entity}Dto`) |
-| [result.md](mla/components/result.md) | Result carriers — `Result`/`Result<T>` + `AppResult<TSuccess>` closed unions over one `AppError` |
-| [service.md](mla/components/service.md) | Service / Client / Broker / Factory / Repository shape, lifetime + doc starters |
-| [settings.md](mla/components/settings.md) | Settings records — `sealed record`, `init`-only, `IOptions<T>` binding |
-| [validator.md](mla/components/validator.md) | Input validation — `IValidator<T>`, mediator validation behavior |
+| [controller.md](mla/components/behavior/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
+| [entity.md](mla/components/data/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
+| [enum.md](lla/components/enums.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
+| [repository.md](mla/components/behavior/repository.md) | Dapper, `IDbConnectionFactory`, `SqlNaming`, generic repositories |
+| [request-model.md](mla/components/data/request-model.md) | `*ApiRequest` bodies + the edge mapping method to the application request |
+| [response-model.md](mla/components/data/response-model.md) | `ApiResponse<T>` success envelope + DTO rules (`{Entity}Dto`) |
+| [result.md](mla/components/data/result.md) | Result carriers — `Result`/`Result<T>` + `AppResult<TSuccess>` closed unions over one `AppError` |
+| [service.md](mla/components/behavior/service.md) | Service / Client / Broker / Factory / Repository shape, lifetime + doc starters |
+| [settings.md](mla/components/data/settings.md) | Settings records — `sealed record`, `init`-only, `IOptions<T>` binding |
+| [validator.md](mla/components/behavior/validator.md) | Input validation — `IValidator<T>`, mediator validation behavior |
 
 ### `mla/layers/` — where a type lives
 

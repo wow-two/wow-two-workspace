@@ -17,7 +17,7 @@ Track order on a new product: `rough` → `polish` (optional) → `version`. A s
 
 Those three decompose by **time** and assume one chat. `vector` is the orthogonal axis — it decomposes by **subject** so lanes run in parallel chats, and each lane runs one of the three inside it. A product with 3+ independent subsystems opens vectors first, tracks second.
 
-## Handoff docs — write-once, read-once, delete (REQUIRED)
+## Handoff docs — write-once, read-once, delete [REQUIRED]
 
 A handoff (`handoff.md`) exists for exactly one purpose: **loading a fresh chat with the context the previous chat is about to lose.** It is a courier, not a record. The track doc is the record.
 

@@ -10,7 +10,7 @@ Records use **body properties with `{ get; init; }`** — not positional constru
 
 **Why:** Positional constructor parameters don't support standard XML doc comments (`/// <summary>`). Body properties do.
 
-**Exception:** Primary constructors are fine for **DI injection** (services, controllers, handlers) — a constructor that only assigns carries neither `<summary>` nor `<param>` ([documentation.md](documentation.md) § *Required tags per type-kind*).
+**Exception:** Primary constructors are fine for **DI injection** (services, controllers, handlers) — a constructor that only assigns carries neither `<summary>` nor `<param>` ([documentation.md](../notation/documentation/documentation.md) § *Required tags per type-kind*).
 
 ```csharp
 // ✅ Correct — body properties with XML docs
@@ -42,7 +42,7 @@ Default to `sealed record` for every data carrier. Open `record` (non-sealed) on
 
 - **`required`** on every non-nullable property whose value must come from outside the constructor (caller, EF, binder)
 - **No default values** unless the property is genuinely optional — applies to **all** models; a generic-role model that genuinely needs a default is
-  an **explicit override documented in its own convention** (e.g. a tuning `Options` type — see [component-names.md](../mla/components/components.md)
+  an **explicit override documented in its own convention** (e.g. a tuning `Options` type — see [component-names.md](../../mla/components/components.md)
   `Settings` vs `Options`), never an ad-hoc default sprinkled in
 - **Init-only** (`{ get; init; }`) for immutable models — settings, DTOs, value objects
 - **Get-set** (`{ get; set; }`) for entities — EF Core requires set accessors
@@ -68,7 +68,7 @@ Optional members make loose contracts, and a loose contract is a domain claim: i
 
 - Always `List<T>` for collection-typed properties (EF Core compat, Npgsql array mapping, mutability for `Add`)
 - Never `T[]`, `ICollection<T>`, `IEnumerable<T>`, `IReadOnlyList<T>` on entities
-- Three patterns (see [entities.md](../mla/components/entity.md) for entity-specific guidance):
+- Three patterns (see [entities.md](../../mla/components/data/entity.md) for entity-specific guidance):
   - `public required List<T> Prop { get; set; }` — always-populated value collections
   - `public List<T> Prop { get; set; } = null!;` — EF navigation properties
   - `public List<T>? Prop { get; set; }` — genuinely optional collections
@@ -76,7 +76,7 @@ Optional members make loose contracts, and a loose contract is a domain claim: i
 ## Documentation
 
 Every public model gets `/// <summary>` (required). Properties get `/// <summary>` too. The starter word for each model kind comes from the
-canonical starter table — [documentation/summary.md](documentation/summary.md) § *Starter table*.
+canonical starter table — [documentation/summary.md](../notation/documentation/summary.md) § *Starter table*.
 
 ### Don't restate the signature
 
@@ -90,13 +90,7 @@ A summary earns its place by saying something the declaration cannot. `required`
 
 ## Naming
 
-- **Entities** — suffix with `Entity` when the type maps 1:1 to a DB table (`ChannelEntity` → `channels` table)
-- **Value objects within entities** — suffix with `ValueObject` (`WifiContentValueObject`, `CodeRuleValueObject`). A persisted value object reads as an entity otherwise, and the suffix is what separates a type that owns a row from one that rides inside one. The wire is unaffected when a `SubtypeRegistry` binds discriminators to types explicitly.
-  - Frontend types do **not** mirror the suffix — a browser-side type is a wire projection, not a persisted object, and naming it after the domain claims an identity and change-tracking it does not have. Suffix those `Dto`.
-- **DTOs** — suffix with `Dto` (`ChannelDto`, `ChannelWithPipelinesDto`)
-- **Settings** — suffix with `Settings` (`ClassificationSettings`)
-- **Results** — suffix with `Result` (`ChannelGetAllResult`)
-- **Query/Command** — suffix with `Query` / `Command` (`ChannelGetAllQuery`, `PipelineExecuteCommand`)
+Suffixes are the component vocabulary's, not this file's — [../../mla/components/components.md](../../mla/components/components.md) § *Keep-list*.
 
 ## Introducing a model — the exclusive-members bar
 
@@ -127,9 +121,9 @@ A discriminated union over a `type` field — never hand-author the discriminato
 
 ## See also
 
-- [entities.md](../mla/components/entity.md) — entity-specific modeling rules
-- [enums.md](../mla/components/enum.md) — enums
-- [settings.md](../mla/components/settings.md) — settings records
-- [result-pattern.md](../mla/components/result.md) — Result type structure
-- [code-organization.md](code-organization.md) — file-per-type
-- [documentation.md](documentation.md) — XML doc + starter table
+- [entities.md](../../mla/components/data/entity.md) — entity-specific modeling rules
+- [enums.md](../components/enums.md) — enums
+- [settings.md](../../mla/components/data/settings.md) — settings records
+- [result-pattern.md](../../mla/components/data/result.md) — Result type structure
+- [code-organization.md](../notation/style/style.md) — file-per-type
+- [documentation.md](../notation/documentation/documentation.md) — XML doc + starter table

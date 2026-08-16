@@ -22,7 +22,7 @@
 | OAuth callback | `Callback` | `callback` | `GET` | `Completes the OAuth callback.` |
 
 - **Verb by mechanism** — credential / token sign-in is a `POST` (it carries a body); an external-IdP challenge that only redirects is a `GET` (`sign-in` → 302 to the provider). Path stays `sign-in` either way.
-- **Mechanism is never in the summary** — OAuth vs password vs guest is *how* (`Begins sign-in.`, not `Challenges the GitHub scheme.`). See [controllers.md › Documentation](../components/controller.md).
+- **Mechanism is never in the summary** — OAuth vs password vs guest is *how* (`Begins sign-in.`, not `Challenges the GitHub scheme.`). See [controllers.md › Documentation](../components/behavior/controller.md).
 - **OAuth callback** — only expose `callback` as an action if the controller handles it; if the auth middleware owns `CallbackPath`, leave it there and keep that path in sync — don't add a dead action.
 
 ---

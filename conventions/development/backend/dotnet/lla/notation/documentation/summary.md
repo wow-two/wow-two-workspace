@@ -4,13 +4,13 @@
 
 > The `<summary>` block — its mandated first word per type-kind (the starter table) + tone. The canonical summary reference; every convention links here.
 
-## Starter table (REQUIRED)
+## Starter table [REQUIRED]
 
 The first word of every `<summary>` is fixed by type-kind. This is the canonical reference — every other file in `conventions/` links here.
 
 | Type-kind | Starter | Example |
 |---|---|---|
-| Interface | **Defines** | `Defines the contract for stamping audit fields on save.` |
+| Interface | **Defines** | `Defines audit-field stamping on save.` |
 | Enum | **Defines** | `Defines the execution status of a pipeline run.` |
 | Enum value | **Refers to** | `Refers to a run that finished successfully.` |
 | Entity / record / model class | **Represents** | `Represents an external listing channel.` |
@@ -74,7 +74,7 @@ AppStore,
 AppStore,
 ```
 
-**Defines / Represents / Handles** — the CQRS verb trio, by layer: **Defines** an interface / marker definition · **Represents** a concrete message model · **Handles** a handler. Same three verbs apply to the mediator markers — see [mediator.md](../../mla/domains/messaging/mediator.md) (§ Comments).
+**Defines / Represents / Handles** — the CQRS verb trio, by layer: **Defines** an interface / marker definition · **Represents** a concrete message model · **Handles** a handler. Same three verbs apply to the mediator markers — see [mediator.md](../../../mla/domains/messaging/mediator.md) (§ Comments).
 
 ## Summary — tightest accurate sentence
 
@@ -84,12 +84,13 @@ AppStore,
   - ❌ `Defines the contract for entities that participate in timestamp auditing — CreatedAt populated on insert, UpdatedAt on every update.`
 - For an **empty marker interface** (no members — it tags a category rather than imposing a shape), use `Defines the marker for {X}`. Don't call it a "shape" — a marker has none. When the tagged concept is broad, define it inline with an em-dash.
   - ✅ `Defines the marker for an entity — a type persisted to a data store.`
-- For **behavior interfaces** (handlers, stampers, service-shaped contracts), `Defines the contract for {action}` is fine — there's no noun to name.
+- **`the contract for` is banned after `Defines`.** The verb already says a contract is being declared, so the phrase pays characters for meaning the reader has. Name the capability directly: `Defines audit-field stamping on save.`, never `Defines the contract for stamping audit fields on save.`
+- For **behavior interfaces** (handlers, stampers, service-shaped contracts), name the action as a noun phrase — `Defines JWT issuance for an admin session.`
 - Don't spill member-level detail into the type summary — the members carry it.
 - Drop filler: `the SDK convention`, `with a custom X type` (the type parameter is already visible in the signature).
 - An **indexer** takes the property starter its accessors name, and its summary states **what the key selects** — `Gets the routing rule at the given order.`, never `Gets the rule.` The key is a value, so it also carries a `<param>` ([params.md](params.md)).
 
-## The falsifiability test (REQUIRED)
+## The falsifiability test [REQUIRED]
 
 One question decides whether a `<summary>` is a definition or a description of today's arrangement:
 
@@ -119,15 +120,8 @@ The companion rule: **a summary states the referent (what the thing *is*), never
 
 ## Extension classes
 
-`Extends`, not `Provides`. An extension class hosts methods bolted onto a type it does not own — it supplies no behaviour of its own, so the service starter overstates it.
+Moved — see [../shape/extensions.md](../../components/extensions.md).
 
-`Extends <see cref="X"/> for {purpose}.` — the target, then the **purpose category**.
-
-- `Extends <see cref="WifiContentValueObject"/> for payload encoding.`
-- **name the purpose, not the additions** — what a class adds changes every time a method lands; why it exists does not
-- **cref the target when there are one or two** — the reader clicks through
-- **use an abstract name when the targets are many or open** — `Extends the host builder for observability wiring.` A list of crefs stops being readable past two, and an open target set has nothing to cref
-- individual extension methods keep a verb start (`Adds`, `Maps`, `Builds`)
 
 ## Properties on entities + DTOs
 
@@ -135,7 +129,7 @@ The companion rule: **a summary states the referent (what the thing *is*), never
 - **`{ get; init; }` takes `Gets`** — the setter closes after construction, so a consumer only ever gets
 - **Applies to every C# model kind**, value objects included. A bare noun phrase (`The network name.`) is the TypeScript style — TS has fields, C# has properties, and the accessor is what the starter names. Don't carry the frontend's phrasing across
 - **A method that produces a formatted payload gets `<inheritdoc />` + `<remarks>`, not a re-described `<summary>`.** The format string lives in the code; a summary spelling it out (`Builds the <c>WIFI:T:…;S:…;;</c> payload`) restates it and goes stale. `<remarks>` carries only what the code doesn't show — escaping rules, an omitted segment, a spec quirk
-- **Name the referent** ([documentation.md](../documentation.md) § *Name the referent*) — name it only when the value is not the type's own: `Gets the order of the rule that matched the scan`, but `ChannelEntity.Slug` takes a bare `Gets or sets the kebab-case slug`
+- **Name the referent** ([documentation.md](documentation.md) § *Name the referent*) — name it only when the value is not the type's own: `Gets the order of the rule that matched the scan`, but `ChannelEntity.Slug` takes a bare `Gets or sets the kebab-case slug`
 - PKs / FKs: `<summary>` like every other member — state what the key identifies
 - **State what the value is — not who sets it, when, or how.** No "stamped by the interceptor", "populated by the DB", "set at construction". An entity-trait contract describes the field; the population mechanism (interceptor, trigger, app code) is the implementer's choice and must not leak in.
   - ✅ `Gets or sets the timestamp when the entity was created.`
@@ -153,19 +147,14 @@ summary from one that does not is the **role it plays**, never the access modifi
   correct; the type alone shows neither.
 - **an injected collaborator** — `private readonly IClock _clock`, an `ILogger<T>`, a repository. **No summary.** Its contract carries the doc,
   and restating it on the field duplicates a fact that then drifts — the same mechanism that makes `<inheritdoc/>` an exemption
-  ([documentation.md](../documentation.md) § *Required tags per type-kind*). A summary here is a Redundant comment by construction.
+  ([documentation.md](documentation.md) § *Required tags per type-kind*). A summary here is a Redundant comment by construction.
 
 The test: **does the declaration leave a "why this?" unanswered?** A value and a state field do; a collaborator's type name is the whole answer.
 
 ## Constants
 
-`Holds` — a member-sized verb, matching how properties take `Gets`. **Not `Defines` / `Represents`**: those are type-kind starters, and a `const` is a member. It has no accessor either, so no `Gets`.
+Moved — a `Constants` class is an LLA role, so its doc rules live with it ([../shape/constants.md](../../components/constants.md)).
 
-- **must not restate the value** — `= "WPA"` is on the line; `Represents the WPA token` says nothing the reader can't see
-- **must name the authority that fixes the value** when one exists — a spec, a wire format, a third-party contract. That is the fact the literal alone hides: `"nopass"` is unguessable until you know the WIFI URI scheme mandates it
-- **applies at every visibility** — a `private const` carries a summary too; only `<inheritdoc/>`, test methods, and generated code are exempt ([documentation.md](../documentation.md) § *Required tags per type-kind*)
-- **a format-string constant must document its shape, never its slots** — `Holds the payload shape of a WIFI URI.` The `{0}`…`{n}` are visible; what a reader needs is which spec the shape comes from
-- **a constant naming a magic number states where the number comes from** — `private const int MaxNameLength = 200;` gets `Holds the column width the schema fixes.`, never `Holds the max name length`
 
 ## Extract a format string when the literal has structure
 
@@ -178,7 +167,7 @@ A literal with fixed structural parts is a **contract shape**, not an implementa
 
 ## Expression body vs block
 
-- **block body by default.** An expression body is for a single trivial delegation or a direct member return, **and only on a component that permits one** — the list is in [members.md](../members.md) § *`=>` is decided by the component*
+- **block body by default.** An expression body is for a single trivial delegation or a direct member return, **and only on a component that permits one** — the list is in [members.md](../style/members.md) § *`=>` is decided by the component*
 - ✅ `public override string Encode() => this.ToPayload();` — a value object, permitted
 - ✅ `public string Slug => _slug;`
 - ❌ the same delegation on a `Service` or `Repository` — block body from the start

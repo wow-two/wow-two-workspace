@@ -69,6 +69,6 @@ var next = CronExpressionParser.NextOccurrence(                  // DateTimeOffs
 
 ## See also
 
-- [result-pattern.md](../components/result.md) — foundation sibling
+- [result-pattern.md](../components/data/result.md) — foundation sibling
 - [Time/time.md](time.md) — package quickstart
 - [NodaTime](https://nodatime.org/) · [TimeZoneConverter](https://github.com/mattjohnsonpint/TimeZoneConverter) · [Cronos](https://github.com/HangfireIO/Cronos)

@@ -21,5 +21,5 @@
 
 ## Usage
 
-- source the context, then pass it explicitly into the mapping - `request.ToCommand(currentUser.Id)` ([request-models.md](../components/request-model.md))
+- source the context, then pass it explicitly into the mapping - `request.ToCommand(currentUser.Id)` ([request-models.md](../components/data/request-model.md))
 - guard a missing actor at the edge - `if (currentUser.Id is not { } userId) return Unauthorized();`

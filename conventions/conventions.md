@@ -64,6 +64,9 @@ Rules:
   symbol). Verify a symbol exists in source before citing; examples come from real code.
 - **No duplication** — reference another convention inline; don't restate it. Supersede a stale note in place rather than stacking.
 - **Location** — `{sub-domain}/{name}.md`; a folder's lead doc is `{folder}.md`, `README.md` only at a repo root.
+- **One level per folder** — docs describing different levels never sit at the same folder level. A doc about *what you declare* and a doc about *how you write it* are two levels; separate them by folder or by nesting, never by filename alone.
+- **A table degrades to bullets** — if any row would exceed 120 characters, the table becomes bullet points. A wrapped cell is unreadable, and the wrap is the signal that the rows carry sentences rather than fields.
+- **No files beside folders** — once a folder holds a sub-folder, every other doc in it gets its own folder too. The folder's own lead doc (`{folder}.md`) is the single exception.
 - **Bullet case** — a bullet is a **lowercase fragment**, not a sentence (capitalize only an identifier / proper noun that opens it). Terse `key - detail` fragments; `controllers.md` is the reference.
 - **Order is normative** — list sections and their bullets in the **order they're applied**; readers + adopters follow that order unless a special case is called out (e.g. the attribute order, the doc-block order in `controllers.md`).
 

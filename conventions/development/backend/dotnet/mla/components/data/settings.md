@@ -6,7 +6,7 @@ Configuration classes that bind to `appsettings.json` sections via `IOptions<T>`
 
 ## Location
 
-`{Service}/Infrastructure/Settings/{Name}Settings.cs` — one file per settings class (per [code-organization.md](../../lla/code-organization.md)).
+`{Service}/Infrastructure/Settings/{Name}Settings.cs` — one file per settings class (per [code-organization.md](../../../lla/notation/style/style.md)).
 
 | Layer | Folder | Examples |
 |---|---|---|
@@ -19,7 +19,7 @@ Configuration classes that bind to `appsettings.json` sections via `IOptions<T>`
 
 - **`sealed record`** — immutable after binding
 - **Naming** — suffix with `Settings` (`ClassificationSettings`, `ScrapeSettings`)
-- **No positional constructor** — body properties only (see [models.md](../../lla/models.md))
+- **No positional constructor** — body properties only (see [models.md](../../../lla/constructs/records.md))
 
 ### Members
 
@@ -41,7 +41,7 @@ public sealed record ClassificationSettings
 
 ## Registration
 
-Register in `HostConfigurationExtensions.AddSettings()` via `IOptions<T>` binding — see [host-configuration.md](../platform/host-configuration.md):
+Register in `HostConfigurationExtensions.AddSettings()` via `IOptions<T>` binding — see [host-configuration.md](../../platform/host-configuration.md):
 
 ```csharp
 public static WebApplicationBuilder AddSettings(this WebApplicationBuilder builder)
@@ -62,7 +62,7 @@ public static WebApplicationBuilder AddSettings(this WebApplicationBuilder build
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../lla/documentation/summary.md):
+Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
 
 ### Settings class
 
@@ -93,6 +93,6 @@ Auth, OAuth, sign-in, and token concerns use the keyword **`Identity`** — alig
 
 ## See also
 
-- [host-configuration.md](../platform/host-configuration.md) — registration
-- [models.md](../../lla/models.md) — record style
-- [documentation/summary.md](../../lla/documentation/summary.md) — the canonical `<summary>` starter table
+- [host-configuration.md](../../platform/host-configuration.md) — registration
+- [models.md](../../../lla/constructs/records.md) — record style
+- [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table

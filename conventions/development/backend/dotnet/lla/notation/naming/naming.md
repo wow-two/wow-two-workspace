@@ -62,7 +62,21 @@ For a library that ships `IServiceCollection` / host extensions (the SDK pattern
 
 ---
 
+## Acronyms
+
+- **Acronyms are always PascalCase, never all-caps** — `Id` not `ID`, `Ai` not `AI`, `Api` not `API`, `Sql`, `Http`, `Json`, `Io`, `Ui`, `Mqtt`, `Grpc`.
+- First letter capital, rest lowercase, **even when it distorts an established acronym** — consistency over original styling.
+- Applies to type / namespace / folder / member names.
+- This governs *all-caps runs* only — a mixed-case proper name with no all-caps run (`OAuth`, `SendGrid`, `MailKit`) is unaffected.
+- Canonical for the whole ecosystem — the backend-beta SDK follows this rule too (its package-id grammar in `docs/architecture/package-layout.md` notes the same case-sensitive-CI trap).
+
+## Banned
+
+- **Hungarian notation** — `m_`, `s_`, a leading `_` on anything but a private field.
+- **`Helper` · `Util` · `Utils` · `Common` · `Manager` suffixes** — banned outright, public or internal. They name the absence of a role, and an internal type needs a role as much as a public one ([../../mla/components/components.md](../../../mla/components/components.md) § *Banned*).
+- **`using static`** — see § *`using static` is banned* above.
+
 ## Specific naming lives by area
 
-- which **suffix** names which **role** (one per role — `Store`→`Repository`, banned junk-drawer, new-suffix gate) → [component-names.md](../mla/components/components.md)
-- service / client / factory → [services.md](../mla/components/service.md) · query / command / handler → [mediator.md](../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](models.md)
+- which **suffix** names which **role** (one per role — `Store`→`Repository`, banned junk-drawer, new-suffix gate) → [component-names.md](../../../mla/components/components.md)
+- service / client / factory → [services.md](../../../mla/components/behavior/service.md) · query / command / handler → [mediator.md](../../../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](../../constructs/records.md)

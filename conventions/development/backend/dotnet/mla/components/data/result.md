@@ -20,7 +20,7 @@
 `AppError(AppErrorType Type, string Message, IReadOnlyDictionary<string,object?>? Metadata = null) { ErrorOrigin? Origin }` — open `record` (subclassed by `ValidationError`, `AppAggregateError`).
 
 - **must** author errors via a catalog — SDK `AppErrors.{Kind}(...)`, app `OrderErrors.*` — never `new AppError { … }` at a call site.
-- **must not** put an HTTP status on the error — `AppErrorType` is transport-agnostic; status maps at the edge ([problem-details.md](../platform/problem-details.md)).
+- **must not** put an HTTP status on the error — `AppErrorType` is transport-agnostic; status maps at the edge ([problem-details.md](../../platform/problem-details.md)).
 - `Type` (name) is the wire `code`; `Origin` is log-only (never serialized); `Metadata` carries message args + reserved header keys.
 
 ## Rules
@@ -34,8 +34,8 @@
 
 ## Throw ⇄ return bridge
 
-A failure is expressible either way over the **same** `AppError`: `error.Throw()` · `result.ValueOrThrow()` · `result.ThrowIfFailure()` · `(() => op()).Attempt()` (catch → `Result`). The mediator **never throws** for `AppResult` requests — `ExceptionToResultBehavior` converts a throw to a `Failure` ([problem-details.md](../platform/problem-details.md)).
+A failure is expressible either way over the **same** `AppError`: `error.Throw()` · `result.ValueOrThrow()` · `result.ThrowIfFailure()` · `(() => op()).Attempt()` (catch → `Result`). The mediator **never throws** for `AppResult` requests — `ExceptionToResultBehavior` converts a throw to a `Failure` ([problem-details.md](../../platform/problem-details.md)).
 
 ## See also
 
-- [validation.md](validator.md) · [problem-details.md](../platform/problem-details.md) · [controllers.md](controller.md) · [mediator.md](../domains/messaging/mediator.md)
+- [validation.md](../behavior/validator.md) · [problem-details.md](../../platform/problem-details.md) · [controllers.md](../behavior/controller.md) · [mediator.md](../../domains/messaging/mediator.md)

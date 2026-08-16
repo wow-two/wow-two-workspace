@@ -3,12 +3,12 @@
 *Last updated: 2026-08-15*
 
 > What — the canonical suffix→role vocabulary for backend types: one name per role, a type's suffix declares its responsibility (the
-> `Store` vs `Repository` vs `Service` decision — not the brand/casing rules in [../code-style/naming.md](../../lla/naming.md)).
+> `Store` vs `Repository` vs `Service` decision — not the brand/casing rules in [../code-style/naming.md](../../lla/notation/naming/naming.md)).
 > Purpose — kill naming entropy: when three synonyms (`Store` / `Repository` / `Provider`) all mean "data access", a reader can't infer role from the
 > name; one suffix per role lets the name carry the responsibility.
 > Use case — reach for it whenever you name any backend type; check the keep-list before inventing a suffix, run the gate before adding a new one.
 
-## Renaming is never the cost (REQUIRED)
+## Renaming is never the cost [REQUIRED]
 
 **A rename is not an argument against getting a name right.** "That would rename types in other repos" is not a reason to keep a wrong name — it is a description of the work, and the work is the point.
 
@@ -70,8 +70,8 @@ Detail (shape, docs, lifetime) stays in the authority; cite it, don't duplicate 
 
 Authority paths for the short names above:
 
-- `services.md` → [../architecture/services.md](service.md) · `clients.md` → [../integrations/clients.md](client.md)
-- `naming.md` / `models.md` → [../code-style/](../code-style/) · `settings.md` → [../runtime/settings.md](settings.md)
+- `services.md` → [../architecture/services.md](behavior/service.md) · `clients.md` → [../integrations/clients.md](behavior/client.md)
+- `naming.md` / `models.md` → [../code-style/](../code-style/) · `settings.md` → [../runtime/settings.md](data/settings.md)
 - `request-models.md` / `response-models.md` / `controllers.md` → [../presentation/](../presentation/)
 - `mediator.md` → [../messaging/mediator.md](../domains/messaging/mediator.md) · `validation.md` / `result-pattern.md` → [./](./)
 - `database.md` / `data-access.md` → [../persistence/](../persistence/)
@@ -137,7 +137,7 @@ Both reach an external system. The line is **whose vocabulary the type exposes**
 
 ### Request sub-blocks — verb-first vs noun-first
 
-The `{Verb}{Noun}ApiRequest` rule ([request-models.md](request-model.md)) governs the **top-level** request — the body a
+The `{Verb}{Noun}ApiRequest` rule ([request-models.md](data/request-model.md)) governs the **top-level** request — the body a
 controller action binds. A body **sub-block nested inside** a request carries no verb of its own; name it **noun-first `{Noun}ApiRequest`**.
 
 - top-level → `PreviewCodeApiRequest`, `CreateCodeApiRequest` (verb-first — the action).
@@ -151,7 +151,7 @@ Default: name the **domain the logic belongs to**, not the type it happens to ex
 - **never carry an interface's `I` into the class name** — `ServiceCollectionExtensions`, never `IServiceCollectionExtensions`. The `I` belongs to the interface, and the class is not one.
 - **must not name a type the domain does not answer to** — `ContentWifiTypeExtensions` names an enum, `ICodeRepositoryExtensions` names an interface. Both lock the class to one declaration, so the first method touching a sibling forces a rename. `WifiEncryptionExtensions` is fine: Wi-Fi encryption *is* the subject, not an incidental target.
 - name the target type only when the target **is** the domain — `ServiceCollectionExtensions` for container registration, where the container is the subject.
-- for DI registration in a library, `naming.md` narrows this further to `<Area>ServiceCollectionExtensions` ([naming.md](../../lla/naming.md) § *Registration and extension-method naming*).
+- for DI registration in a library, `naming.md` narrows this further to `<Area>ServiceCollectionExtensions` ([naming.md](../../lla/notation/naming/naming.md) § *Registration and extension-method naming*).
 
 **Exception — a closed family.** When several types form one modelled family (a discriminated union's variants plus the enums they carry), one `{Family}Extensions` class may host the extensions for all of them.
 
@@ -159,7 +159,7 @@ Default: name the **domain the logic belongs to**, not the type it happens to ex
 - must name the family, not one member: `WifiContentExtensions`, not `WifiEncryptionExtensions` when it also extends the content type
 - the family class owns the family's format constants too, keeping wire spellings out of the model
 - rationale: a per-target split gives 2+ files per family and scatters one wire contract; per-family gives one place to look and one place for the spec's literals to live
-- summary starter is `Extends` — see [documentation/summary.md](../../lla/documentation/summary.md) § *Extension classes*
+- summary starter is `Extends` — see [documentation/summary.md](../../lla/notation/documentation/summary.md) § *Extension classes*
 
 ---
 
@@ -202,7 +202,7 @@ Seen-as sources (real today; the fold renames them):
 
 ---
 
-## Adding a new suffix — the gate (REQUIRED)
+## Adding a new suffix — the gate [REQUIRED]
 
 Before coining a suffix, answer the why-questions in order; the first **yes** picks the suffix:
 
@@ -225,6 +225,18 @@ components land in a category the keep-list has not written yet. Coining is its 
 Rapid scaffolding does not lower this bar, it raises it: scaffolding is where an unconfirmed name gets replicated fastest.
 
 ---
+
+## Model suffixes
+
+Lifted from `lla/shape/models.md` — a suffix is component vocabulary, so it lives with the keep-list.
+
+- **Entities** — suffix with `Entity` when the type maps 1:1 to a DB table (`ChannelEntity` → `channels` table)
+- **Value objects within entities** — suffix with `ValueObject` (`WifiContentValueObject`, `CodeRuleValueObject`). A persisted value object reads as an entity otherwise, and the suffix is what separates a type that owns a row from one that rides inside one. The wire is unaffected when a `SubtypeRegistry` binds discriminators to types explicitly.
+  - Frontend types do **not** mirror the suffix — a browser-side type is a wire projection, not a persisted object, and naming it after the domain claims an identity and change-tracking it does not have. Suffix those `Dto`.
+- **DTOs** — suffix with `Dto` (`ChannelDto`, `ChannelWithPipelinesDto`)
+- **Settings** — suffix with `Settings` (`ClassificationSettings`)
+- **Results** — suffix with `Result` (`ChannelGetAllResult`)
+- **Query/Command** — suffix with `Query` / `Command` (`ChannelGetAllQuery`, `PipelineExecuteCommand`)
 
 ## Banned — the junk drawer
 

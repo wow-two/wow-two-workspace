@@ -20,4 +20,4 @@
 ## See also
 
 - [members.md](members.md) — block `{ }` vs expression `=>` bodies; the debuggability rationale this reconciles with
-- [controllers.md](../mla/components/controller.md) — the `() => NoContent()` → `NoContent` method group in the `DeleteById` `.Match` example
+- [controllers.md](../../../mla/components/behavior/controller.md) — the `() => NoContent()` → `NoContent` method group in the `DeleteById` `.Match` example

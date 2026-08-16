@@ -2,7 +2,7 @@
 
 *Last updated: 2026-07-06*
 
-JSDoc on every public export. Mirrors the backend XML-doc starter table ([../backend/documentation.md](../../backend/dotnet/lla/documentation.md)) so a type reads the same in C# and TS.
+JSDoc on every public export. Mirrors the backend XML-doc starter table ([../backend/documentation.md](../../backend/dotnet/lla/notation/documentation/documentation.md)) so a type reads the same in C# and TS.
 
 ## Format
 
@@ -124,5 +124,5 @@ A `//` block / inline comment states a **role** in one line — never the ration
 
 ## See also
 
-- [../backend/documentation.md](../../backend/dotnet/lla/documentation.md) — the C# starter table this mirrors
+- [../backend/documentation.md](../../backend/dotnet/lla/notation/documentation/documentation.md) — the C# starter table this mirrors
 - [components.md](../presentation/components.md) · [enums.md](enums.md) · [extensions.md](extensions.md)

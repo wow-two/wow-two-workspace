@@ -56,6 +56,19 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 - **Avoid generic names** — `Helpers/`, `Utils/`, `Misc/` are banned. If it doesn't fit a subdomain, it belongs in `Core/`
 - **Mirror across layers** — if Domain has `Listings/ListingCapturing/`, Infrastructure has `Listings/Capturing/` (drop redundant prefix)
 
+## Source folder casing
+
+- **Backend source folders are PascalCase**, matching their namespace segment 1:1 (`Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`). Distinct from the top-level **project** dir `{slug}.backend-services/`, which stays kebab — that's the IDE-collision-proof project folder, not a source folder ([repo/structure/repo-structure.md](../../../../repo/structure/repo-structure.md) §3).
+
+## Component folders across layers
+
+A component states its folder **name** once ([../../lla/components/components.md](../../lla/components/components.md) § *The component template*);
+where that folder may appear is this file's rule, and the two together are not duplication.
+
+- must allow a component folder in **any** layer that declares the component — `Enums/` is legal under Domain, Application and Infrastructure alike.
+- must scope the folder to its subdomain rather than to the project root — `Listings/Enums/`, never a single `Enums/` per assembly.
+- must not read a folder's presence in one layer as a claim on the others; a layer that declares none carries none.
+
 ## Layer alignment
 
 Domain and Infrastructure mirror each other but aren't forced to be 1:1. Infrastructure subdomains can exist without a Domain counterpart (e.g. `Publishing/` has no domain entities — it only formats and sends).
@@ -76,5 +89,5 @@ Domain and Infrastructure mirror each other but aren't forced to be 1:1. Infrast
 ## See also
 
 - [service-architecture.md](layers.md) — the 5 layers
-- [entities.md](../components/entity.md) — where entities live
-- [enums.md](../components/enum.md) — where enums live
+- [entities.md](../components/data/entity.md) — where entities live
+- [enums.md](../../lla/components/enums.md) — where enums live

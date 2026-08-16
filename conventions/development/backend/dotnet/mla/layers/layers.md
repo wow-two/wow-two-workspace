@@ -75,4 +75,4 @@ Persistence     (implements Application repository interfaces)
 
 - [host-configuration.md](../platform/host-configuration.md) — the `Configure` / `Extensions` split
 - [domain-structuring.md](domain-structuring.md) — subdomains within `Domain/` and `Infrastructure/`
-- [controllers.md](../components/controller.md) — Api layer details (thin-dispatcher controllers)
+- [controllers.md](../components/behavior/controller.md) — Api layer details (thin-dispatcher controllers)

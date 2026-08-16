@@ -17,7 +17,7 @@
 | `{Repo}.Persistence/Commands/` | Write operations | `SupplySourceUrlCommands` |
 | `{Repo}.Persistence/Repositories/` | Generic-CRUD subclasses | `OlxListingsRepository : DapperRepository<…>` |
 
-- One file per query/command type (per [code-organization.md](../../lla/code-organization.md)).
+- One file per query/command type (per [code-organization.md](../../../lla/notation/style/style.md)).
 
 ---
 
@@ -65,7 +65,7 @@ SqlMapper.AddTypeHandler(new ListTypeHandler<Guid>());
 ```
 
 > Enum-as-text columns: use `AddEnumTypeHandler<TEnum>(CaseStyle.Snake)` (registers `EnumTypeHandler<TEnum>`) — see [Enum-as-text columns](#enum-as-text-columns)
-> and [enums.md](enum.md).
+> and [enums.md](../../../lla/components/enums.md).
 
 ---
 
@@ -138,7 +138,7 @@ For hand-written queries and commands.
   `DynamicParameters.Add`). Strongly-typed `SqlNaming.ParRef<OlxListingEntity>(x => x.Id)`. Pass values via an anonymous object or `DynamicParameters`.
 - **Casing is global** — defaults columns `Snake`, params `Camel`. Override **once at startup** via `SqlNaming.ColumnCase` / `SqlNaming.ParameterCase`
   if a schema differs; never per-call.
-- **Raw strings** — follow [code-organization.md](../../lla/code-organization.md) raw-string rules (opening `"""` on its own line).
+- **Raw strings** — follow [code-organization.md](../../../lla/notation/style/style.md) raw-string rules (opening `"""` on its own line).
 - **Wrap every call** in `new CommandDefinition(sql, parameters, cancellationToken: ct)` — never `QueryAsync(sql, parameters)` without it (loses the CT).
 
 ```csharp
@@ -222,7 +222,7 @@ services.AddEnumTypeHandler<OrderStatus>(CaseStyle.Camel);
 
 - `AddEnumTypeHandler<TEnum>` (constraint `TEnum : struct, Enum`) registers `EnumTypeHandler<TEnum>`: writes emit the chosen `CaseStyle`, reads are
   case-insensitive.
-- For Postgres **native** enum types, use Npgsql's driver-level `MapEnum` instead — see [enums.md](enum.md).
+- For Postgres **native** enum types, use Npgsql's driver-level `MapEnum` instead — see [enums.md](../../../lla/components/enums.md).
 
 ---
 
@@ -237,7 +237,7 @@ services.AddEnumTypeHandler<OrderStatus>(CaseStyle.Camel);
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../lla/documentation/summary.md):
+Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
 
 ### Query / Commands class
 
@@ -274,4 +274,4 @@ public sealed class SupplySourceUrlCommands { }
 
 - **Sealed class** with primary constructor injecting `IDbConnectionFactory`.
 - **Connection pattern** — `await using var conn = await connectionFactory.CreateOpenAsync(ct);` per method.
-- **No DbContext** — Dapper uses raw connections; if you need EF, use an EF repository against the `DbContext` instead — see [database.md](../domains/persistence/database.md).
+- **No DbContext** — Dapper uses raw connections; if you need EF, use an EF repository against the `DbContext` instead — see [database.md](../../domains/persistence/database.md).

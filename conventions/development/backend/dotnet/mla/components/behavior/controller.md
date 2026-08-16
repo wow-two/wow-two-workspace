@@ -10,7 +10,7 @@
 
 #### Summary
 
-- see [baseline summary docs](../../lla/documentation/summary.md)
+- see [baseline summary docs](../../../lla/notation/documentation/summary.md)
 - keyword - `Exposes {resource} over HTTP`, e.g. `Exposes portfolio products over HTTP.` — a controller manages nothing, it exposes a resource
 - applies to non-resource controllers (status / health) too - the starter table carries one `Controller` row, with no resource/non-resource split
 - must not spill details — where the endpoints are used, whether a supporting controller exists, etc.
@@ -30,7 +30,7 @@
 ### Dependencies
 
 - may inject a caller-context accessor or other helper dependencies
-- must inject [mediator components](../domains/messaging/mediator.md) for application-layer communication
+- must inject [mediator components](../../domains/messaging/mediator.md) for application-layer communication
 - must not inject services, repositories, or validators directly
 
 ### Examples
@@ -62,7 +62,7 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 #### Summary
 
-- see [baseline summary docs](../../lla/documentation/summary.md)
+- see [baseline summary docs](../../../lla/notation/documentation/summary.md)
 - must not restate the HTTP verb
 - must state the action - e.g. `Sends the given message.`, `Sets the code's active state.`
 - must use the specified verbs for standard CRUD actions:
@@ -99,7 +99,7 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 ### Shape
 
-- see [baseline method docs](../../lla/members.md)
+- see [baseline method docs](../../../lla/notation/style/members.md)
 
 ### Return type
 
@@ -111,8 +111,8 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 ### API request binding
 
-- must bind the payload via an [api request model](request-model.md)
-- must read the actor through [`ICurrentUser`](../platform/api-context-building.md) for user context
+- must bind the payload via an [api request model](../data/request-model.md)
+- must read the actor through [`ICurrentUser`](../../platform/api-context-building.md) for user context
 - must use `User` / `HttpContext` only for facts `ICurrentUser` doesn't expose
 
 ### Cancellation
@@ -121,19 +121,19 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 ### Application request mapping
 
-- each api request declares its own [mapping method](request-model.md) to its application request
+- each api request declares its own [mapping method](../data/request-model.md) to its application request
 - must build the application request via that mapping method
 
 ### No business logic
 
-- must delegate business logic to internal components — for application requests, via [mediator components](../domains/messaging/mediator.md)
+- must delegate business logic to internal components — for application requests, via [mediator components](../../domains/messaging/mediator.md)
 - must not catch exceptions, validate, orchestrate, or hand-map
 - must save the dispatch result to a local — never request-map, send, and return on one line
 
 ### Response mapping
 
-- must `.Match` the saved result ([members.md](../../lla/members.md))
-- for [`AppResult`](result.md) - collapse via `.Match(onSuccess, onFailure)`: success → `ApiResponse<T>.Ok(dto)`, failure → `Problem(...)`
+- must `.Match` the saved result ([members.md](../../../lla/notation/style/members.md))
+- for [`AppResult`](../data/result.md) - collapse via `.Match(onSuccess, onFailure)`: success → `ApiResponse<T>.Ok(dto)`, failure → `Problem(...)`
 
 **Success mapping**
 
@@ -145,13 +145,13 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 | Binary / stream              | `File(bytes, contentType)`                                             |
 
 - `CreatedAtAction` points at `nameof(GetById)` with the new `{ id }` — the `Location` header round-trips to the read action
-- `T` is always a DTO; `ApiResponse<T>` never wraps another envelope ([response-models.md](response-model.md))
+- `T` is always a DTO; `ApiResponse<T>` never wraps another envelope ([response-models.md](../data/response-model.md))
 
 **Failure mapping — `Problem`**
 
 - must map a failure to `Problem(...)` with context, never bare `NotFound()` / `Conflict()` / `BadRequest()`
-- status comes from the injected `IErrorHttpStatusCodeMapper` — `statusMapper.ToStatusCode(fail.Error)`; never inline a status literal ([problem-details.md](../platform/problem-details.md))
-- `fail.Error` is an `AppError` — `.Message` carries the detail, `.Type` the `AppErrorType` the mapper reads ([result-pattern.md](result.md))
+- status comes from the injected `IErrorHttpStatusCodeMapper` — `statusMapper.ToStatusCode(fail.Error)`; never inline a status literal ([problem-details.md](../../platform/problem-details.md))
+- `fail.Error` is an `AppError` — `.Message` carries the detail, `.Type` the `AppErrorType` the mapper reads ([result-pattern.md](../data/result.md))
 
 ### Examples
 
