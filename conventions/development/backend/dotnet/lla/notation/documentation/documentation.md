@@ -103,6 +103,15 @@ Most bad doc comments are true sentences filed in the wrong place. Route by **au
 - **`<summary>` and `<remarks>` ship** — they land in the XML doc file and in IntelliSense. A maintainer note put there is broadcast to every consumer.
 - **A member cannot know how it is used.** Any claim quantifying callers, uniqueness, or authority belongs one level up, in a convention.
 
+## Declared fields only [REQUIRED]
+
+A component doc names the doc fields its types carry, one sub-heading each. **A field the component does not declare is
+forbidden on that component** — the omission is the ban, so no doc has to list what it excludes.
+
+- must add a field only by declaring it in the component doc, with the rule it obeys there.
+- must justify the addition in that sub-heading's first line — what the field carries that the declared ones cannot.
+- must not read a missing field as an oversight; a component with no `<remarks>` sub-heading forbids `<remarks>`.
+
 ## Name the referent [REQUIRED]
 
 A member name says *what* a value is, never *whose* it is. `Name` on a `CodeCreateCommand` could be the code's, its author's, or its owner's, and

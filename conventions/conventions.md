@@ -44,7 +44,8 @@ Rules:
 - **Shape** — `# Title` → `*Last updated:*` → description blockquote → `##` sections. `---` between **every** section. No `## See also` — link inline only
   where load-bearing.
 - **Description** — **one line**: **What** it governs + the scope boundary. Add **Purpose** (*why*) / **Use case** (*when*) only when they aren't obvious from What — and never restate a fact (e.g. a path) in both the description and the body. Not "Conventions for X" filler.
-- **Budget — the rule that makes the rest measurable.** A convention doc is **≤120 lines**; a bullet is **≤20 words, one clause**. Over either, the
+- **Budget — the rule that makes the rest measurable.** A line is **≤120 characters**, **75 preferred**; over 120 is an exception a claim earns by keeping its scope, causality or negation words. No cap on a doc's length — a doc is as long as its rules, and padding is caught by compaction, not by a line count.
+- **Compaction — every rule earns its characters.** Cut a line the reader already believes; cut a line that changes nothing they do next; cut the motive clause unless it changes the action. Prefer the verb to its nominalization, and the actor as the subject. A rule that survives all three cuts is the rule; anything else was commentary.
   doc is carrying something that is not a rule — split it or move it (→ *Rationale lives elsewhere*). Check with
   `wc -l` and `expr $(wc -w < f) / $(wc -l < f)`; a words-per-line above ~8 means the bullets have become sentences. `controllers.md` sits at ~4.6.
   Exempt: this file and the `{area}-conventions.md` indexes — an index is a lookup table, and its length tracks the tree, not its own verbosity.
@@ -65,6 +66,7 @@ Rules:
 - **No duplication** — reference another convention inline; don't restate it. Supersede a stale note in place rather than stacking.
 - **Location** — `{sub-domain}/{name}.md`; a folder's lead doc is `{folder}.md`, `README.md` only at a repo root.
 - **One level per folder** — docs describing different levels never sit at the same folder level. A doc about *what you declare* and a doc about *how you write it* are two levels; separate them by folder or by nesting, never by filename alone.
+- **A constraint earns a rule only when no positive rule already excludes it** — a starter rule fixes the starter, so a wrong starter is only a ❌ example; nothing about a correct starter forbids a type from bridging two services, so that needs its own rule.
 - **A table degrades to bullets** — if any row would exceed 120 characters, the table becomes bullet points. A wrapped cell is unreadable, and the wrap is the signal that the rows carry sentences rather than fields.
 - **No files beside folders** — once a folder holds a sub-folder, every other doc in it gets its own folder too. The folder's own lead doc (`{folder}.md`) is the single exception.
 - **Bullet case** — a bullet is a **lowercase fragment**, not a sentence (capitalize only an identifier / proper noun that opens it). Terse `key - detail` fragments; `controllers.md` is the reference.

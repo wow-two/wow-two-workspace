@@ -30,10 +30,16 @@
 | Section | Sub-headings | States |
 |---|---|---|
 | Location | Folder · File | the folder name that wraps it, and the file's name |
-| Declaration | Type doc · Type name | the type's `<summary>`, and the type's own name |
-| Content | Member docs · Members | each member's `<summary>`, and the members themselves |
+| Declaration | Type doc · Type name | the type's doc fields, and the type's own name |
+| Content | Member docs · Members | each member's doc fields, and the members themselves |
 
-```markdown
+- must give each doc field its own sub-heading; a field the component does not declare is forbidden on it ([../notation/documentation/documentation.md](../notation/documentation/documentation.md) § *Declared fields only*).
+- must write each rule as what the code **must have**, never as what it must not be — a banned shape belongs in the ❌ example, not in a rule.
+- must close every doc sub-heading **and** the `Members` sub-heading with one ✅ / ❌ pair; the ❌ must fail a rule stated directly above it.
+- must state a constraint as its own rule when no positive rule already excludes it — a starter rule fixes the starter, so a wrong starter is only an ❌; nothing about a correct starter forbids a type from bridging two services, so that needs a rule of its own.
+- must state a member **order** rule in `Members` — a reader cannot predict an order the doc never fixes.
+
+````markdown
 # {Components}
 
 *Last updated: {YYYY-MM-DD}*
@@ -53,18 +59,43 @@
 ## Declaration
 
 ### Type doc
-- {rule}
+
+#### [Summary](../notation/documentation/summary.md)
+- must {rule}
+
+```csharp
+// ✅
+{good}
+// ❌ {why it fails}
+{bad}
+```
 
 ### Type name
-- {rule}
+- must {rule}
 
 ## Content
 
 ### Member docs
-- {rule}
+
+#### [Summary](../notation/documentation/summary.md)
+- must {rule}
+
+```csharp
+// ✅
+{good}
+// ❌ {why it fails}
+{bad}
+```
 
 ### Members
-- {rule}
+- must {rule}
+
+```csharp
+// ✅
+{good}
+// ❌ {why it fails}
+{bad}
+````
 
 ## See also
 

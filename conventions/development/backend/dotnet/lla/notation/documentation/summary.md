@@ -6,46 +6,28 @@
 
 ## Starter table [REQUIRED]
 
-The first word of every `<summary>` is fixed by type-kind. This is the canonical reference — every other file in `conventions/` links here.
+The first word of every `<summary>` is fixed by type-kind.
+
+- must take its starter from the component's own doc when one exists — a component owns its starter, and this table never repeats it.
+- must take it from the table below when no component doc claims the kind — member kinds above all, which belong to no component.
+- must not add a row for a kind that has a component doc; add the rule there instead, so this file stops growing as components do.
 
 | Type-kind | Starter | Example |
 |---|---|---|
 | Interface | **Defines** | `Defines audit-field stamping on save.` |
-| Enum | **Defines** | `Defines the execution status of a pipeline run.` |
-| Enum value | **Refers to** | `Refers to a run that finished successfully.` |
-| Entity / record / model class | **Represents** | `Represents an external listing channel.` |
-| DTO | **Represents** (or describe projection) | `Represents a flat channel projection for the CRM grid.` |
-| Service | **Provides** | `Provides channel and pipeline seeding on application startup.` |
-| Validator | **Validates** | `Validates the create-code request.` |
 | Mapper | **Maps** | `Maps a paid plan to its Stripe price id and back.` |
 | Registry | **Binds** | `Binds each content variant to its discriminator.` |
-| Client (speaks the provider's model) | **Connects** | `Connects to the Telegram Bot API for messages and topics.` |
-| Broker (speaks ours) | **Integrates** | `Integrates the Stripe payment provider.` |
 | Factory | **Creates** | `Creates AI clients keyed by provider and model tier.` |
-| Repository | **Accesses** | `Accesses stored codes through EF Core.` |
 | CQRS marker / handler interface (`IQuery`, `ICommand`, `IQueryHandler`, …) | **Defines** | `Defines a query that returns <typeparamref name="TResult"/>.` |
-| Query/Command (concrete CQRS message) | **Represents** | `Represents a query to get all channels with their pipelines and sources.` |
-| Query/Command handler | **Handles `<see cref="X"/>`** | `Handles <see cref="ChannelGetAllQuery"/>.` |
-| Static constants class | **Contains** | `Contains the canonical kebab-case slugs for every channel.` |
-| Constant field (`const` / `static readonly`) | **Holds** | `Holds the token an open network carries in a WIFI payload.` |
-| Extension class | **Extends** | `Extends <see cref="WifiEncryption"/> for WIFI-URI spelling.` |
-| Extension method | (verb at start: `Adds`, `Uses`, `Maps`, `Configures`) | `Adds the JWT bearer authentication scheme with sane defaults.` |
-| Configuration class (settings record) | **Configuration for** | `Configuration for AI classification pipeline behavior.` |
 | EF `IEntityTypeConfiguration<T>` class | **Configures** | `Configures the listings table mapping and relationships.` |
 | HostConfiguration extension | **Configures** | `Configures typed HTTP clients for external API integrations.` |
 | Hosted service | **Runs** or **Schedules** | `Runs EF Core migrations on application startup with connect-retry.` |
-| Result base (abstract) | **Represents the outcome of** | `Represents the outcome of reading seed data for an entity type.` |
-| Result `Success` variant | (describe the success state) | `Seed data read successfully — entities ready for upsert.` |
-| Result `Failure` variant | (describe the failure state) | `Seed data read failed — error tracked for diagnostics.` |
 | Property (read-only) | **Gets** | `Gets the kebab-case slug.` |
 | Property (read-write) | **Gets or sets** | `Gets or sets the kebab-case slug.` |
 | Property (write-only) | **Sets** | `Sets the API key used for outbound calls.` |
 | Field carrying a value or state | **Holds** | `Holds the compiled pattern an e-mail address must match.` |
 | Indexer | **Gets** / **Gets or sets** / **Sets** | `Gets the routing rule at the given order.` |
 | Method (action) | Verb at start: `Adds`, `Gets`, `Creates`, `Sends`, `Configures`, `Maps`, `Builds` | `Sends the OTP to the resolved Telegram chat.` |
-| Controller (class) | **Exposes** | `Exposes portfolio products over HTTP.` |
-| Controller action | Verb at start (HTTP method shape): `Gets`, `Creates`, `Updates`, `Deletes`, `Executes`, `Cancels` | `Gets all channels with their pipelines.` |
-| Request model (`{Verb}{Noun}ApiRequest`) | **Represents** | `Represents the create-code request body.` |
 
 ### How a starter is chosen
 

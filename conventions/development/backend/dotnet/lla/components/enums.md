@@ -9,85 +9,69 @@
 ## Location
 
 ### Folder
-- must live in an `Enums/` folder beside the code that declares it.
+- must sit in an `Enums/` folder beside the code that declares it.
 
 ### File
-- `{Repo}.Domain/{Subdomain}/Enums/{Name}.cs` — **one file per enum** (per [code-organization.md](../notation/style/style.md)).
-- Lives alongside its entities in the Domain assembly, under the owning subdomain folder.
-
----
+- must give each enum its own file, named for the type.
 
 ## Declaration
 
 ### Type doc
-- `/// <summary>` starts with **Defines** — per [documentation/summary.md](../notation/documentation/summary.md) starter table
-- **name the question the enum answers, never its answers.** An enum is an axis; the members are points on it, and they are already in the declaration two lines down
-- **the test: does the summary survive a new member?** A value list goes false the moment an eleventh arrives — that is the *inventory* shape of the falsifiability test ([summary.md](../notation/documentation/summary.md) § *The falsifiability test*)
 
-The shape is `Defines the {axis} that {subject} {verb}s`:
+#### [Summary](../notation/documentation/summary.md)
+- must start with **Defines**.
+- must name the question the enum answers, never its answers.
+- must survive a new member — a summary that lists values goes false the moment an eleventh arrives.
 
 ```csharp
-// ✅ the axis — still true when a member is added
-/// <summary>Defines the category a channel falls into.</summary>
-public enum ChannelType { Supply, Demand }
-
-/// <summary>Defines how a code's symbol resolves.</summary>
-public enum ContentMode { Static, Dynamic }
-
-/// <summary>Defines the scan signal a routing rule matches on.</summary>
-public enum RuleConditionType { Device, Country, Language, TimeOfDay }
-
-/// <summary>Defines the lifecycle state of a subscription.</summary>
-public enum SubscriptionStatus { … }
-
-/// <summary>Defines the symbology a code renders as.</summary>
-public enum BarcodeFormat { … }
-
-// ❌ the answers — the em-dash clause is the value list, and it rots on the next member
-/// <summary>Defines the category of a channel — supply (scraping listings) or demand (capturing inquiries).</summary>
-
-// ❌ names the members outright
-/// <summary>Defines url, text, wifi, vCard, calendar, phone, sms, email, geo and mobileApp.</summary>
+// ✅ the axis
+/// <summary>Defines the execution status of a pipeline run.</summary>
+// ❌ an inventory, false on the next member
+/// <summary>Defines Pending, Running, Completed and Failed.</summary>
 ```
 
 ### Type name
-- **Singular** — no plural (`ChannelType` not `ChannelTypes`)
-- **No `Enum` suffix** — `PipelineRunStatus` not `PipelineRunStatusEnum`
-- **PascalCase values** — `Supply`, `Demand`, `ApartmentRent`
-
----
+- must be singular — `ChannelType`, never `ChannelTypes`.
+- must carry the domain noun and nothing else — `PipelineRunStatus`, never `PipelineRunStatusEnum`.
 
 ## Content
 
 ### Member docs
-- `/// <summary>` on each value starts with **Refers to** — a value holds nothing, it names one choice (per [documentation/summary.md](../notation/documentation/summary.md) starter table) — then states what the value means
-- **not `Represents`** — that starter claims the member *carries* its referent; an enum member only points at one option
+
+#### [Summary](../notation/documentation/summary.md)
+- must start with **Refers to**, then state what the option means.
 
 ```csharp
-/// <summary>Defines the execution status of a pipeline run.</summary>
-public enum PipelineRunStatus
-{
-    /// <summary>Refers to a run currently executing.</summary>
-    Running,
+// ✅ the member names one option
+/// <summary>Refers to a run that finished successfully.</summary>
+Completed,
 
-    /// <summary>Refers to a run that finished successfully.</summary>
-    Completed,
-
-    /// <summary>Refers to a run that terminated due to an error.</summary>
-    Failed,
-
-    /// <summary>Refers to a run manually stopped before completion.</summary>
-    Cancelled
-}
+// ❌ Represents claims the member carries its referent
+/// <summary>Represents a completed run.</summary>
 ```
 
----
+#### [Remarks](../notation/documentation/remarks.md)
+- must carry `<remarks>` only for a constraint a consumer would otherwise get wrong.
 
 ### Members
-- **Backing type** — default `int`, no explicit values unless mapping to DB ordinals (rare; prefer PG enums)
-- **No `[Flags]`** unless genuinely bitwise — most domain enums are not
+- must be PascalCase — `Supply`, `ApartmentRent`.
+- must take the default `int` backing type.
+- must use `[Flags]` only when the members are genuinely bitwise.
+- must place a default or unset member first.
+- must order the rest by their own level when one exists, ascending or descending, and by declaration order otherwise.
 
----
+```csharp
+// ✅ default first, then ascending severity
+None,
+Low,
+Medium,
+High,
+
+// ❌ no order a reader can predict
+High,
+None,
+Medium,
+```
 
 ## See also
 

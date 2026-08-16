@@ -9,7 +9,7 @@
 ## Location
 
 ### Folder
-- must live in a `Constants/` folder beside the code that owns the values.
+- must sit in a `Constants/` folder beside the code that owns the values.
 
 ### File
 - must give each constants class its own file, named for the type.
@@ -17,25 +17,64 @@
 ## Declaration
 
 ### Type doc
-- must open the `<summary>` with **Contains** — `Contains the canonical kebab-case slugs for every channel.`
+
+#### [Summary](../notation/documentation/summary.md)
+- must start with **Contains**.
+- must name the set the values belong to.
+
+```csharp
+// ✅
+/// <summary>Contains the canonical kebab-case slugs for every channel.</summary>
+// ❌ names no set
+/// <summary>Contains constants.</summary>
+```
 
 ### Type name
-- must declare `public static class {Name}Constants`, or `{Name}` when the noun already reads as a set (`ChannelSlugs`).
+- must declare `public static class {Name}Constants`, or `{Name}` when the noun already reads as a set.
+
+```csharp
+// ✅
+public static class ChannelSlugs
+// ❌ the suffix says nothing the noun does not
+public static class ChannelSlugsConstants
+```
 
 ## Content
 
 ### Member docs
-`Holds` — a member-sized verb, matching how properties take `Gets`. **Not `Defines` / `Represents`**: those are type-kind starters, and a `const` is a member. It has no accessor either, so no `Gets`.
 
-- **must not restate the value** — `= "WPA"` is on the line; `Represents the WPA token` says nothing the reader can't see
-- **must name the authority that fixes the value** when one exists — a spec, a wire format, a third-party contract. That is the fact the literal alone hides: `"nopass"` is unguessable until you know the WIFI URI scheme mandates it
-- **applies at every visibility** — a `private const` carries a summary too; only `<inheritdoc/>`, test methods, and generated code are exempt ([documentation.md](../notation/documentation/documentation.md) § *Required tags per type-kind*)
-- **a format-string constant must document its shape, never its slots** — `Holds the payload shape of a WIFI URI.` The `{0}`…`{n}` are visible; what a reader needs is which spec the shape comes from
-- **a constant naming a magic number states where the number comes from** — `private const int MaxNameLength = 200;` gets `Holds the column width the schema fixes.`, never `Holds the max name length`
+#### [Summary](../notation/documentation/summary.md)
+- must start with **Holds**.
+- must name the authority that fixes the value — a spec, a wire format, a third-party contract.
+- must state the shape of a format string, never its slots.
+
+```csharp
+// ✅ the authority, not the literal
+/// <summary>Holds the token an open network carries in a WIFI payload.</summary>
+public const string OpenNetwork = "nopass";
+
+// ❌ restates what the line already shows
+/// <summary>Holds the value "nopass".</summary>
+```
+
+#### [Remarks](../notation/documentation/remarks.md)
+- must carry `<remarks>` only to name the spec the value answers to — `Follows RFC 6068.`
 
 ### Members
-- must use `const` where the value is compile-time, `static readonly` where it is not.
-- must group related values with a blank line between groups, no dividers.
+- must use `const` for a compile-time value, `static readonly` for anything else.
+- must assign a literal, or an expression built from literals declared above it.
+- must order from the primitive value to the composed one, or in the order the flow consumes them.
+- must separate every constant from the next with one blank line.
+- must split a group into its own file once the class passes 60 lines — regions hide length, files state it.
+
+```csharp
+// ✅ literals, primitive first, the composed shape after
+public const string Scheme = "WIFI:";
+public const string PayloadShape = Scheme + "T:{0};S:{1};P:{2};;";
+
+// ❌ reaches out for its value, so the class no longer holds the authority
+public static readonly string PayloadShape = WifiFormats.BuildShape();
+```
 
 ## See also
 
