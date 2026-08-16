@@ -31,7 +31,7 @@ Migrations/
 - `Dev/` (`MigrationConventions.DevFolderName`) — flat editable drafts, both sections in one file; promoted at merge; never embedded, never read as a
   numbered migration.
 - **`Migrations/*/Apply.sql` IS the schema-first canonical schema** — the owned `CREATE TABLE` truth, read before any model / query / EF config
-  ([database.md](../database.md)). EF maps over it, never generates it.
+  ([database](../database.md)). EF maps over it, never generates it.
 
 ---
 

@@ -15,7 +15,7 @@
 ## Fallbacks
 
 - use the inherited `User` (`ClaimsPrincipal`) / `HttpContext` for facts `ICurrentUser` doesn't expose - source IP, headers
-- never read these in a handler - caller context is sourced at the edge and rides the application request ([mediator.md](../domains/messaging/mediator.md))
+- never read these in a handler - caller context is sourced at the edge and rides the application request ([mediator](../domains/messaging/mediator.md))
 
 ---
 

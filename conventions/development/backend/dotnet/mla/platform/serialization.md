@@ -14,12 +14,12 @@
 - must serialize `DateTimeOffset` / `DateOnly` / `TimeOnly` / `TimeSpan` as ISO-8601 strings.
 
 > Wire vs storage: this is the **API** enum form (camelCase string). DB storage is a separate concern — snake_case text
-> ([../persistence/enums.md](../../lla/components/enums.md)). One enum → `active` on the wire, `active` in the column, `Active` in code.
+> ([enums](../../lla/components/enums.md)). One enum → `active` on the wire, `active` in the column, `Active` in code.
 
 ---
 
 ## Wiring
 
-- must apply the contract once, at the host — `AddControllers().AddJsonStringEnums()` over the SDK preset (`JsonOptionsPresets.Default`), never a hand-rolled `JsonSerializerOptions` per controller ([../architecture/host-configuration.md](host-configuration.md)).
+- must apply the contract once, at the host — `AddControllers().AddJsonStringEnums()` over the SDK preset (`JsonOptionsPresets.Default`), never a hand-rolled `JsonSerializerOptions` per controller ([host configuration](host-configuration.md)).
 - must reuse the **same options object** for any manual (de)serialization (e.g. a jsonb `ValueConverter`) so the stored and wire shapes can't drift.
 - must not override casing / enum / null policy on an individual endpoint — the contract is uniform across the service.

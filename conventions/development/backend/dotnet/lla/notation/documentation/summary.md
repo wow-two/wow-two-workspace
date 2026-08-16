@@ -25,7 +25,7 @@ The first word of every `<summary>` is fixed by what the thing is, and this file
 - For **behavior interfaces** (handlers, stampers, service-shaped contracts), name the action as a noun phrase — `Defines JWT issuance for an admin session.`
 - Don't spill member-level detail into the type summary — the members carry it.
 - Drop filler: `the SDK convention`, `with a custom X type` (the type parameter is already visible in the signature).
-- An **indexer** takes the property starter its accessors name, and its summary states **what the key selects** — `Gets the routing rule at the given order.`, never `Gets the rule.` The key is a value, so it also carries a `<param>` ([params.md](params.md)).
+- An **indexer** takes the property starter its accessors name, and its summary states **what the key selects** — `Gets the routing rule at the given order.`, never `Gets the rule.` The key is a value, so it also carries a `<param>` ([params](params.md)).
 
 ## The falsifiability test [REQUIRED]
 
@@ -57,7 +57,7 @@ The companion rule: **a summary states the referent (what the thing *is*), never
 
 ## Extension classes
 
-Moved — see [../shape/extensions.md](../../components/extensions.md).
+Moved — see [extensions](../../components/extensions.md).
 
 
 ## Properties on entities + DTOs
@@ -66,7 +66,7 @@ Moved — see [../shape/extensions.md](../../components/extensions.md).
 - **`{ get; init; }` takes `Gets`** — the setter closes after construction, so a consumer only ever gets
 - **Applies to every C# model kind**, value objects included. A bare noun phrase (`The network name.`) is the TypeScript style — TS has fields, C# has properties, and the accessor is what the starter names. Don't carry the frontend's phrasing across
 - **A method that produces a formatted payload gets `<inheritdoc />` + `<remarks>`, not a re-described `<summary>`.** The format string lives in the code; a summary spelling it out (`Builds the <c>WIFI:T:…;S:…;;</c> payload`) restates it and goes stale. `<remarks>` carries only what the code doesn't show — escaping rules, an omitted segment, a spec quirk
-- **Name the referent** ([documentation.md](documentation.md) § *Name the referent*) — name it only when the value is not the type's own: `Gets the order of the rule that matched the scan`, but `ChannelEntity.Slug` takes a bare `Gets or sets the kebab-case slug`
+- **Name the referent** ([documentation](documentation.md) § *Name the referent*) — name it only when the value is not the type's own: `Gets the order of the rule that matched the scan`, but `ChannelEntity.Slug` takes a bare `Gets or sets the kebab-case slug`
 - PKs / FKs: `<summary>` like every other member — state what the key identifies
 - **State what the value is — not who sets it, when, or how.** No "stamped by the interceptor", "populated by the DB", "set at construction". An entity-trait contract describes the field; the population mechanism (interceptor, trigger, app code) is the implementer's choice and must not leak in.
   - ✅ `Gets or sets the timestamp when the entity was created.`
@@ -84,13 +84,13 @@ summary from one that does not is the **role it plays**, never the access modifi
   correct; the type alone shows neither.
 - **an injected collaborator** — `private readonly IClock _clock`, an `ILogger<T>`, a repository. **No summary.** Its contract carries the doc,
   and restating it on the field duplicates a fact that then drifts — the same mechanism that makes `<inheritdoc/>` an exemption
-  ([documentation.md](documentation.md) § *Required tags per type-kind*). A summary here is a Redundant comment by construction.
+  ([documentation](documentation.md) § *Required tags per type-kind*). A summary here is a Redundant comment by construction.
 
 The test: **does the declaration leave a "why this?" unanswered?** A value and a state field do; a collaborator's type name is the whole answer.
 
 ## Constants
 
-Moved — a `Constants` class is an LLA role, so its doc rules live with it ([../shape/constants.md](../../components/constants.md)).
+Moved — a `Constants` class is an LLA role, so its doc rules live with it ([constants](../../components/constants.md)).
 
 
 ## Extract a format string when the literal has structure
@@ -104,7 +104,7 @@ A literal with fixed structural parts is a **contract shape**, not an implementa
 
 ## Expression body vs block
 
-- **block body by default.** An expression body is for a single trivial delegation or a direct member return, **and only on a component that permits one** — the list is in [members.md](../style/members.md) § *`=>` is decided by the component*
+- **block body by default.** An expression body is for a single trivial delegation or a direct member return, **and only on a component that permits one** — the list is in [members.md](../../constructs/constructs.md) § *The body*
 - ✅ `public override string Encode() => this.ToPayload();` — a value object, permitted
 - ✅ `public string Slug => _slug;`
 - ❌ the same delegation on a `Service` or `Repository` — block body from the start

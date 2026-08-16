@@ -9,13 +9,13 @@
 - must carry `<returns>` on every method whose return type is not `void`, `Task`, or `ValueTask`.
 - must exempt exactly those three — a method returning nothing has nothing to describe, and `Task` alone is the absence of a value.
 - must carry it on `Task<T>` / `ValueTask<T>` — the `T` is the value, and the wrapper is a mechanism the caller already sees.
-- **consistency is the reason**, the same one [params.md](params.md) § *Every parameter, every time* runs: a per-method judgment leaves a reader unable to tell an omission from a decision.
+- **consistency is the reason**, the same one [params](params.md) § *Every parameter, every time* runs: a per-method judgment leaves a reader unable to tell an omission from a decision.
 
 ## What it says
 
 - must name **the value**, not the act of returning it — `The stored code, or null when the slug is unknown.`, never `Returns the code.`
 - must state the **null / empty case** when one exists — that is the fact a caller most often gets wrong.
-- must name the referent, like every other block ([documentation.md](documentation.md) § *Name the referent*).
+- must name the referent, like every other block ([documentation](documentation.md) § *Name the referent*).
 - must not restate the `<summary>` — if the summary already carries the whole answer, the summary is doing the returns block's job and one of them is redundant.
 
 ```csharp
@@ -29,5 +29,5 @@
 
 ## See also
 
-- [params.md](params.md) — the sibling rule for parameters
-- [summary.md](summary.md) — the starter table the summary answers to
+- [params](params.md) — the sibling rule for parameters
+- [summary](summary.md) — the starter table the summary answers to

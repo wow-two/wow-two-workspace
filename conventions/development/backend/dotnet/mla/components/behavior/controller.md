@@ -99,7 +99,9 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 ### Shape
 
-- see [baseline method docs](../../../lla/notation/style/members.md)
+- see [baseline method docs](../../../lla/constructs/constructs.md)
+- must use a block body `{ }` from the start — an action binds, dispatches, and maps a result, three steps minimum
+  ([style](../../../lla/notation/style/style.md) § *The body*)
 
 ### Return type
 
@@ -132,7 +134,7 @@ public class ProductsController(IProductRepository repository) : ControllerBase
 
 ### Response mapping
 
-- must `.Match` the saved result ([members.md](../../../lla/notation/style/members.md))
+- must `.Match` the saved result ([members.md](../../../lla/constructs/constructs.md))
 - for [`AppResult`](../data/result.md) - collapse via `.Match(onSuccess, onFailure)`: success → `ApiResponse<T>.Ok(dto)`, failure → `Problem(...)`
 
 **Success mapping**

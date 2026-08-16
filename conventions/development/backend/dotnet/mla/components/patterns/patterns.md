@@ -11,15 +11,15 @@
 - must be a pattern with a **settled name in the literature** — `Factory`, `Decorator`, `Adapter`, `Strategy`.
 - must state what the pattern buys in this codebase, never what the book says it buys.
 - must live in `mla/`, not `lla/`: a pattern needs collaborators to mean anything, so it fails the self-sufficiency gate
-  ([../../../lla/components/components.md](../../../lla/components/components.md) § *The gate*).
+  ([components](../../../lla/components/components.md) § *The gate*).
 
 ## Adding a pattern
 
 - must follow the component template — Location · Declaration · Content
-  ([../../../lla/components/components.md](../../../lla/components/components.md) § *Adding a component*).
+  ([components](../../../lla/components/components.md) § *Adding a component*).
 - must name the file for the pattern in the plural — `factories.md`, `decorators.md`.
 
 ## See also
 
-- [../components.md](../components.md) — the suffix keep-list
+- [components](../components.md) — the suffix keep-list
 - [../data/entity.md](../data/entity.md) · [../behavior/service.md](../behavior/service.md) — the layer-role components

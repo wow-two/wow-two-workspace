@@ -65,7 +65,7 @@ SqlMapper.AddTypeHandler(new ListTypeHandler<Guid>());
 ```
 
 > Enum-as-text columns: use `AddEnumTypeHandler<TEnum>(CaseStyle.Snake)` (registers `EnumTypeHandler<TEnum>`) — see [Enum-as-text columns](#enum-as-text-columns)
-> and [enums.md](../../../lla/components/enums.md).
+> and [enums](../../../lla/components/enums.md).
 
 ---
 
@@ -222,7 +222,7 @@ services.AddEnumTypeHandler<OrderStatus>(CaseStyle.Camel);
 
 - `AddEnumTypeHandler<TEnum>` (constraint `TEnum : struct, Enum`) registers `EnumTypeHandler<TEnum>`: writes emit the chosen `CaseStyle`, reads are
   case-insensitive.
-- For Postgres **native** enum types, use Npgsql's driver-level `MapEnum` instead — see [enums.md](../../../lla/components/enums.md).
+- For Postgres **native** enum types, use Npgsql's driver-level `MapEnum` instead — see [enums](../../../lla/components/enums.md).
 
 ---
 
@@ -237,7 +237,7 @@ services.AddEnumTypeHandler<OrderStatus>(CaseStyle.Camel);
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
+Per the starter table in [summary](../../../lla/notation/documentation/summary.md):
 
 ### Query / Commands class
 
@@ -274,4 +274,6 @@ public sealed class SupplySourceUrlCommands { }
 
 - **Sealed class** with primary constructor injecting `IDbConnectionFactory`.
 - **Connection pattern** — `await using var conn = await connectionFactory.CreateOpenAsync(ct);` per method.
-- **No DbContext** — Dapper uses raw connections; if you need EF, use an EF repository against the `DbContext` instead — see [database.md](../../domains/persistence/database.md).
+- **No DbContext** — Dapper uses raw connections; if you need EF, use an EF repository against the `DbContext` instead — see [database](../../domains/persistence/database.md).
+- must use a block body `{ }` from the start — a query method gains a filter, a projection, a log line
+  ([style](../../../lla/notation/style/style.md) § *The body*).

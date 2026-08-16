@@ -46,7 +46,7 @@ Non-component utility files co-located in a folder use **descriptive PascalCase 
 
 | Suffix | Use | Examples |
 |---|---|---|
-| `*Extensions.ts` | Helpers that extend a built-in/external type (see [extensions.md](extensions.md)) | `DateExtensions.ts`, `StringExtensions.ts` |
+| `*Extensions.ts` | Helpers that extend a built-in/external type (see [extensions](extensions.md)) | `DateExtensions.ts`, `StringExtensions.ts` |
 | `*Styles.ts` | Shared `tailwind-variants` configs (see [styling.md](../presentation/styling.md)) | `ButtonStyles.ts`, `InputStyles.ts` |
 | `*Helpers.ts` | Domain-specific fns that don't fit `Extensions` | `FormHelpers.ts` |
 
@@ -75,7 +75,7 @@ The framework singletons every app has exactly one of — the router root, the s
 
 ## Component props
 
-Prop **names** follow a fixed vocabulary so any component reads the same way. (Prop **shape** rules — `readonly`, no-destructure, `interface` — live in [components.md](../presentation/components.md).)
+Prop **names** follow a fixed vocabulary so any component reads the same way. (Prop **shape** rules — `readonly`, no-destructure, `interface` — live in [components](../presentation/components.md).)
 
 | Kind | Prefix / shape | Examples |
 |---|---|---|
@@ -159,6 +159,6 @@ interface InfoBannerProps {
 
 ## See also
 
-- [enums.md](enums.md) — enums-as-`enum` + label Record; domain enum vs. UI value-set split
-- [components.md](../presentation/components.md) — one-component-per-folder; prop **shape** rules (`readonly`, no-destructure) that pair with the prop **names** above
-- [extensions.md](extensions.md) — `*Extensions` const objects
+- [enums](enums.md) — enums-as-`enum` + label Record; domain enum vs. UI value-set split
+- [components](../presentation/components.md) — one-component-per-folder; prop **shape** rules (`readonly`, no-destructure) that pair with the prop **names** above
+- [extensions](extensions.md) — `*Extensions` const objects

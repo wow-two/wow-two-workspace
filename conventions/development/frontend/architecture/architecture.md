@@ -36,8 +36,8 @@ Five layers at `src/` root (no `layers/` wrapper). Dependency runs **inward**: `
 
 ## Files — where general naming applies
 
-- files `PascalCase`, folders `camelCase`, one lowercase `index.ts` **barrel** per slice (its only public surface) — per [naming.md](../code-style/naming.md).
-- one component per its own folder ([components.md](../presentation/components.md)); hooks `use{Noun}` ([hooks.md](../presentation/hooks.md)); types — `*Dto` (entity · form · sub-model) / `*Content` / `*Request` ([models.md](../code-style/models.md)).
+- files `PascalCase`, folders `camelCase`, one lowercase `index.ts` **barrel** per slice (its only public surface) — per [naming](../code-style/naming.md).
+- one component per its own folder ([components](../presentation/components.md)); hooks `use{Noun}` ([hooks.md](../presentation/hooks.md)); types — `*Dto` (entity · form · sub-model) / `*Content` / `*Request` ([models.md](../code-style/models.md)).
 - **role-specific naming** (component-role suffixes, type/api/const markers) → the [Naming](#naming--role--suffix) section below.
 
 ## Naming — role → suffix

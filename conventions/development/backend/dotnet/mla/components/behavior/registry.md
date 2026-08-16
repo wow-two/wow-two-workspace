@@ -52,6 +52,8 @@
 ### Members
 - must accept registrations at composition time only, never after the first lookup.
 - must throw when a key in the closed set has no binding — a silent miss hides a wiring fault.
+- may use `=>` for a member that returns or delegates — a registry holds bindings, not logic that grows
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ```csharp
 // ✅ the miss is loud
@@ -65,5 +67,5 @@ public Type? Get(CodeContentType key) => _bindings.GetValueOrDefault(key);
 
 ## See also
 
-- [../components.md](../components.md) — `Registry` vs `Repository`
+- [components](../components.md) — `Registry` vs `Repository`
 - [mapper.md](mapper.md) — the type handed its data

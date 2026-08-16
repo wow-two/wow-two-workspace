@@ -3,7 +3,7 @@
 *Last updated: 2026-08-15*
 
 > Block layout, in-file order, shared DOM vocabulary, and JSDoc verbs for a Vue Single-File Component.
-> Purpose — the React rules in [components.md](components.md) have no counterpart for `<script setup>`, macros, `useAttrs`, or emits.
+> Purpose — the React rules in [components](components.md) have no counterpart for `<script setup>`, macros, `useAttrs`, or emits.
 > Use case — writing or reviewing any `.vue` file, above all in `@wow-two-beta/ui-vue`.
 
 ## Blocks
@@ -43,10 +43,10 @@
 - must doc a `watch` by the effect it causes (`Emits …` · `Syncs …` · `Resets …`), never `Watches …`.
 - must doc a function with a third-person verb — `Copies …` · `Resolves …`.
 - must mark a non-exported type, constant, or helper `@internal`.
-- must keep a doc a **one-liner**; the six-condition exception is in [../code-style/documentation.md](../code-style/documentation.md) § The multi-line exception.
+- must keep a doc a **one-liner**; the six-condition exception is in [documentation](../code-style/documentation.md) § The multi-line exception.
 - must keep a non-JSDoc `/* */` comment to **one line** stating a role — no exception at all.
-- must not restate a rule from this file at a use site → [../code-style/documentation.md](../code-style/documentation.md) § Scope.
-- verb table for everything else → [../code-style/documentation.md](../code-style/documentation.md).
+- must not restate a rule from this file at a use site → [documentation](../code-style/documentation.md) § Scope.
+- verb table for everything else → [documentation](../code-style/documentation.md).
 
 ---
 
@@ -71,7 +71,7 @@ One home per DOM literal, in `foundation/utils`. Take from it; never re-declare 
 | Element tag | `ElementTag` | `ElementTag.Div` |
 
 - must add a missing literal to the shared module rather than declaring it locally — a shared const object costs one object for the whole package, a per-component tuple multiplies by component count.
-- must name a **constant** PascalCase, never `SCREAMING_SNAKE` → [../code-style/constants.md](../code-style/constants.md).
+- must name a **constant** PascalCase, never `SCREAMING_SNAKE` → [constants](../code-style/constants.md).
 - must not extract a DOM attribute **name** used once in a template — markup is not code.
 
 ---
@@ -116,7 +116,7 @@ Four, and each catches something the others miss. Run all four; `check:sfc` is t
 **What no gate catches: what a comment says.** `max-len` measures a comment's width and nothing else, so a doc
 that restates a convention, argues a trade-off, or narrates history passes all four. Tooling cannot close this —
 a rule-restating doc is well-formed prose of legal length. It is caught in review, or not at all, which is why
-[../code-style/documentation.md](../code-style/documentation.md) § Scope carries a test a reviewer can apply in one pass.
+[documentation](../code-style/documentation.md) § Scope carries a test a reviewer can apply in one pass.
 
 ---
 

@@ -63,6 +63,8 @@ public static class WifiSsidEncodingExtensions
 - must take the receiver as a `this` parameter or as a plain argument.
 - must be reachable by its type name at the call site.
 - may be `async` when the receiver's own work is asynchronous, returning `Task<T>` or `ValueTask<T>`.
+- may use `=>` for a member that returns or delegates — extensions take no collaborators to accumulate
+  ([style](../notation/style/style.md) § *The body*).
 - must produce its result from the receiver and its arguments alone — a method that joins two collaborators' results is a `Service`.
 - must declare a constant here when this class is its only caller, and in a `Constants` class the moment a second caller appears.
 - must order constants first, then methods.
@@ -81,5 +83,5 @@ public static string ToPayload(this WifiContentValueObject content, IFormatBroke
 
 ## See also
 
-- [../notation/documentation/summary.md](../notation/documentation/summary.md) — the starter table
-- [../../mla/components/components.md](../../mla/components/components.md) — the suffix keep-list
+- [summary](../notation/documentation/summary.md) — the starter table
+- [components](../../mla/components/components.md) — the suffix keep-list

@@ -14,6 +14,8 @@
 - both are **closed DUs** (private ctor + sealed nested cases); `where T : notnull` / `where TSuccess : notnull` → non-null, side-owned (no `bool IsSuccess; T?`, no null-checks).
 - collapse with `.Match(onSuccess, onFailure)` — the mandated consume path.
 - an inner `Result<T>` (service) maps up into an `AppResult<TSuccess>` in the handler.
+- may use `=>` for a member that returns or delegates — a carrier holds a success or an error, not logic that grows
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ## `AppError` — the one failure value
 
@@ -38,4 +40,4 @@ A failure is expressible either way over the **same** `AppError`: `error.Throw()
 
 ## See also
 
-- [validation.md](../behavior/validator.md) · [problem-details.md](../../platform/problem-details.md) · [controllers.md](../behavior/controller.md) · [mediator.md](../../domains/messaging/mediator.md)
+- [validation.md](../behavior/validator.md) · [problem-details.md](../../platform/problem-details.md) · [controllers.md](../behavior/controller.md) · [mediator](../../domains/messaging/mediator.md)

@@ -27,7 +27,7 @@ app.Run();
 - `AddApiDefaults(this WebApplicationBuilder, Action<ApiDefaultsOptions>? configure = null)` — registers the P1 service baseline; returns the builder for chaining.
 - `UseApiDefaults(this WebApplication)` — adds the matching middleware pipeline and maps the OpenAPI + health endpoints; returns the app.
 - Both defined in `src/meta/ApiDefaultsExtensions.cs` (root namespace `WoW.Two.Sdk.Backend.Beta` — one `using` lights it up).
-- Pristine `Program.cs` still applies (see [host-configuration.md](host-configuration.md)) — when the product wraps these in `HostConfiguration`, the two `Configure` extensions call `AddApiDefaults` / `UseApiDefaults` and nothing per-area.
+- Pristine `Program.cs` still applies (see [host configuration](host-configuration.md)) — when the product wraps these in `HostConfiguration`, the two `Configure` extensions call `AddApiDefaults` / `UseApiDefaults` and nothing per-area.
 
 ## What the bundle folds in
 
@@ -95,6 +95,6 @@ Auth, mediator, and data are **deliberately excluded** — they need per-app key
 
 ## See also
 
-- [host-configuration.md](host-configuration.md) — pristine `Program.cs` + `HostConfiguration` split that wraps these calls
+- [host configuration](host-configuration.md) — pristine `Program.cs` + `HostConfiguration` split that wraps these calls
 - [service-architecture.md](../layers/layers.md) — the 5 layers
 - `src/meta/README.md` (in `wow-two-sdk.backend.beta`) — the boot-floor quickstart + per-area composition escape hatch

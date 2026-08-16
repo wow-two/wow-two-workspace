@@ -65,10 +65,12 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 - must pass the stopping token to every await, so shutdown stays prompt.
 - must resolve a scoped collaborator from `IServiceScopeFactory` per run — the host holds this
   type as a singleton.
+- must use a block body `{ }` from the start — a run loop gains a guard, a scope, and a log line
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 - must order the members `ExecuteAsync` or `StartAsync` first, then the private steps it calls.
 
 ## See also
 
 - [service.md](service.md) — the type it resolves per run
-- [../components.md](../components.md) — the `BackgroundService` row, and the `Scheduler` / `Observer` folds
-- [host-configuration.md](../../platform/host-configuration.md) — `AddSchedulers()`, where it is registered
+- [components](../components.md) — the `BackgroundService` row, and the `Scheduler` / `Observer` folds
+- [host configuration](../../platform/host-configuration.md) — `AddSchedulers()`, where it is registered

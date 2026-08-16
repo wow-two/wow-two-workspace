@@ -73,10 +73,10 @@ For a library that ships `IServiceCollection` / host extensions (the SDK pattern
 ## Banned
 
 - **Hungarian notation** — `m_`, `s_`, a leading `_` on anything but a private field.
-- **`Helper` · `Util` · `Utils` · `Common` · `Manager` suffixes** — banned outright, public or internal. They name the absence of a role, and an internal type needs a role as much as a public one ([../../mla/components/components.md](../../../mla/components/components.md) § *Banned*).
+- **`Helper` · `Util` · `Utils` · `Common` · `Manager` suffixes** — banned outright, public or internal. They name the absence of a role, and an internal type needs a role as much as a public one ([components](../../../mla/components/components.md) § *Banned*).
 - **`using static`** — see § *`using static` is banned* above.
 
 ## Specific naming lives by area
 
 - which **suffix** names which **role** (one per role — `Store`→`Repository`, banned junk-drawer, new-suffix gate) → [component-names.md](../../../mla/components/components.md)
-- service / client / factory → [services.md](../../../mla/components/behavior/service.md) · query / command / handler → [mediator.md](../../../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](../../constructs/constructs.md)
+- service / client / factory → [services.md](../../../mla/components/behavior/service.md) · query / command / handler → [mediator](../../../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](../../constructs/constructs.md)

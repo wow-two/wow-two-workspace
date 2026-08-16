@@ -23,10 +23,12 @@ Interface in `Application/`, implementation in `Infrastructure/` — the Clean A
 - **Non-static** class
 - **Primary constructor** for DI injection (allowed exception to the body-property rule for records — see [models.md](../../../lla/constructs/constructs.md))
 - **Sealed** unless intentionally designed for inheritance — `sealed` should be the default
+- must use a block body `{ }` from the start — a service's logic grows: a guard, a retry, a log line arrive later
+  ([style](../../../lla/notation/style/style.md) § *The body*)
 
 ### Lifetime
 
-Register in the appropriate `HostConfigurationExtensions` method (see [host-configuration.md](../../platform/host-configuration.md)):
+Register in the appropriate `HostConfigurationExtensions` method (see [host configuration](../../platform/host-configuration.md)):
 - **Singleton** — stateless, thread-safe, expensive to construct
 - **Scoped** — request-scoped state, holds DbContext or similar
 - **Transient** — lightweight, no caching benefit
@@ -41,12 +43,12 @@ This doc governs what a `Service` **is** and how it is shaped, not what the suff
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
+Per the starter table in [summary](../../../lla/notation/documentation/summary.md):
 
 ### Service class
 
 - `/// <summary>` starts with **Provides**
-- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../../lla/notation/documentation/remarks.md) § *What it carries*) — never required
+- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks](../../../lla/notation/documentation/remarks.md) § *What it carries*) — never required
 
 ```csharp
 /// <summary>Provides channel and pipeline seeding on application startup.</summary>
@@ -86,12 +88,12 @@ public static class ChannelSlugs { }
 
 - `/// <summary>` one-liner — start with a verb (`Gets`, `Sends`, `Creates`, `Builds`)
 - Multi-step methods may add `/// <remarks>` with a numbered flow — capped at 5 lines, tags included, and only after gates 1 and 2
-  ([remarks.md](../../../lla/notation/documentation/remarks.md) § *Multi-line — the same three gates*)
+  ([remarks](../../../lla/notation/documentation/remarks.md) § *Multi-line — the same three gates*)
 
 ## See also
 
 - [clients.md](client.md) — HTTP API wrappers
 - [data-access.md](repository.md) — Dapper repositories
-- [host-configuration.md](../../platform/host-configuration.md) — DI registration
-- [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table
-- [documentation.md](../../../lla/notation/documentation/documentation.md) — XML doc format + the three gates
+- [host configuration](../../platform/host-configuration.md) — DI registration
+- [summary](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table
+- [documentation](../../../lla/notation/documentation/documentation.md) — XML doc format + the three gates

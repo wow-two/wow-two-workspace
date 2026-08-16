@@ -57,6 +57,8 @@ Completed,
 - must be PascalCase — `Supply`, `ApartmentRent`.
 - must take the default `int` backing type.
 - must use `[Flags]` only when the members are genuinely bitwise.
+- may use `=>` only in an `Extensions` class over the enum — a member here binds a name to a value and has no body
+  ([style](../notation/style/style.md) § *The body*).
 - must place a default or unset member first.
 - must order the rest by their own level when one exists, ascending or descending, and by declaration order otherwise.
 
@@ -75,5 +77,5 @@ Medium,
 
 ## See also
 
-- [../notation/documentation/summary.md](../notation/documentation/summary.md) — the starter table
-- [../../mla/domains/persistence/database.md](../../mla/domains/persistence/database.md) — how a stored enum maps to a column
+- [summary](../notation/documentation/summary.md) — the starter table
+- [database](../../mla/domains/persistence/database.md) — how a stored enum maps to a column

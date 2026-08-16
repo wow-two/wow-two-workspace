@@ -25,6 +25,8 @@ Clients live in integration folders grouped by provider:
 - **`HttpClient`** injected via primary constructor (typed `HttpClient` pattern) — or provider-specific SDK type when wrapping an SDK
 - **Sealed** unless inheritance is needed
 - **Naming** — suffix with `Client`, prefixed with provider name
+- must use a block body `{ }` from the start — a call method gains a header, a guard, a log line later
+  ([style](../../../lla/notation/style/style.md) § *The body*)
 
 ### Lifetime
 
@@ -147,13 +149,13 @@ These layer onto the same `IHttpClientBuilder`; chain after the registration hel
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
+Per the starter table in [summary](../../../lla/notation/documentation/summary.md):
 
 ### Client class
 
 - `/// <summary>` starts with **Connects** — a `Client` speaks the provider's model, so it *connects to* the provider's API
 - a `Broker` (the app-side seam, speaking our model) starts with **Integrates** — see [component-names.md](../components.md) § *`Client` vs `Broker` — whose model does it speak*
-- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks.md](../../../lla/notation/documentation/remarks.md) § *What it carries*)
+- `/// <remarks>` only when a caller needs a directive, a spec reference, or a non-obvious constraint ([remarks](../../../lla/notation/documentation/remarks.md) § *What it carries*)
 
 ```csharp
 /// <summary>Connects to the Telegram Bot API for messages and topics.</summary>

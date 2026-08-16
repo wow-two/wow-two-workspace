@@ -8,7 +8,7 @@ Custom hooks encapsulate state, lifecycle, and operations. Data-fetching hooks o
 
 - **Always prefix `use`** — `useAuth`, `useSupplyListings`.
 - **Name the resource or action, not the noun** — `useFilterOptions`, not `useFilters`.
-- File is PascalCase (`UseSupplyListings.ts`), export is camelCase (`useSupplyListings`) — see [naming.md](../code-style/naming.md).
+- File is PascalCase (`UseSupplyListings.ts`), export is camelCase (`useSupplyListings`) — see [naming](../code-style/naming.md).
 
 ## Location
 
@@ -45,4 +45,4 @@ export function useDropdown(): [boolean, () => void] { }
 ## See also
 
 - [state-and-data.md](../architecture/state-and-data.md) — the API client these wrap
-- [documentation.md](../code-style/documentation.md) — verb table · [naming.md](../code-style/naming.md)
+- [documentation](../code-style/documentation.md) — verb table · [naming](../code-style/naming.md)

@@ -58,13 +58,15 @@ public void Configure(EntityTypeBuilder<ListingEntity> builder)
 
 ### Members
 - must declare `Configure` as the type's only public member.
+- must use a block body `{ }` from the start — the builder chain gains a call with every mapping added
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 - must configure what changes runtime behaviour — the table, the key, column types, conversions,
-  relations ([database.md](../../domains/persistence/database.md) § *What to configure*).
+  relations ([database](../../domains/persistence/database.md) § *What to configure*).
 - must leave the schema itself to the migration, which owns every DDL-only concern.
 - must order the calls table and key, column types, conversions, then relationships.
 
 ## See also
 
 - [entity.md](entity.md) — the record this maps
-- [database.md](../../domains/persistence/database.md) — type mappings, conventions, interceptor wiring
-- [../components.md](../components.md) — the `Configuration` row
+- [database](../../domains/persistence/database.md) — type mappings, conventions, interceptor wiring
+- [components](../components.md) — the `Configuration` row

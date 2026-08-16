@@ -140,7 +140,7 @@ builder
 
 Two consequences to handle when collapsing a layer's registrations into the host: Two consequences to handle when collapsing a layer into the host:
 
-- **Assembly scans** (mediator handlers, FluentValidation validators) anchor on a **public marker type in the scanned layer** — `typeof(IApplicationMarker).Assembly` — never the parameterless overload: called from the host, `Assembly.GetCallingAssembly()` resolves to the *host* assembly, not the layer (see [mediator.md](../domains/messaging/mediator.md)). Add one empty `public interface I{Layer}Marker;` to each scanned layer.
+- **Assembly scans** (mediator handlers, FluentValidation validators) anchor on a **public marker type in the scanned layer** — `typeof(IApplicationMarker).Assembly` — never the parameterless overload: called from the host, `Assembly.GetCallingAssembly()` resolves to the *host* assembly, not the layer (see [mediator](../domains/messaging/mediator.md)). Add one empty `public interface I{Layer}Marker;` to each scanned layer.
 - **Internal adapters** (EF stores, typed clients) stay `internal` — the host registers them by concrete type, so grant it visibility with `<InternalsVisibleTo Include="{Host}" />` in the layer's `.csproj`. Don't widen them to `public` just to wire them.
 
 Startup tasks (DB init, seeding, warm-up) move host-side too — into `Configure(WebApplication)` or an extension it calls, never into `Program.cs` ([§ Program.cs](#programcs) — the entry point holds four statements and never grows a fifth). An async task makes the whole chain async ([§ Async startup](#async-startup)).
@@ -149,7 +149,7 @@ Startup tasks (DB init, seeding, warm-up) move host-side too — into `Configure
 
 - the class + the two `Configure` overloads use the **locked** summaries shown above (don't reword per app).
 - each private `Add*` extension gets a one-liner `<summary>` starting with **"Registers"** (or "Configures"). No `<remarks>` on host wiring.
-- the `Configure` chain carries **no trailing per-method comments** — the method names self-document. Inline comments only where a step's *why* isn't obvious (imperative one-liner, per [documentation.md](../../lla/notation/documentation/documentation.md)).
+- the `Configure` chain carries **no trailing per-method comments** — the method names self-document. Inline comments only where a step's *why* isn't obvious (imperative one-liner, per [documentation](../../lla/notation/documentation/documentation.md)).
 
 ## Rules
 

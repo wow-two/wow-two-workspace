@@ -52,8 +52,10 @@
 ### Members
 - must expose one create method per axis it dispatches on.
 - must resolve its dependencies through the container, never construct them.
+- must use a block body `{ }` from the start — a create method gains a branch with every variant it builds
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ## See also
 
-- [patterns.md](patterns.md) — the pattern component gate
-- [../components.md](../components.md) — the suffix keep-list
+- [patterns](patterns.md) — the pattern component gate
+- [components](../components.md) — the suffix keep-list

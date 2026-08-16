@@ -68,6 +68,8 @@ Rules:
 - **One level per folder** — docs describing different levels never sit at the same folder level. A doc about *what you declare* and a doc about *how you write it* are two levels; separate them by folder or by nesting, never by filename alone.
 - **A constraint earns a rule only when no positive rule already excludes it** — a starter rule fixes the starter, so a wrong starter is only a ❌ example; nothing about a correct starter forbids a type from bridging two services, so that needs its own rule.
 - **An example demonstrates its own section, never the whole doc** — a code sample under `Member docs` shows the member-doc rules and may omit everything else the type needs. Repeating every convention in every example is what makes examples stale.
+- **A line reference is `{file}:{line}`** — `style.md:75`, never "line 75" or "the line about bodies". The form is clickable in an IDE, greppable in a diff, and unambiguous when two files carry the same rule.
+- **A link's display text names the thing, never the path** — the label says what the target is, and the path stays inside the parentheses. A path in the text is unreadable inline and goes stale on every move.
 - **A layer references one layer down for doc rules, never restates them** — a component doc's `### Type doc` cites the layer below it and stops there; the reader crawls down for the merged set. Restating a lower layer's rule creates a second copy that drifts.
 - **One whole-shape example per component, placed last and marked illustrative** — after `## Content`, a single fence shows the finished file top to bottom so a reader sees how the sections compose. It is not normative: the sections remain the authority, and a rule stated only in the shape example does not exist.
 - **One example per doc-comment section, placed last** — it sits after the final field sub-heading so it covers every field the section declared, not only the first.
@@ -103,7 +105,7 @@ Cross-area: **[swappable-modules.md](development/swappable-modules.md)** — eng
 | SDK / library repo shape · `engineering/` + npm package under `engineering/codebase/{slug}/` · `src/` source-only + `tests/{unit,stories}` · config repoint · dist-only publish | [development/repo/structure/sdk-structure.md](development/repo/structure/sdk-structure.md) |
 | Commit-message format (`{type}: {past-tense verb} {subject}`, 50–70 chars, subject only · one cohesive change) **+ commit protocol** — agent stages + commits; the human pushes, and history ops need a rapid-building marker (hook-enforced) **+ large files** — LFS vs gitignore, and repairing a binary already in pushed history | [development/repo/version-control/git.md](development/repo/version-control/git.md) |
 
-### backend/ — .NET conventions (cut by scope) · [dotnet-conventions.md](development/backend/dotnet/dotnet-conventions.md)
+### backend/ — .NET conventions (cut by scope) · [the dotnet index](development/backend/dotnet/dotnet-conventions.md)
 
 Backend rules live under the stack that owns them (`backend/dotnet/`), and each stack is cut by **how far a rule reaches**.
 

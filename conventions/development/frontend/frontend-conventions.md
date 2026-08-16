@@ -11,15 +11,15 @@
 
 | File | What it covers |
 |---|---|
-| [naming.md](code-style/naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
+| [naming](code-style/naming.md) | Files PascalCase (barrels lowercase), folders camelCase, `*Extensions`/`*Styles`/`*Helpers` suffixes, exports |
 | [imports.md](code-style/imports.md) | `import` layout — 5 group order (side-effect / third-party / SDK / `@/` / relative) blank-line-separated · alphabetical intra-group · inline vs standalone `type` · published-subpath + `@/`-over-relative rules |
-| [documentation.md](code-style/documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
+| [documentation](code-style/documentation.md) | JSDoc one-liner rule + verb-starter table (Defines / Renders / Manages / Provides) |
 | [code-organization.md](code-style/code-organization.md) | `const`/`let`, `// ── Section ──` dividers, 7-group import order, React named-type imports (no UMD `React.*`), file-internal order |
 | [models.md](code-style/models.md) | The `*Dto` family (entity/form/sub-model) · `*Content` · `*Request` · descriptor/catalog · fields (`T` / `T?`) · `interface`/`type` · doc rules (`Defines` type / `The …` member, blank line between members) |
 | [type-mapping.md](code-style/type-mapping.md) | The .NET ↔ wire ↔ TS scalar contract — `Guid`/`number`/`boolean` · `Temporal.*` dates wired by one global reviver · enums · `ReadonlyArray<T>` (never `T[]`) · `?`-nullability |
-| [enums.md](code-style/enums.md) | const object `as const` — PascalCase key / camelCase value · derived `type` · `Unresolved` first · `//` comment · `Displays` (presentation) + `Payloads` (backend) extensions |
-| [constants.md](code-style/constants.md) | PascalCase scalars / data · `as const` · JSDoc one-liner · const-vs-enum decision |
-| [extensions.md](code-style/extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
+| [enums](code-style/enums.md) | const object `as const` — PascalCase key / camelCase value · derived `type` · `Unresolved` first · `//` comment · `Displays` (presentation) + `Payloads` (backend) extensions |
+| [constants](code-style/constants.md) | PascalCase scalars / data · `as const` · JSDoc one-liner · const-vs-enum decision |
+| [extensions](code-style/extensions.md) | `{Noun}Extensions` `as const` objects (no class/namespace) — the C# static-helper analog |
 
 ## architecture/
 
@@ -32,7 +32,7 @@
 
 | File | What it covers |
 |---|---|
-| [components.md](presentation/components.md) | One-component-per-folder, props (`readonly`, **destructure** w/ inline defaults), file structure, UI terminology, variants |
+| [components](presentation/components.md) | One-component-per-folder, props (`readonly`, **destructure** w/ inline defaults), file structure, UI terminology, variants |
 | [vue-sfc.md](presentation/vue-sfc.md) | **Vue SFCs** — two `<script>` blocks · macro-first order · `Fires`/`The`/`Emits` verbs for emits, slots, computed, watch · 120 wrap (Prettier + `max-len`) · `AriaAttribute` over magic strings · `useAttrs` + `@vue-ignore` heritage |
 | [component-catalog.md](presentation/component-catalog.md) | The reference frontend's components by **kind** (screens · views · controls · fields · displays) — a "what exists" lookup |
 | [forms.md](presentation/forms.md) | `useAppForm` engine pin (`src/form.ts`) · `*Values` + zod schema · `form.Field` × `Field` chrome · ProblemDetails → field errors · `validateOn` · arrays · `form.engine` escape hatch · house-engine `play()` stories |

@@ -43,7 +43,7 @@ Every backend service follows **layered Clean Architecture**:
 ## Rules
 
 - `Program.cs` is a slim 3-liner: `builder.Configure()` → `app.Configure()` → `app.Run()`
-- All DI registration lives in `Api/Configurations/HostConfiguration.Extensions.cs` as extension methods — see [host-configuration.md](../platform/host-configuration.md)
+- All DI registration lives in `Api/Configurations/HostConfiguration.Extensions.cs` as extension methods — see [host configuration](../platform/host-configuration.md)
 - `HostConfiguration.cs` defines `Configure(builder)` and `Configure(app)` as partial class
 - **Interfaces in `Application/`, implementations in `Infrastructure/`** — the dependency rule
 - Settings classes in `Infrastructure/Settings/`, loaded via configuration binding
@@ -73,6 +73,6 @@ Persistence     (implements Application repository interfaces)
 
 ## See also
 
-- [host-configuration.md](../platform/host-configuration.md) — the `Configure` / `Extensions` split
-- [domain-structuring.md](domain-structuring.md) — subdomains within `Domain/` and `Infrastructure/`
+- [host configuration](../platform/host-configuration.md) — the `Configure` / `Extensions` split
+- [domain structuring](domain-structuring.md) — subdomains within `Domain/` and `Infrastructure/`
 - [controllers.md](../components/behavior/controller.md) — Api layer details (thin-dispatcher controllers)

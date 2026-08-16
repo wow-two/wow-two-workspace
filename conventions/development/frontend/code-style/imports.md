@@ -3,7 +3,7 @@
 *Last updated: 2026-07-06*
 
 > How to order and write `import` statements in a `.ts` / `.tsx` file — group order, intra-group sort, and `type`-import form.
-> Purpose — one deterministic layout so any file's head reads the same and diffs stay minimal. Sits with [naming.md](naming.md) / [documentation.md](documentation.md) / [enums.md](enums.md) in `code-style/`.
+> Purpose — one deterministic layout so any file's head reads the same and diffs stay minimal. Sits with [naming](naming.md) / [documentation](documentation.md) / [enums](enums.md) in `code-style/`.
 
 **Order:** `side-effect → third-party → SDK → @/ alias → relative`
 

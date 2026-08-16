@@ -63,6 +63,8 @@ public const string OpenNetwork = "nopass";
 ### Members
 - must use `const` for a compile-time value, `static readonly` for anything else.
 - must assign a literal, or an expression built from literals declared above it.
+- may use `=>` for a member that returns or delegates — a constants class holds values, not logic that grows
+  ([style](../notation/style/style.md) § *The body*).
 - must order from the primitive value to the composed one, or in the order the flow consumes them.
 - must separate every constant from the next with one blank line.
 - must split a group into its own file once the class passes 60 lines — regions hide length, files state it.
@@ -78,5 +80,5 @@ public static readonly string PayloadShape = WifiFormats.BuildShape();
 
 ## See also
 
-- [../notation/documentation/summary.md](../notation/documentation/summary.md) — the starter table
-- [../notation/style/style.md](../notation/style/style.md) — lifting a structured literal into a named `const`
+- [summary](../notation/documentation/summary.md) — the starter table
+- [style](../notation/style/style.md) — lifting a structured literal into a named `const`

@@ -18,7 +18,7 @@
 ## Documentation
 
 The `/// <summary>` is the top line of the file — write it first, then the record declaration and members below. Follows the starter table in
-[documentation/summary.md](../../../lla/notation/documentation/summary.md), with entity-specific conventions below.
+[summary](../../../lla/notation/documentation/summary.md), with entity-specific conventions below.
 
 ### Entity-level
 
@@ -32,7 +32,7 @@ public sealed record ChannelEntity : IKeyedEntity<Guid> { }
 ### Member-level (regular properties)
 
 - `/// <summary>` starts with **"Gets or sets the {property}"** — bare, because the value is the entity's own. Name a referent only when it
-  belongs to something else, as a foreign key does ([documentation.md](../../../lla/notation/documentation/documentation.md) § *Name the referent*)
+  belongs to something else, as a foreign key does ([documentation](../../../lla/notation/documentation/documentation.md) § *Name the referent*)
 
 ```csharp
 /// <summary>Gets or sets the kebab-case slug, used as unique code reference.</summary>
@@ -73,7 +73,7 @@ public required Guid ChannelId { get; set; }
 - `sealed record` — see [models.md](../../../lla/constructs/constructs.md)
 - No positional constructors — body properties only
 - Suffix with `Entity` when it maps to a DB table (`ChannelEntity` → `channels`); value objects (`PipelineRun`, `NodeRun`) skip the suffix
-- Primary key: `Guid Id` — see [database.md](../../domains/persistence/database.md) for the PK rules
+- Primary key: `Guid Id` — see [database](../../domains/persistence/database.md) for the PK rules
 - Implements `IKeyedEntity<Guid>` (from the SDK's `Data.Abstractions` package — adds `Id`)
 
 ### Members
@@ -82,6 +82,8 @@ public required Guid ChannelId { get; set; }
 - **Always returned by persistence** — `required` with `{ get; set; }`
 - **Not always returned** — no `required`, initialize with `null!` (relations, joined fields, EF-managed navigations)
 - **Collections** — always `List<T>` (see [models.md](../../../lla/constructs/constructs.md) for the three patterns)
+- may use `=>` for a member that returns or delegates — an entity carries data, and a carrier's members do not grow
+  ([style](../../../lla/notation/style/style.md) § *The body*)
 
 #### Enum arrays
 
@@ -97,8 +99,8 @@ public required List<string> ApartmentAmenities { get; set; }
 
 ### Database mapping
 
-- See [database.md](../../domains/persistence/database.md) for type mappings, numeric units, and EF Core configuration rules
-- See [enums.md](../../../lla/components/enums.md) for enum mapping
+- See [database](../../domains/persistence/database.md) for type mappings, numeric units, and EF Core configuration rules
+- See [enums](../../../lla/components/enums.md) for enum mapping
 
 ---
 
@@ -132,7 +134,7 @@ public sealed record OrderLineItemEntity : IKeyedEntity<Guid>, IHasTableName
 ## Trait stack
 
 Behaviors are **single-purpose interfaces, never base classes** — an entity composes exactly the traits it needs, and each contract extends the bare
-`IEntity` marker. The EF Core `AuditInterceptor` / `SoftDeleteInterceptor` stamp these fields automatically; see [database.md](../../domains/persistence/database.md) for
+`IEntity` marker. The EF Core `AuditInterceptor` / `SoftDeleteInterceptor` stamp these fields automatically; see [database](../../domains/persistence/database.md) for
 interceptor wiring.
 
 ### Audit — split by lifecycle

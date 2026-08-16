@@ -50,8 +50,10 @@ public CodeRule? this[int order] => _rules.GetValueOrDefault(order);
 ### Members
 - must expose one indexer per type; a second key means the type wraps two sets.
 - must not throw for a missing key when a nullable return can state the same thing.
+- may use `=>` for the accessor that returns the element — a keyed lookup returns, and a lookup does not grow
+  ([style](../notation/style/style.md) § *The body*).
 
 ## See also
 
-- [components.md](components.md) — the self-sufficiency gate
-- [../notation/documentation/summary.md](../notation/documentation/summary.md) — accessor starters
+- [components](components.md) — the self-sufficiency gate
+- [summary](../notation/documentation/summary.md) — accessor starters

@@ -29,7 +29,7 @@ Everything else is cut:
 - ❌ who sets the value, when, or how
 - ❌ anything the `<summary>` already carries
 
-`<remarks>` is exempt from the falsifiability test ([summary.md](summary.md) § *The falsifiability test*) — a directive is allowed to describe the present.
+`<remarks>` is exempt from the falsifiability test ([summary](summary.md) § *The falsifiability test*) — a directive is allowed to describe the present.
 
 ## Frames — the shapes that recur
 
@@ -55,12 +55,12 @@ reading the sentence is displacing. `Read free-flow off the observed speed_90, n
 
 - must open a **Prohibition** at the start of the sentence — `Never …`. A mid-sentence `, never …` is the corrective modifier, and the two mean different things: one forbids a call, the other corrects a reading.
 - must keep `only` in a **Selection** — `Use for idempotent calls only` selects; `Use AddResilientClient` merely wires.
-- must not aim a `<remarks>` at the next editor — `Keep … in lock-step` is a maintainer fact and ships to every consumer through IntelliSense. It belongs in a `//` beside the code ([documentation.md](documentation.md) § *Where a fact belongs*). 14 blocks in the workspace do this today.
+- must not aim a `<remarks>` at the next editor — `Keep … in lock-step` is a maintainer fact and ships to every consumer through IntelliSense. It belongs in a `//` beside the code ([documentation](documentation.md) § *Where a fact belongs*). 14 blocks in the workspace do this today.
 
 ## Multi-line — the same three gates [REQUIRED]
 
 A `<remarks>` earns extra lines the way a `<summary>` does: it clears **convention → compaction → length**
-([documentation.md](documentation.md) § *Three gates, in order*). Readability is not a ground, and a numbered flow is not a licence —
+([documentation](documentation.md) § *Three gates, in order*). Readability is not a ground, and a numbered flow is not a licence —
 it is a block that still has to survive gates 1 and 2 before length is even asked.
 
 - must not wrap a block that has not cleared gates 1 and 2 — a multi-line `<remarks>` is evidence they were skipped.

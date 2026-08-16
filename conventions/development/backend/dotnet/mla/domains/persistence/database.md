@@ -131,7 +131,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : AppDb
   `EnableRetryOnFailure(maxRetryCount: 6)` + `CommandTimeout(30)`.
 - Connection string comes from `DatabaseOptions.ConnectionString`, bound via `AddDatabaseOptions` (`Database` config section by default).
 - A shared `NpgsqlDataSource` is registered once via `AddNpgsqlDataSource` (`PostgresServiceCollectionExtensions`) — built from
-  `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper, and the place enums attach (`MapEnums` — see [enums.md](../../../lla/components/enums.md)).
+  `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper, and the place enums attach (`MapEnums` — see [enums](../../../lla/components/enums.md)).
 
 ```csharp
 services.AddDatabaseOptions(configuration);
@@ -217,7 +217,7 @@ builder
 ### Enum mapping (Postgres)
 
 Do NOT use `.HasConversion()` per property — enums are registered globally at the Npgsql data-source level via `MapEnums` (driver-level C#↔PG enum
-mapping). Full details in [enums.md](../../../lla/components/enums.md).
+mapping). Full details in [enums](../../../lla/components/enums.md).
 
 ---
 
@@ -288,7 +288,7 @@ builder
 
 ### Documentation
 
-Single `/// <summary>` one-liner starting with "Configures" — per [documentation/summary.md](../../../lla/notation/documentation/summary.md) starter table. No `<remarks>`.
+Single `/// <summary>` one-liner starting with "Configures" — per [summary](../../../lla/notation/documentation/summary.md) starter table. No `<remarks>`.
 
 ```csharp
 /// <summary>Configures the listings table mapping and relationships.</summary>

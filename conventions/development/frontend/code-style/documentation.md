@@ -2,7 +2,7 @@
 
 *Last updated: 2026-07-06*
 
-JSDoc on every public export. Mirrors the backend XML-doc starter table ([../backend/documentation.md](../../backend/dotnet/lla/notation/documentation/documentation.md)) so a type reads the same in C# and TS.
+JSDoc on every public export. Mirrors the backend XML-doc starter table ([documentation](../../backend/dotnet/lla/notation/documentation/documentation.md)) so a type reads the same in C# and TS.
 
 ## Format
 
@@ -80,7 +80,7 @@ export interface EditableFields { }
 
 > **"Provides"** is reserved for implementation objects that supply behaviour of their own (services). An extension object supplies none — it bolts methods onto a type it does not own — so it takes **`Extends`**, matching the backend. Interfaces use **"Defines"** (shape) or **"Represents"** (data). A hook leads with **`Manages …`** — the state / behavior it owns — alongside the other keywords (`Renders` · `Emits` · `Defines` · `Maps` · `Defines props for`); `Manages` ≈ 90% of hooks, with `Provides access to` only for thin context unwrappers.
 >
-> **Prop members carry a direction-appropriate verb, not `Gets or sets`** — a React prop is unidirectional, and the get/set pair is split across a `value` prop and its `onChange` callback. Doc the inbound `value` as a noun phrase led by `The …`; doc the outbound callback with `Emits …` (or `Fires when …` for a pure event). Not `Gets or sets` (C#-property framing — a prop is neither), `Holds`/`Provides` (implies mutable storage the component doesn't own). The keyword scheme lives in [components.md](../presentation/components.md) § Members.
+> **Prop members carry a direction-appropriate verb, not `Gets or sets`** — a React prop is unidirectional, and the get/set pair is split across a `value` prop and its `onChange` callback. Doc the inbound `value` as a noun phrase led by `The …`; doc the outbound callback with `Emits …` (or `Fires when …` for a pure event). Not `Gets or sets` (C#-property framing — a prop is neither), `Holds`/`Provides` (implies mutable storage the component doesn't own). The keyword scheme lives in [components](../presentation/components.md) § Members.
 
 ## Member-level docs
 
@@ -124,5 +124,5 @@ A `//` block / inline comment states a **role** in one line — never the ration
 
 ## See also
 
-- [../backend/documentation.md](../../backend/dotnet/lla/notation/documentation/documentation.md) — the C# starter table this mirrors
-- [components.md](../presentation/components.md) · [enums.md](enums.md) · [extensions.md](extensions.md)
+- [documentation](../../backend/dotnet/lla/notation/documentation/documentation.md) — the C# starter table this mirrors
+- [components](../presentation/components.md) · [enums](enums.md) · [extensions](extensions.md)

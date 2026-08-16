@@ -30,13 +30,13 @@ call a thing, never whether its reason is obvious. Five exemptions, and no other
 - **an implementation carrying `/// <inheritdoc/>`** — the contract's summary is the summary, and restating it puts one fact in two places
   that drift apart. Write `<inheritdoc/>`, never a paraphrase.
 - **a test method** — no signature docs at all: no `<summary>`, no `<param>`, no `<remarks>`. `Create_WithBlankName_Returns400` is already
-  the sentence, and a summary can only restate the name, which [documentation/summary.md](summary.md) § *Falsifiability* bans.
+  the sentence, and a summary can only restate the name, which [summary](summary.md) § *Falsifiability* bans.
 - **generated code** — `.Designer.cs`, scaffolded EF migrations, source-generator output. Never authored, so never swept.
 - **an injected collaborator field** — `private readonly IClock _clock`. Same mechanism as `<inheritdoc/>`: the contract carries the doc, and
   a copy on the field drifts. Only a collaborator is exempt; a field holding a value or state is documented
-  ([documentation/summary.md](summary.md) § *Fields — role decides, not visibility*).
+  ([summary](summary.md) § *Fields — role decides, not visibility*).
 - **a constructor that only assigns** — a DI primary constructor above all: no `<summary>`, and no `<param>` for its injected collaborators
-  ([documentation/params.md](params.md) § *Every parameter, every time*). The type's own summary already states what it does, and
+  ([params](params.md) § *Every parameter, every time*). The type's own summary already states what it does, and
   each collaborator's contract carries its own doc. It earns both back the moment construction carries a **guarantee** — validation,
   normalization, a derived value, or a choice between overloads. That is the factory-shaped constructor, and it is documented in full.
 
@@ -47,11 +47,11 @@ call a thing, never whether its reason is obvious. Five exemptions, and no other
 | Entity (record mapping to table) | `<summary>` (entity description) | Per-member `<summary>` |
 | DTO | `<summary>` | Same as entity |
 | Settings record | `<summary>` (appsettings section name) | Per-member `<summary>` |
-| Service / Client / Broker / Repository | `<summary>` | Methods get a `<summary>` one-liner; `<remarks>` only when [remarks.md](remarks.md) § *What it carries* applies |
-| Static class (constants, helpers, registries) | `<summary>` | Members per [documentation/summary.md](summary.md) § *Constants* |
+| Service / Client / Broker / Repository | `<summary>` | Methods get a `<summary>` one-liner; `<remarks>` only when [remarks](remarks.md) § *What it carries* applies |
+| Static class (constants, helpers, registries) | `<summary>` | Members per [summary](summary.md) § *Constants* |
 | Extension class | `<summary>` (purpose of the extensions) | Each extension method gets its own `<summary>` |
 | Configuration class (EF `IEntityTypeConfiguration<T>`) | `<summary>` one-liner | No `<remarks>` |
-| Handler (query/command) | `<summary>` | Nothing else — starter in [documentation/summary.md](summary.md) |
+| Handler (query/command) | `<summary>` | Nothing else — starter in [summary](summary.md) |
 | Result type (Success/Failure containers) | `<summary>` on the abstract base and each variant | Members per the entity rule |
 
 ## Per-block conventions
@@ -60,12 +60,12 @@ Each XML doc block has its own rules — start here:
 
 | Block | Convention | Covers |
 |---|---|---|
-| `<summary>` | [documentation/summary.md](summary.md) | Starter table (mandated first word per type-kind), the falsifiability test, tone, property and constant summaries. **Canonical summary reference** |
-| `<remarks>` | [documentation/remarks.md](remarks.md) | Never required; a directive, a spec reference, or genuine complexity — held to the same three gates |
-| `<param>` | [documentation/params.md](params.md) | Compact noun-phrase per parameter |
-| `<typeparam>` | [documentation/typeparams.md](typeparams.md) | Skipped for a conventional name; carried for a domain-meaningful one |
-| `<returns>` | [documentation/returns.md](returns.md) | Required unless the return is `void` / `Task` / `ValueTask` |
-| `<exception>` | [documentation/exceptions.md](exceptions.md) | Only exceptions the method throws itself |
+| `<summary>` | [summary](summary.md) | Starter table (mandated first word per type-kind), the falsifiability test, tone, property and constant summaries. **Canonical summary reference** |
+| `<remarks>` | [remarks](remarks.md) | Never required; a directive, a spec reference, or genuine complexity — held to the same three gates |
+| `<param>` | [params](params.md) | Compact noun-phrase per parameter |
+| `<typeparam>` | [type params](typeparams.md) | Skipped for a conventional name; carried for a domain-meaningful one |
+| `<returns>` | [returns](returns.md) | Required unless the return is `void` / `Task` / `ValueTask` |
+| `<exception>` | [exceptions](exceptions.md) | Only exceptions the method throws itself |
 
 ## Three gates, in order [REQUIRED]
 
@@ -77,7 +77,7 @@ A doc block passes three gates, and **length is the last one**. An over-long blo
 
 - **Multi-line is the earned exception.** It says "every word here is load-bearing and there are more than 120 characters of them" — a claim most blocks cannot make.
 - **Cap it at 5 lines.** Past that it is a doc page, not a comment: move it to the module's `.standard.md` and leave the summary pointing at nothing. Clearing gates 1 and 2 buys length, not unlimited length.
-- **Strike test.** Strike every line whose removal costs the caller nothing. One survivor earns the block; none collapses it. (The frontend's sibling rule — [../../frontend/code-style/documentation.md](documentation.md).)
+- **Strike test.** Strike every line whose removal costs the caller nothing. One survivor earns the block; none collapses it. (The frontend's sibling rule — [documentation](documentation.md).)
 
 ```csharp
 // ❌ Wrong — wrapped straight to gate 3; the appositive after the em-dash is the real defect
@@ -176,7 +176,7 @@ Spec provenance, standards history, format archaeology. Interesting to whoever w
 // ✅ provenance is a maintainer fact — move it to a `//` beside the literal it explains, or drop it
 ```
 
-**Conformance is not provenance.** *"This output conforms to RFC 6068"* is a contract the caller can rely on, so it ships — as a **spec reference in `<remarks>`** ([documentation/remarks.md](remarks.md) § *What it carries*), naming the spec and restating none of it. The `<summary>` keeps its purpose shape and does not absorb the citation. *"The format was never standardised; here is why the literals look like this"* is provenance, and it goes in a `//`.
+**Conformance is not provenance.** *"This output conforms to RFC 6068"* is a contract the caller can rely on, so it ships — as a **spec reference in `<remarks>`** ([remarks](remarks.md) § *What it carries*), naming the spec and restating none of it. The `<summary>` keeps its purpose shape and does not absorb the citation. *"The format was never standardised; here is why the literals look like this"* is provenance, and it goes in a `//`.
 
 ```csharp
 // ❌ restates the spec, and repeats the scheme RFC 6068 already names
@@ -214,11 +214,11 @@ public required string Slug { get; set; }
 /// <summary>Gets or sets the kebab-case slug of the channel.</summary>
 ```
 
-The defect is the empty predicate, never the starter — a property summary must keep its `Gets` / `Gets or sets` ([summary.md](summary.md) § *Properties*). Say what the name cannot: the parent entity, units, range, or what null means. Not who sets it, when, or how.
+The defect is the empty predicate, never the starter — a property summary must keep its `Gets` / `Gets or sets` ([summary](summary.md) § *Properties*). Say what the name cannot: the parent entity, units, range, or what null means. Not who sets it, when, or how.
 
 ### Mandated comment *(Clean Code)*
 
-A doc written because a rule demands one, carrying nothing the declaration lacks — an empty `<summary>` on a self-evident private method, a `<returns>` restating the return type. **`<param>` is exempt**: [documentation/params.md](params.md) requires one per parameter on purpose, because a partial set reads as an omission.
+A doc written because a rule demands one, carrying nothing the declaration lacks — an empty `<summary>` on a self-evident private method, a `<returns>` restating the return type. **`<param>` is exempt**: [params](params.md) requires one per parameter on purpose, because a partial set reads as an omission.
 
 ### Inobvious connection *(Clean Code)*
 
@@ -226,7 +226,7 @@ A comment referring to something the reader cannot locate — "the sentinel", "a
 
 ### Circumstance as definition
 
-A `<summary>` describing today's arrangement rather than what the type is. It fails the **falsifiability test** in [documentation/summary.md](summary.md), which names the shapes it takes.
+A `<summary>` describing today's arrangement rather than what the type is. It fails the **falsifiability test** in [summary](summary.md), which names the shapes it takes.
 
 ### Wrapped instead of cut
 
@@ -304,6 +304,6 @@ For a library that ships reusable wrappers (the SDK pattern) — docs ride the w
 
 - [models.md](../../constructs/constructs.md) — record style + general property rules
 - [entities.md](../../../mla/components/data/entity.md) — entity-specific doc rules
-- [enums.md](../../components/enums.md) — enum value documentation
+- [enums](../../components/enums.md) — enum value documentation
 - [services.md](../../../mla/components/behavior/service.md) — service / client / factory naming
-- [mediator.md](../../../mla/domains/messaging/mediator.md) — query/command/handler naming + docs
+- [mediator](../../../mla/domains/messaging/mediator.md) — query/command/handler naming + docs

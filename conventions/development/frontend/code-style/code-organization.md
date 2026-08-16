@@ -2,7 +2,7 @@
 
 *Last updated: 2026-07-06*
 
-The TS counterpart of [../backend/code-organization.md](../../backend/dotnet/lla/notation/style/style.md). File-per-type and one-component-per-folder live in [naming.md](naming.md) / [components.md](../presentation/components.md); this file covers in-file layout.
+The TS counterpart of [../backend/code-organization.md](../../backend/dotnet/lla/notation/style/style.md). File-per-type and one-component-per-folder live in [naming](naming.md) / [components](../presentation/components.md); this file covers in-file layout.
 
 ## Language baseline
 
@@ -47,9 +47,9 @@ Group order, intra-group sort, and `type`-import form live in [imports.md](impor
 
 ## File-internal order
 
-Components: imports → types → constants → helpers → component → sub-components (see [components.md](../presentation/components.md)). Non-component modules: imports → types → constants → exported members.
+Components: imports → types → constants → helpers → component → sub-components (see [components](../presentation/components.md)). Non-component modules: imports → types → constants → exported members.
 
 ## See also
 
-- [naming.md](naming.md) · [components.md](../presentation/components.md)
+- [naming](naming.md) · [components](../presentation/components.md)
 - [../backend/code-organization.md](../../backend/dotnet/lla/notation/style/style.md) — the C# sibling

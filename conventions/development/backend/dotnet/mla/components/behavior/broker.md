@@ -50,8 +50,15 @@ What the app does **after** the retries are exhausted is a different decision, a
 - `{Capability}{Provider}Broker` or `{Provider}{Capability}Broker` — `StripeBillingBroker`
   (`smart-qr-poc/…/SmartQr.Infrastructure/Billing/Services/`).
 - `/// <summary>` starts with **Integrates** — `Integrates the Stripe payment provider.`
-  ([documentation/summary.md](../../../lla/notation/documentation/summary.md)).
+  ([summary](../../../lla/notation/documentation/summary.md)).
 - one interface per broker, named for the capability (`IBillingBroker`), so the provider name lives only in the implementation.
+
+---
+
+## Members
+
+- must use a block body `{ }` from the start — a broker's degradation policy gains a step as the seam grows
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ---
 
@@ -69,4 +76,4 @@ Deliberately unwritten; decide these against a second real broker rather than in
 
 - [clients.md](client.md) — the provider-facing half, and the resilience pipeline
 - [component-names.md](../components.md) § *`Client` vs `Broker`* — which model the type speaks
-- [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the `Integrates` starter
+- [summary](../../../lla/notation/documentation/summary.md) — the `Integrates` starter

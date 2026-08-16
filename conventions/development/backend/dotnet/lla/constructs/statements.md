@@ -17,7 +17,7 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 
 - must read `use` as the default form for its job, and `use with care` as allowed but argued in review.
 - must treat `banned` as never written — `What it does` carries the replacement.
-- a declaration form (`operator checked`, `partial`, a local function) is ruled on in [constructs.md](constructs.md).
+- a declaration form (`operator checked`, `partial`, a local function) is ruled on in [constructs](constructs.md).
 
 | Form | What it does | Verdict |
 |---|---|---|
@@ -128,13 +128,13 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 | empty statement `;` | does nothing | `use with care` |
 | `this` · `base` access | reaches the current instance or the base one | `use` |
 
-- must `await` every asynchronous call, without exception ([style.md](../notation/style/style.md) § *Banned*).
+- must `await` every asynchronous call, without exception ([style](../notation/style/style.md) § *Banned*).
 - must use `var` when the initializer names the type, and write the type when it does not
-  ([style.md](../notation/style/style.md) § *`var` — preferred, with one exception*).
+  ([style](../notation/style/style.md) § *`var` — preferred, with one exception*).
 - must promote a structural interpolated string to a `const` — interpolation is for a message.
 - must gate `lock` behind a `private readonly` object, never `this` and never a public field.
 
 ## See also
 
-- [constructs.md](constructs.md) — the forms that declare a type
-- [../notation/style/style.md](../notation/style/style.md) — how the text around these is laid out
+- [constructs](constructs.md) — the forms that declare a type
+- [style](../notation/style/style.md) — how the text around these is laid out

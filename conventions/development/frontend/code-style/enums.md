@@ -31,7 +31,7 @@ The fork that drives location.
 
 ## 3. Shape and documentation
 
-- must JSDoc the type with a one-liner starting **`Defines …`** ([documentation.md](documentation.md)).
+- must JSDoc the type with a one-liner starting **`Defines …`** ([documentation](documentation.md)).
 - must declare a `const` object `as const`, then derive the type.
 - must not use the TS `enum` keyword — nominal-typing + `const enum` pitfalls; the const object is tree-shakeable and the value *is* the wire string.
 

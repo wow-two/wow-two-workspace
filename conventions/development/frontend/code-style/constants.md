@@ -7,7 +7,7 @@ A single fixed value, or an unrelated group of them. Distinct from an [enum](enu
 ## Const vs enum
 
 - a single scalar, or unrelated values → a **`const`** (this file).
-- a fixed **set** of related string values (a closed vocabulary) → an **enum** ([enums.md](enums.md)).
+- a fixed **set** of related string values (a closed vocabulary) → an **enum** ([enums](enums.md)).
 
 ## Declaration
 
@@ -26,9 +26,9 @@ export const Angles = [/* … */] as const;
 
 ## Comments
 
-- must JSDoc every exported constant with a one-liner `/** … */` ([documentation.md](documentation.md)); include units / range when not obvious — `(px)`, `(0..1 extent)`.
+- must JSDoc every exported constant with a one-liner `/** … */` ([documentation](documentation.md)); include units / range when not obvious — `(px)`, `(0..1 extent)`.
 - an internal (unexported) constant uses `/** @internal … */`.
 
 ## See also
 
-- [enums.md](enums.md) — the value-**set** sibling · [extensions.md](extensions.md) — `{Noun}Extensions` helper objects · [naming.md](naming.md)
+- [enums](enums.md) — the value-**set** sibling · [extensions](extensions.md) — `{Noun}Extensions` helper objects · [naming](naming.md)

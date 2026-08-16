@@ -33,7 +33,7 @@
 | Declaration | Type doc · Type name | the type's doc fields, and the type's own name |
 | Content | Member docs · Members | each member's doc fields, and the members themselves |
 
-- must give each doc field its own sub-heading; a field the component does not declare is forbidden on it ([../notation/documentation/documentation.md](../notation/documentation/documentation.md) § *Declared fields only*).
+- must give each doc field its own sub-heading; a field the component does not declare is forbidden on it ([documentation](../notation/documentation/documentation.md) § *Declared fields only*).
 - must write each rule as what the code **must have**, never as what it must not be — a banned shape belongs in the ❌ example, not in a rule.
 - must close every doc sub-heading **and** the `Members` sub-heading with one ✅ / ❌ pair; the ❌ must fail a rule stated directly above it.
 - must state a constraint as its own rule when no positive rule already excludes it — a starter rule fixes the starter, so a wrong starter is only an ❌; nothing about a correct starter forbids a type from bridging two services, so that needs a rule of its own.
@@ -104,5 +104,5 @@
 
 ## See also
 
-- [../constructs/constructs.md](../constructs/constructs.md) — the constructs these roles are built from
-- [../notation/notation.md](../notation/notation.md) — the defaults a component may override
+- [constructs](../constructs/constructs.md) — the constructs these roles are built from
+- [notation](../notation/notation.md) — the defaults a component may override

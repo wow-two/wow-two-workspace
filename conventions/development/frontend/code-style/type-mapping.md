@@ -14,7 +14,7 @@
 | `string` | `string` | `string` | |
 | `bool` | `bool` | `boolean` | |
 | `int` / `long` / `decimal` | `number` | `number` | no `bigint`, no decimal-as-string |
-| `enum` | camelCase `string` | enum const-type ([enums.md](enums.md)) | wire value **is** the enum value — no mapping |
+| `enum` | camelCase `string` | enum const-type ([enums](enums.md)) | wire value **is** the enum value — no mapping |
 | `DateTimeOffset` / `DateTime` | ISO-8601 `string` | `Temporal.Instant` | see Dates |
 | `DateOnly` | `yyyy-MM-dd` | `Temporal.PlainDate` | date-only, no time/zone |
 | `TimeOnly` | `HH:mm:ss` | `Temporal.PlainTime` | time-only |
@@ -58,7 +58,7 @@ Dates convert at the **HTTP client boundary** ([state-and-data.md](../architectu
 
 ## Enums
 
-- wire value = the const-object's camelCase value = the TS enum value → **identity**, no mapping. Backend must serialize camelCase (`JsonStringEnumConverter(JsonNamingPolicy.CamelCase)`). Full pattern: [enums.md](enums.md).
+- wire value = the const-object's camelCase value = the TS enum value → **identity**, no mapping. Backend must serialize camelCase (`JsonStringEnumConverter(JsonNamingPolicy.CamelCase)`). Full pattern: [enums](enums.md).
 
 ---
 

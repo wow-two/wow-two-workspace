@@ -62,7 +62,7 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 
 ## Component folders across layers
 
-A component states its folder **name** once ([../../lla/components/components.md](../../lla/components/components.md) § *The component template*);
+A component states its folder **name** once ([components](../../lla/components/components.md) § *The component template*);
 where that folder may appear is this file's rule, and the two together are not duplication.
 
 - must allow a component folder in **any** layer that declares the component — `Enums/` is legal under Domain, Application and Infrastructure alike.
@@ -90,4 +90,4 @@ Domain and Infrastructure mirror each other but aren't forced to be 1:1. Infrast
 
 - [service-architecture.md](layers.md) — the 5 layers
 - [entities.md](../components/data/entity.md) — where entities live
-- [enums.md](../../lla/components/enums.md) — where enums live
+- [enums](../../lla/components/enums.md) — where enums live

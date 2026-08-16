@@ -3,7 +3,7 @@
 *Last updated: 2026-07-03*
 
 > How to declare a model, in the order you build one. Scalars + dates → [type-mapping.md](type-mapping.md); enums →
-> [enums.md](enums.md); the API envelope + errors are integration, not models → [state-and-data.md](../architecture/state-and-data.md).
+> [enums](enums.md); the API envelope + errors are integration, not models → [state-and-data.md](../architecture/state-and-data.md).
 
 **Flow:** `kind → file + name → shape + doc → members (doc → type) → mapper (only if a DTO)`
 
@@ -45,7 +45,7 @@ Every client-side data model carries a **`*Dto`** suffix — it marks "a data sh
 ## 3. Shape + doc
 
 - must use `interface` for an object shape; `type` only for a union / alias / enum value-set.
-- must open the type doc with **`Represents`** for a data model (an interface that holds data) — one line; **`Defines`** only for an abstraction / contract / enum. (We have no classes; a data interface *represents* its data — mirrors [../backend/code-style/documentation.md](../../backend/dotnet/lla/notation/documentation/documentation.md) + the frontend [documentation.md](documentation.md) verb table.)
+- must open the type doc with **`Represents`** for a data model (an interface that holds data) — one line; **`Defines`** only for an abstraction / contract / enum. (We have no classes; a data interface *represents* its data — mirrors [documentation](../../backend/dotnet/lla/notation/documentation/documentation.md) + the frontend [documentation](documentation.md) verb table.)
 
 ```typescript
 /** Represents an issued invoice and its lifecycle status. */
@@ -58,10 +58,10 @@ export interface Invoice {
 
 Per member, in order: **doc → type**.
 
-- must open each member doc with **`The …`** — a value noun phrase, one line. TS has no get/set, so a model field reads like a prop's `value` ([components.md](../presentation/components.md) § Members) — never `Gets or sets` (a C# get/set idiom).
-- must leave **exactly one blank line between every documented member** of an interface / type (member = its doc + the field), as in a C# model — a general model-formatting rule, mirroring the blank-line-before-derived-type in [enums.md](enums.md).
+- must open each member doc with **`The …`** — a value noun phrase, one line. TS has no get/set, so a model field reads like a prop's `value` ([components](../presentation/components.md) § Members) — never `Gets or sets` (a C# get/set idiom).
+- must leave **exactly one blank line between every documented member** of an interface / type (member = its doc + the field), as in a C# model — a general model-formatting rule, mirroring the blank-line-before-derived-type in [enums](enums.md).
 - must mark required as `field: T`, optional as `field?: T` — no `T | null`, no emitted null.
-- must type each member per [type-mapping.md](type-mapping.md); enum fields per [enums.md](enums.md).
+- must type each member per [type-mapping.md](type-mapping.md); enum fields per [enums](enums.md).
 - must group a large model with `// ── Section ──` bands; no `@example`, no mechanism notes.
 
 ```typescript

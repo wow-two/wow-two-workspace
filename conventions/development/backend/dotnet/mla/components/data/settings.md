@@ -26,6 +26,8 @@ Configuration classes that bind to `appsettings.json` sections via `IOptions<T>`
 - **`{ get; init; }`** — set once by config binding, never mutated
 - **Non-nullable** — `required` on every property unless the setting is genuinely optional
 - **No defaults** — config binder must provide values; missing values should fail loudly
+- may use `=>` for a member that returns or delegates — a settings record holds bound values, not logic
+  ([style](../../../lla/notation/style/style.md) § *The body*)
 
 ```csharp
 /// <summary>Configuration for AI classification pipeline behavior.</summary>
@@ -41,7 +43,7 @@ public sealed record ClassificationSettings
 
 ## Registration
 
-Register in `HostConfigurationExtensions.AddSettings()` via `IOptions<T>` binding — see [host-configuration.md](../../platform/host-configuration.md):
+Register in `HostConfigurationExtensions.AddSettings()` via `IOptions<T>` binding — see [host configuration](../../platform/host-configuration.md):
 
 ```csharp
 public static WebApplicationBuilder AddSettings(this WebApplicationBuilder builder)
@@ -62,7 +64,7 @@ public static WebApplicationBuilder AddSettings(this WebApplicationBuilder build
 
 ## Documentation
 
-Per the starter table in [documentation/summary.md](../../../lla/notation/documentation/summary.md):
+Per the starter table in [summary](../../../lla/notation/documentation/summary.md):
 
 ### Settings class
 
@@ -93,6 +95,6 @@ Auth, OAuth, sign-in, and token concerns use the keyword **`Identity`** — alig
 
 ## See also
 
-- [host-configuration.md](../../platform/host-configuration.md) — registration
+- [host configuration](../../platform/host-configuration.md) — registration
 - [models.md](../../../lla/constructs/constructs.md) — record style
-- [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table
+- [summary](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table

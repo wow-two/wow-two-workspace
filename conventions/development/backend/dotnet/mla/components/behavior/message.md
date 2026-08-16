@@ -63,11 +63,13 @@
 ### Members
 - must carry every input the handler reads as a property on the message.
 - must take each collaborator through the handler's constructor — a repository is not an input.
+- must use a block body `{ }` from the start — a handler orchestrates a use case, and every one gains steps
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 - must bind exactly one handler to a query and to a command; an event takes 0..N.
 - must order the message's properties as they arrive: route id, then body, then caller context.
 
 ## See also
 
-- [../components.md](../components.md) — the `Handler` + `Command`/`Query`/`Event` row
-- [mediator.md](../../domains/messaging/mediator.md) — dispatch, pipeline behaviors, registration
+- [components](../components.md) — the `Handler` + `Command`/`Query`/`Event` row
+- [mediator](../../domains/messaging/mediator.md) — dispatch, pipeline behaviors, registration
 - [controller.md](controller.md) — the caller that sends one

@@ -52,6 +52,8 @@
 ### Members
 - must take every input as an argument — a mapper owns no state to read from.
 - must stay total: every input shape produces an output, or the type is a `Validator`.
+- may use `=>` for a member that returns or delegates — growth means the type stopped being a `Mapper`
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ```csharp
 // ✅ every input reaches an output
@@ -65,5 +67,5 @@ public CodeCreateCommand? Map(CreateCodeApiRequest request) =>
 
 ## See also
 
-- [../components.md](../components.md) — `Mapper` vs `Registry`
+- [components](../components.md) — `Mapper` vs `Registry`
 - [registry.md](registry.md) — the type that owns its set

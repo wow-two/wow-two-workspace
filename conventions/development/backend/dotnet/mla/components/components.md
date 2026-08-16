@@ -3,7 +3,7 @@
 *Last updated: 2026-08-15*
 
 > What — the canonical suffix→role vocabulary for backend types: one name per role, a type's suffix declares its responsibility (the
-> `Store` vs `Repository` vs `Service` decision — not the brand/casing rules in [../code-style/naming.md](../../lla/notation/naming/naming.md)).
+> `Store` vs `Repository` vs `Service` decision — not the brand/casing rules in [naming](../../lla/notation/naming/naming.md)).
 > Purpose — kill naming entropy: when three synonyms (`Store` / `Repository` / `Provider`) all mean "data access", a reader can't infer role from the
 > name; one suffix per role lets the name carry the responsibility.
 > Use case — reach for it whenever you name any backend type; check the keep-list before inventing a suffix, run the gate before adding a new one.
@@ -73,7 +73,7 @@ Authority paths for the short names above:
 - `services.md` → [../architecture/services.md](behavior/service.md) · `clients.md` → [../integrations/clients.md](behavior/client.md)
 - `naming.md` / `models.md` → [../code-style/](../code-style/) · `settings.md` → [../runtime/settings.md](data/settings.md)
 - `request-models.md` / `response-models.md` / `controllers.md` → [../presentation/](../presentation/)
-- `mediator.md` → [../messaging/mediator.md](../domains/messaging/mediator.md) · `validation.md` / `result-pattern.md` → [./](./)
+- `mediator.md` → [mediator](../domains/messaging/mediator.md) · `validation.md` / `result-pattern.md` → [./](./)
 - `database.md` / `data-access.md` → [../persistence/](../persistence/)
 
 Confirmed-in-source examples (sample paths, not exhaustive):
@@ -151,7 +151,7 @@ Default: name the **domain the logic belongs to**, not the type it happens to ex
 - **never carry an interface's `I` into the class name** — `ServiceCollectionExtensions`, never `IServiceCollectionExtensions`. The `I` belongs to the interface, and the class is not one.
 - **must not name a type the domain does not answer to** — `ContentWifiTypeExtensions` names an enum, `ICodeRepositoryExtensions` names an interface. Both lock the class to one declaration, so the first method touching a sibling forces a rename. `WifiEncryptionExtensions` is fine: Wi-Fi encryption *is* the subject, not an incidental target.
 - name the target type only when the target **is** the domain — `ServiceCollectionExtensions` for container registration, where the container is the subject.
-- for DI registration in a library, `naming.md` narrows this further to `<Area>ServiceCollectionExtensions` ([naming.md](../../lla/notation/naming/naming.md) § *Registration and extension-method naming*).
+- for DI registration in a library, `naming.md` narrows this further to `<Area>ServiceCollectionExtensions` ([naming](../../lla/notation/naming/naming.md) § *Registration and extension-method naming*).
 
 **Exception — a closed family.** When several types form one modelled family (a discriminated union's variants plus the enums they carry), one `{Family}Extensions` class may host the extensions for all of them.
 
@@ -159,7 +159,7 @@ Default: name the **domain the logic belongs to**, not the type it happens to ex
 - must name the family, not one member: `WifiContentExtensions`, not `WifiEncryptionExtensions` when it also extends the content type
 - the family class owns the family's format constants too, keeping wire spellings out of the model
 - rationale: a per-target split gives 2+ files per family and scatters one wire contract; per-family gives one place to look and one place for the spec's literals to live
-- summary starter is `Extends` — see [documentation/summary.md](../../lla/notation/documentation/summary.md) § *Extension classes*
+- summary starter is `Extends` — see [summary](../../lla/notation/documentation/summary.md) § *Extension classes*
 
 ---
 

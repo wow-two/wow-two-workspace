@@ -4,7 +4,7 @@
 
 > .NET conventions for every backend service under `wow-two-ws/`. Lookup table — open a file when the task
 > touches it; do not pre-read. Cut by **scope**: how far a rule reaches.
-> How to write a doc here → template + rules in [../../../conventions.md](../../../conventions.md).
+> How to write a doc here → template + rules in [conventions](../../../conventions.md).
 
 ## The three scopes
 
@@ -52,12 +52,12 @@ single-service default every later service inherits by accident.
 
 ### `lla/` — language level
 
-Three levels, and they never share a folder ([../../../conventions.md](../../../conventions.md) § *One level per folder*).
+Three levels, and they never share a folder ([conventions](../../../conventions.md) § *One level per folder*).
 
 | Level | Answers | Lives in |
 |---|---|---|
 | **construct** | what C# offers, and which of it we use or forbid — `record` · `class` · `interface` · `enum` · `struct` · `delegate` | [constructs/](lla/constructs/constructs.md) |
-| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components.md](lla/components/components.md) |
+| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components](lla/components/components.md) |
 | **definition** | the whole component — folder, file, type doc, type name, member doc, content | each component's own file, via the six-section template |
 
 **The role level fixes the starters.** A data model — `record`, `struct` — takes **Represents**. An interface over a data
@@ -81,13 +81,13 @@ A component that does not override cites `notation/` rather than restating it.
 ### `mla/components/` — a kind of type you declare
 
 Split by what the type is for: [data/](mla/components/data/entity.md) holds, [behavior/](mla/components/behavior/service.md) does.
-The lead is [components.md](mla/components/components.md) — the suffix keep-list, the folds, and the coining gate.
+The lead is [components](mla/components/components.md) — the suffix keep-list, the folds, and the coining gate.
 
 | File | What it covers |
 |---|---|
 | [broker.md](mla/components/behavior/broker.md) | The app-side seam — broker/client peering, degradation policy, `Integrates` starter |
 | [client.md](mla/components/behavior/client.md) | HTTP API wrappers — `HttpClient` injection, resilience pipeline (`AddSdkResilience`), Refit |
-| [components.md](mla/components/components.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
+| [components](mla/components/components.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
 | [controller.md](mla/components/behavior/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
 | [registry.md](mla/components/behavior/registry.md) | The key-to-type set — binds at composition, throws on a miss |
 | [mapper.md](mla/components/behavior/mapper.md) | The transform — total, stateless, both shapes named |
@@ -108,7 +108,7 @@ The lead is [components.md](mla/components/components.md) — the suffix keep-li
 
 | File | What it covers |
 |---|---|
-| [domain-structuring.md](mla/layers/domain-structuring.md) | Subdomain pattern, `Core/` vs operation folders |
+| [domain structuring](mla/layers/domain-structuring.md) | Subdomain pattern, `Core/` vs operation folders |
 | [layers.md](mla/layers/layers.md) | Solution-folder grouping + 5-layer Clean Arch (Api / Application / Domain / Infrastructure / Persistence) |
 | [test-databases.md](mla/layers/test-databases.md) | Test-DB selection — tiers (`RelationalTestDb<TContext>` · `MultiHostFixture` · `MigratorHarness`), Postgres default, `WOW2_TEST_DB` switch + SQLite speed fallback |
 | [test-databases.md](mla/layers/test-databases.md) | Test-DB tiers — container vs shared, Respawn reset boundaries |
@@ -122,7 +122,7 @@ The lead is [components.md](mla/components/components.md) — the suffix keep-li
 | [build.md](mla/platform/build/build.md) | Sub-domain lead — the two solution-root files, the minimal-`.csproj` invariant |
 | [central-package-management.md](mla/platform/build/central-package-management.md) | `Directory.Packages.props` — CPM: one `PackageVersion` per package, `.csproj` refs by name (no `Version`); add/bump; SDK ref + `FrameworkReference` |
 | [directory-build-props.md](mla/platform/build/directory-build-props.md) | `Directory.Build.props` — shared props (`net10.0` · `Nullable` · `ImplicitUsings` · `LangVersion latest`); opt-in warnings-as-errors + NuGet-audit stance; packaging props SDK-only |
-| [host-configuration.md](mla/platform/host-configuration.md) | `HostConfiguration.Configure` + Extensions split, slim `Program.cs` |
+| [host configuration](mla/platform/host-configuration.md) | `HostConfiguration.Configure` + Extensions split, slim `Program.cs` |
 | [known-endpoints.md](mla/platform/known-endpoints.md) | Fixed identity / system endpoints — `api/identity/*`, `api/system/status` |
 | [launch-profiles.md](mla/platform/launch-profiles.md) | `launchSettings.json` — a single `https` profile, even/odd port pair from `ports.md` |
 | [problem-details.md](mla/platform/problem-details.md) | RFC-7807 error responses — `Problem()`, `IErrorHttpStatusCodeMapper`, global handler |
@@ -135,8 +135,8 @@ The lead is [components.md](mla/components/components.md) — the suffix keep-li
 | File | What it covers |
 |---|---|
 | [jwt-auth.md](mla/domains/identity/jwt-auth.md) | JWT bearer auth — token issuance + validation wiring |
-| [mediator.md](mla/domains/messaging/mediator.md) | In-process request/response + fan-out — `IRequest`/`INotification`, CQRS query/command naming, `ISender`/`IPublisher`, pipeline behaviors |
-| [database.md](mla/domains/persistence/database.md) | Schema-first rule (canonical = `Migrations/*/Apply.sql` for Sql-strategy), column constraints, type mappings, EF-as-mapper |
+| [mediator](mla/domains/messaging/mediator.md) | In-process request/response + fan-out — `IRequest`/`INotification`, CQRS query/command naming, `ISender`/`IPublisher`, pipeline behaviors |
+| [database](mla/domains/persistence/database.md) | Schema-first rule (canonical = `Migrations/*/Apply.sql` for Sql-strategy), column constraints, type mappings, EF-as-mapper |
 | [bespoke-migrations.md](mla/domains/persistence/migrations/bespoke-migrations.md) | Bespoke-SQL migrator — components + lifecycle (provider-agnostic): `AddDatabaseBespokeMigrations`, layout, drift/orphan |
 | [dbup-migrations.md](mla/domains/persistence/migrations/dbup-migrations.md) | DbUp forward-only scripts — `AddDbUpRunner` |
 | [ef-migrations.md](mla/domains/persistence/migrations/ef-migrations.md) | EF Core code-first migrations — `AddEfMigrationsRunner<TContext>` |

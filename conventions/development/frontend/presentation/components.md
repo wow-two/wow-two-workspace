@@ -49,7 +49,7 @@ components/
 
 ## 3. Doc
 
-- must JSDoc the component with a **one-line** `/** … */` starting **`Renders …`** ([documentation.md](../code-style/documentation.md)) — never a multi-line block on a component.
+- must JSDoc the component with a **one-line** `/** … */` starting **`Renders …`** ([documentation](../code-style/documentation.md)) — never a multi-line block on a component.
 - must JSDoc the props interface with a one-liner starting **`Defines props for …`**.
 
 ```tsx
@@ -83,7 +83,7 @@ export function AuthorContact({ authorName, phones }: AuthorContactProps) {
 
 ## 5. Prop members
 
-Each member gets a one-line JSDoc whose verb matches the prop's **direction** — a prop is unidirectional, and the get/set is split across a `value` prop and its `onChange` callback, so one direction-appropriate verb per member is right ([documentation.md](../code-style/documentation.md) verb table).
+Each member gets a one-line JSDoc whose verb matches the prop's **direction** — a prop is unidirectional, and the get/set is split across a `value` prop and its `onChange` callback, so one direction-appropriate verb per member is right ([documentation](../code-style/documentation.md) verb table).
 
 - must doc a **value / input** prop as a noun phrase led by **`The …`**.
 - must doc a **callback / event** prop with **`Emits …`** — the value it hands back; a *pure* event with no payload uses **`Fires when …`**.
@@ -99,7 +99,7 @@ Each member gets a one-line JSDoc whose verb matches the prop's **direction** �
 **Required vs. optional per prop origin:**
 
 - **pure-UI prop** (no backend counterpart) → member doc **required**; there's no backend contract to lean on.
-- **backend-mirrored DTO prop** → member doc **omitted** — the backend declares the field semantics; the FE must not restate them ([documentation.md](../code-style/documentation.md) § Member-level docs).
+- **backend-mirrored DTO prop** → member doc **omitted** — the backend declares the field semantics; the FE must not restate them ([documentation](../code-style/documentation.md) § Member-level docs).
 
 ```tsx
 /** Defines props for the fill controls. */
@@ -144,5 +144,5 @@ export function FillControls(props: FillControlsProps) { … }
 
 ## 8. Use
 
-- a value that is one of an enum's members is modeled as the **enum**, compared `x === Enum.Member` — never fanned into `isSolid` / `isGradient` booleans ([enums.md](../code-style/enums.md) § No parallel `isMember` flags).
+- a value that is one of an enum's members is modeled as the **enum**, compared `x === Enum.Member` — never fanned into `isSolid` / `isGradient` booleans ([enums](../code-style/enums.md) § No parallel `isMember` flags).
 - where a component lives (the `presentation/` layer) → [architecture.md](../architecture/architecture.md); forms + hooks → [forms.md](forms.md) · [hooks.md](hooks.md).

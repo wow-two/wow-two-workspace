@@ -58,12 +58,14 @@ Validation repeats down the stack; layers do not delegate to each other.
 
 Validators are FluentValidation `AbstractValidator<T>` — one per validated type, `public sealed`, plain FluentValidation, no SDK base class.
 
-- **Name** `{Concept}Validator` — `WifiContentValidator`, `ProductCreateCommandValidator`. **Co-locate** with the type it validates (same folder as the command; see [mediator.md](../../domains/messaging/mediator.md)).
+- **Name** `{Concept}Validator` — `WifiContentValidator`, `ProductCreateCommandValidator`. **Co-locate** with the type it validates (same folder as the command; see [mediator](../../domains/messaging/mediator.md)).
 - **Track the type name only when the concept has more than one model.** A validator names the *concept*, not the class. `WifiContentValueObject` gets `WifiContentValidator` — there is one wifi-content model, so nothing is ambiguous, and dragging a role suffix into the validator name buys a longer identifier and no information.
 - **When a concept does have several models across layers** (`ProductEntity` + `ProductDto` + `ProductCreateRequest`), each validator carries the full type name so the target is unambiguous. That is the case the `{Type}Validator` shape exists for.
 - a role suffix on the model (`Entity` / `Dto` / `ValueObject`) is a **statement about the model**, not about what validates it — renaming the model must not force a validator rename.
 - **Summaries** — type: `Validates <see cref="{Type}"/>.`; constructor: `Configures the {action} field rules.`
 - **Syntax** — one rule per `RuleFor`; each chained call on its own line (`.Must(...)` then `.WithMessage(...)`); a blank line between `RuleFor`s.
+- may use `=>` for a member that returns or delegates, a single-`RuleFor` constructor included — a rule chain is
+  declarative, not a flow that gains steps ([style](../../../lla/notation/style/style.md) § *The body*).
 - **Messages** — omit `.WithMessage` when FluentValidation's default reads fine (it names the property); add one only where the rule's intent isn't obvious from the property and validator (e.g. a format check).
 - **`nameof`** — use `nameof` wherever a rule references another member by name.
 - **Shared predicates** — factor a reusable check into a static helper (`ProductValidation.IsValidRepo`) called via `.Must(...)`; don't inline the same lambda across validators.

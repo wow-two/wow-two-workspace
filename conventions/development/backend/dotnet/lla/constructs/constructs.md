@@ -90,12 +90,12 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 - must declare a data carrier as a `sealed record` with body properties, never positional ([records.md](constructs.md)).
 - must declare behavior as a `sealed class` — value equality would be wrong on a type whose identity is what it does.
 - must give a `static class` a `Constants` or `Extensions` role only
-  ([constants.md](../components/constants.md) · [extensions.md](../components/extensions.md)).
+  ([constants](../components/constants.md) · [extensions](../components/extensions.md)).
 - must have a measured allocation reason before any `struct` form — the default is a reference type.
 - must prefer `Func<>` / `Action<>` over a named `delegate` unless the name earns itself.
-- must put one `enum` per file; the domain-mapping rules are MLA ([enums.md](../components/enums.md)).
-- must let the role pick an `interface` doc starter ([summary.md](../notation/documentation/summary.md)).
-- must clear the five gates in [members.md](../notation/style/members.md) before an expression-bodied member.
+- must put one `enum` per file; the domain-mapping rules are MLA ([enums](../components/enums.md)).
+- must let the role pick an `interface` doc starter ([summary](../notation/documentation/summary.md)).
+- must clear the five gates in [members.md](constructs.md) before an expression-bodied member.
 
 ## Banned constructs
 
@@ -108,9 +108,9 @@ A ban here is about the **construct**, whatever role holds it. A ban that depend
   - the null-invocation race — the last subscriber can detach between the null check and the call, and the call throws.
   - one throwing handler aborts the rest — a multicast delegate walks its list in order, so the first exception stops every later subscriber.
   - an `IEnumerable<IObserver>` set injected by hand is the same shape and folds the same way.
-- **positional records for data carriers** — reach for body properties with `{ get; init; }` ([../notation/style/style.md](../notation/style/style.md)).
+- **positional records for data carriers** — reach for body properties with `{ get; init; }` ([style](../notation/style/style.md)).
 - **`dynamic`** — reach for generics or polymorphism; the compiler stops checking and the failure moves to runtime.
-- **`using static`** — reach for the type name at the call site ([../notation/naming/naming.md](../notation/naming/naming.md) § *Banned*).
+- **`using static`** — reach for the type name at the call site ([naming](../notation/naming/naming.md) § *Banned*).
 
 ## Data components
 
@@ -126,6 +126,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 - must document a domain-meaningful parameter, and skip a conventional one.
 
 ### Type name
+- must give the type its own file, named for it; a generic and non-generic pair may share one.
 - must name the thing carried, never the carrier — `Channel`, not `ChannelData`.
 
 ### Member docs
@@ -134,7 +135,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 - must start a property with **Gets**, **Gets or sets** or **Sets**, matching its accessors.
 - must start a field holding a fixed value with **Holds** — `const`, `static readonly`, `readonly`.
 - must start a field keeping changing state with **Keeps** — the verb says the value moves.
-- must name the referent unless the value is the type's own ([../notation/documentation/documentation.md](../notation/documentation/documentation.md)).
+- must name the referent unless the value is the type's own ([documentation](../notation/documentation/documentation.md)).
 
 ```csharp
 // ✅ accessor and mutability visible from the first word
@@ -148,6 +149,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 
 ### Members
 - must be `{ get; init; }` body properties, never positional parameters.
+- may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
 - must be `required` when the value must come from outside the constructor.
 - must be non-nullable unless the absence is a fact the caller reads.
 
@@ -170,7 +172,8 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must carry a directive, a spec reference, or a constraint the signature hides.
 
 ### Type name
-- must carry the role suffix from the keep-list ([../../mla/components/components.md](../../mla/components/components.md)).
+- must give the type its own file, named for it; a generic and non-generic pair may share one.
+- must carry the role suffix from the keep-list ([components](../../mla/components/components.md)).
 
 ### Member docs
 
@@ -198,6 +201,8 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 ### Members
 - must take collaborators through the constructor, never a service locator.
 - must hold no mutable state unless the role is a `Tracker`.
+- must separate member groups with a `// ── Section ──` divider once the type passes 60 lines.
+- may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
 
 ### Constructs
 - must use `sealed class` — a `record` would claim value equality the type does not have.
@@ -207,5 +212,5 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 ## See also
 
 - [shape.md](constructs.md) — the lead, and the rule that form is chosen never defaulted
-- [../../mla/components/components.md](../../mla/components/components.md) — the roles these constructs carry
-- [statements.md](statements.md) — the forms that run inside a declaration
+- [components](../../mla/components/components.md) — the roles these constructs carry
+- [statements](statements.md) — the forms that run inside a declaration
