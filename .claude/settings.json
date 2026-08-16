@@ -28,6 +28,20 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/style-recharge.sh\" 2>/dev/null || echo \"STYLE hook did not run -- check it with: bash -n .claude/hooks/style-recharge.sh\""
+          },
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-style.py\" 2>/dev/null || echo \"STYLE CHECK drain did not run -- check it with: python3 -c 'import ast;ast.parse(open(\\\".claude/hooks/check-style.py\\\").read())'\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/check-style.py\" 2>/dev/null || echo \"STYLE CHECK did not run -- shape check OFF this turn.\""
           }
         ]
       }

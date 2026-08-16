@@ -294,7 +294,7 @@ Aligned with [GWDNBM principle](../../../../../.claude/projects/-Users-max-Proje
 - ⏳ `POST /transcripts` endpoint (Program.cs still `Hello World!`)
 - ⏳ VttParser unit tests
 
-Full state + resume recipe in the [POC README](../../workbench/ventures/yt-transcripts-poc/README.md). Reason for the standalone README: the previous working chat was accidentally deleted on 2026-05-28 — the README is now the recovery surface.
+Full state + resume recipe in the [POC README](../README.md). Reason for the standalone README: the previous working chat was accidentally deleted on 2026-05-28 — the README is now the recovery surface.
 
 ## Next Steps
 

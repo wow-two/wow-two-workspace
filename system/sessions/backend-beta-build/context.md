@@ -130,7 +130,7 @@ Class names also descriptive: `JsonOptionsPresets`, `DomainError`, `IdentifierGu
 
 Stable identifiers neutral: cookie `.app.auth`, policy `"default"`. `ActivitySource`/`Meter` keep `WoW.Two.<Area>` (intentional brand for cross-service trace filtering).
 
-Full convention: [`docs/conventions/naming.md`](../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/docs/conventions/naming.md).
+Full convention: [`docs/conventions/naming.md`](../../../conventions/development/backend/dotnet/lla/notation/naming/naming.md).
 
 ## Locked decisions (do not re-litigate)
 

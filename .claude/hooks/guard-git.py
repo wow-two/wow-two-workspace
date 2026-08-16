@@ -15,7 +15,7 @@ Shared policy (identical in eis-ws / 10x-ws / wow-two-ws):
              `run view|list|watch`, `issue view|list`, `api` GET, `repo view`,
              `auth status`)
   forbidden  `git push` in every form (`--force`, `--force-with-lease`, `--tags`,
-             and push-by-gh) · worktree destruction (`reset --hard`, `restore`,
+             and push-by-gh) · worktree destruction (`reset --hard`, `restore` to the worktree,
              `checkout -- <path>`, `checkout .`, `clean`) · every gh write
              (`pr create|comment|merge|close|edit|review|ready`,
              `issue create|comment|close|edit`, `release create`,
@@ -91,7 +91,9 @@ READ_ONLY = {
 }
 
 # Worktree destruction — forbidden everywhere, no exemption.
-WORKTREE_KILL = {"restore", "clean"}
+# `restore` is NOT here: `--staged` alone is index-only and safe, so it is
+# resolved in git_verdict() where the flags are visible.
+WORKTREE_KILL = {"clean"}
 RESET_KILL = {"--hard", "--merge", "--keep"}
 CHECKOUT_KILL = {"-f", "--force", "--ours", "--theirs"}
 SWITCH_KILL = {"-f", "--force", "--discard-changes"}
@@ -250,6 +252,13 @@ def git_verdict(sub, args):
 
     if sub == "push":
         return hard
+    if sub == "restore":
+        # `--staged`/`-S` alone rewrites the index; the worktree is untouched, so
+        # nothing uncommitted can be lost. Adding `--worktree`/`-W` (or passing no
+        # flag at all) overwrites files from the index or HEAD -> destruction.
+        staged = flags & {"--staged", "-S"}
+        worktree = flags & {"--worktree", "-W"}
+        return None if (staged and not worktree) else hard
     if sub in WORKTREE_KILL:
         return hard
     if sub in SURGERY:

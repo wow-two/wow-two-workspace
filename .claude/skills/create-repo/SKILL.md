@@ -127,8 +127,8 @@ What's there (rebranded from `Sample` → `{Brand}`):
   - `{Brand}.Persistence` — `{Brand}DbContext` (EF Core **SQLite**), `DependencyInjection.AddPersistence`
     + `InitializeDatabaseAsync` using **`EnsureCreatedAsync`** — schema is created on boot, **no migration
     files** and no `dotnet-ef` tooling.
-  - `{Brand}.Api` — slim `Program.cs` → `Configurations/HostConfiguration`(+`Extensions`) +
-    `AppInitialization`; `Controllers/GreetingController` (`ISender` + `result switch → Ok / Problem`);
+  - `{Brand}.Api` — fixed four-statement `Program.cs` → `Configurations/HostConfiguration`(+`Extensions`),
+    which owns startup work; `Controllers/GreetingController` (`ISender` + `result switch → Ok / Problem`);
     `wwwroot/index.html` placeholder; `appsettings.json`(+`.Development`); `Properties/launchSettings.json`.
 - **Ports** — already re-allocated by `scaffold.sh` (template's `8220`/`8221` https/http + `8225` vite →
   the next-free pair; see §2's port pass). Nothing to set by hand.

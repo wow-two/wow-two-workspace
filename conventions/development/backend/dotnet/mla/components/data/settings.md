@@ -19,7 +19,7 @@ Configuration classes that bind to `appsettings.json` sections via `IOptions<T>`
 
 - **`sealed record`** — immutable after binding
 - **Naming** — suffix with `Settings` (`ClassificationSettings`, `ScrapeSettings`)
-- **No positional constructor** — body properties only (see [models.md](../../../lla/constructs/records.md))
+- **No positional constructor** — body properties only (see [models.md](../../../lla/constructs/constructs.md))
 
 ### Members
 
@@ -94,5 +94,5 @@ Auth, OAuth, sign-in, and token concerns use the keyword **`Identity`** — alig
 ## See also
 
 - [host-configuration.md](../../platform/host-configuration.md) — registration
-- [models.md](../../../lla/constructs/records.md) — record style
+- [models.md](../../../lla/constructs/constructs.md) — record style
 - [documentation/summary.md](../../../lla/notation/documentation/summary.md) — the canonical `<summary>` starter table

@@ -302,7 +302,7 @@ For a library that ships reusable wrappers (the SDK pattern) — docs ride the w
 
 ## See also
 
-- [models.md](../../constructs/records.md) — record style + general property rules
+- [models.md](../../constructs/constructs.md) — record style + general property rules
 - [entities.md](../../../mla/components/data/entity.md) — entity-specific doc rules
 - [enums.md](../../components/enums.md) — enum value documentation
 - [services.md](../../../mla/components/behavior/service.md) — service / client / factory naming

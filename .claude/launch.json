@@ -220,6 +220,19 @@
         "dev"
       ],
       "port": 8248
+    },
+    {
+      "name": "ui-vue-playground",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "-C",
+        "workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/engineering/codebase/wow-two-front-vue-beta-sdk",
+        "--filter",
+        "playground",
+        "dev"
+      ],
+      "port": 5176,
+      "autoPort": true
     }
   ]
 }

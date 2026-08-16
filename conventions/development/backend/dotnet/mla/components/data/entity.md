@@ -70,7 +70,7 @@ public required Guid ChannelId { get; set; }
 
 ### Record shape
 
-- `sealed record` — see [models.md](../../../lla/constructs/records.md)
+- `sealed record` — see [models.md](../../../lla/constructs/constructs.md)
 - No positional constructors — body properties only
 - Suffix with `Entity` when it maps to a DB table (`ChannelEntity` → `channels`); value objects (`PipelineRun`, `NodeRun`) skip the suffix
 - Primary key: `Guid Id` — see [database.md](../../domains/persistence/database.md) for the PK rules
@@ -81,7 +81,7 @@ public required Guid ChannelId { get; set; }
 - **Non-nullable by default** — no nullable types unless the column is genuinely optional
 - **Always returned by persistence** — `required` with `{ get; set; }`
 - **Not always returned** — no `required`, initialize with `null!` (relations, joined fields, EF-managed navigations)
-- **Collections** — always `List<T>` (see [models.md](../../../lla/constructs/records.md) for the three patterns)
+- **Collections** — always `List<T>` (see [models.md](../../../lla/constructs/constructs.md) for the three patterns)
 
 #### Enum arrays
 

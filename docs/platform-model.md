@@ -1,6 +1,6 @@
 # WoW 2.0 — Platform Model & Build Strategy
 
-*Last updated: 2026-06-20*
+*Last updated: 2026-08-15*
 
 > How every wow-two platform capability is **shaped, shipped, and promoted**: the three distribution forms · the build-now-promote-later lifecycle · the parallel-bricks delivery rule. Read this before designing any new platform component.
 

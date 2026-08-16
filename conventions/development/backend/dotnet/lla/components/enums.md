@@ -41,6 +41,9 @@
 #### [Summary](../notation/documentation/summary.md)
 - must start with **Refers to**, then state what the option means.
 
+#### [Remarks](../notation/documentation/remarks.md)
+- must carry `<remarks>` only for a constraint a consumer would otherwise get wrong.
+
 ```csharp
 // ✅ the member names one option
 /// <summary>Refers to a run that finished successfully.</summary>
@@ -49,9 +52,6 @@ Completed,
 // ❌ Represents claims the member carries its referent
 /// <summary>Represents a completed run.</summary>
 ```
-
-#### [Remarks](../notation/documentation/remarks.md)
-- must carry `<remarks>` only for a constraint a consumer would otherwise get wrong.
 
 ### Members
 - must be PascalCase — `Supply`, `ApartmentRent`.

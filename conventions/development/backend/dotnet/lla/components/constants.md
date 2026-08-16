@@ -48,6 +48,9 @@ public static class ChannelSlugsConstants
 - must name the authority that fixes the value — a spec, a wire format, a third-party contract.
 - must state the shape of a format string, never its slots.
 
+#### [Remarks](../notation/documentation/remarks.md)
+- must carry `<remarks>` only to name the spec the value answers to — `Follows RFC 6068.`
+
 ```csharp
 // ✅ the authority, not the literal
 /// <summary>Holds the token an open network carries in a WIFI payload.</summary>
@@ -56,9 +59,6 @@ public const string OpenNetwork = "nopass";
 // ❌ restates what the line already shows
 /// <summary>Holds the value "nopass".</summary>
 ```
-
-#### [Remarks](../notation/documentation/remarks.md)
-- must carry `<remarks>` only to name the spec the value answers to — `Follows RFC 6068.`
 
 ### Members
 - must use `const` for a compile-time value, `static readonly` for anything else.

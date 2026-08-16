@@ -46,7 +46,7 @@ public abstract record ApiResponse<T> : ApiResponse
 
 ## Response shape — the DTO
 
-The payload `T`. Pure data, entity-first; record + property style is owned by [models.md](../../../lla/constructs/records.md), the summary starter (`Represents …`) by [documentation/summary.md](../../../lla/notation/documentation/summary.md).
+The payload `T`. Pure data, entity-first; record + property style is owned by [models.md](../../../lla/constructs/constructs.md), the summary starter (`Represents …`) by [documentation/summary.md](../../../lla/notation/documentation/summary.md).
 
 ### Naming
 

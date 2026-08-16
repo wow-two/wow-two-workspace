@@ -1,62 +1,17 @@
 # Summary
 
-*Last updated: 2026-08-15*
+*Last updated: 2026-08-16*
 
 > The `<summary>` block — its mandated first word per type-kind (the starter table) + tone. The canonical summary reference; every convention links here.
 
 ## Starter table [REQUIRED]
 
-The first word of every `<summary>` is fixed by type-kind.
+The first word of every `<summary>` is fixed by what the thing is, and this file no longer holds the roster.
 
-- must take its starter from the component's own doc when one exists — a component owns its starter, and this table never repeats it.
-- must take it from the table below when no component doc claims the kind — member kinds above all, which belong to no component.
-- must not add a row for a kind that has a component doc; add the rule there instead, so this file stops growing as components do.
-
-| Type-kind | Starter | Example |
-|---|---|---|
-| Interface | **Defines** | `Defines audit-field stamping on save.` |
-| Mapper | **Maps** | `Maps a paid plan to its Stripe price id and back.` |
-| Registry | **Binds** | `Binds each content variant to its discriminator.` |
-| Factory | **Creates** | `Creates AI clients keyed by provider and model tier.` |
-| CQRS marker / handler interface (`IQuery`, `ICommand`, `IQueryHandler`, …) | **Defines** | `Defines a query that returns <typeparamref name="TResult"/>.` |
-| EF `IEntityTypeConfiguration<T>` class | **Configures** | `Configures the listings table mapping and relationships.` |
-| HostConfiguration extension | **Configures** | `Configures typed HTTP clients for external API integrations.` |
-| Hosted service | **Runs** or **Schedules** | `Runs EF Core migrations on application startup with connect-retry.` |
-| Property (read-only) | **Gets** | `Gets the kebab-case slug.` |
-| Property (read-write) | **Gets or sets** | `Gets or sets the kebab-case slug.` |
-| Property (write-only) | **Sets** | `Sets the API key used for outbound calls.` |
-| Field carrying a value or state | **Holds** | `Holds the compiled pattern an e-mail address must match.` |
-| Indexer | **Gets** / **Gets or sets** / **Sets** | `Gets the routing rule at the given order.` |
-| Method (action) | Verb at start: `Adds`, `Gets`, `Creates`, `Sends`, `Configures`, `Maps`, `Builds` | `Sends the OTP to the resolved Telegram chat.` |
-
-### How a starter is chosen
-
-Two rules generate every row above, so a new kind does not need a debate.
-
-- **Agent noun → its own verb.** A suffix naming an actor (`-er` / `-or`) takes that verb: `Validator → Validates` · `Mapper → Maps` · `Handler → Handles` · `Tracker → Tracks` · `Rasterizer → Rasterizes` · `Extensions → Extends`. The name and the doc agree by construction and cannot drift.
-- **Place noun → the role's characteristic verb.** A suffix naming a thing (`Repository`, `Client`, `Broker`, `Controller`, `Service`, `Registry`) has no verb to borrow, so one is chosen for the role and fixed here. Pick the verb for **what the type does for its caller**, never for what it contains or wraps.
-  - a `Repository` is not the database, so it **accesses** the store rather than storing.
-  - a `Controller` manages nothing, so it **exposes** a resource over HTTP.
-  - a `Broker` **integrates** an external dependency into the app; a `Client` **connects to** the provider's API.
-  - a `Registry` is not a store, so it **binds** keys to types; owning the set means owning whether it is complete. `Holds` is the `const` field's starter and means one thing.
-  - a `Service` stores, maps, validates and tracks nothing directly, so it **provides** the flow it manages or orchestrates.
-- a starter that restates its own suffix (`Broker → Brokers`) adds no meaning — reach for the role's verb instead.
-
-A doc violating the starter table is a style miss regardless of content quality.
-
-**Enum type vs value.** `Represents` claims the entity **carries** its referent — a `User` record represents a user because it holds everything a user is. An enum value holds nothing: `AppStore` does not represent the Apple App Store, it names one choice among several, and the store keeps existing without it. That pointing *is* the indirection, which is what `Refers to` says.
-
-```csharp
-// ❌ Represents overstates — the member is a label, not the store
-/// <summary>Represents the Apple App Store.</summary>
-AppStore,
-
-// ✅
-/// <summary>Refers to the Apple App Store.</summary>
-AppStore,
-```
-
-**Defines / Represents / Handles** — the CQRS verb trio, by layer: **Defines** an interface / marker definition · **Represents** a concrete message model · **Handles** a handler. Same three verbs apply to the mediator markers — see [mediator.md](../../../mla/domains/messaging/mediator.md) (§ Comments).
+- must take a **type's** starter from its component doc — [`lla/components/`](../../components/components.md) or [`mla/components/`](../../../mla/components/components.md).
+- must take a **member's** starter from [`constructs.md`](../../constructs/constructs.md), whose data and behavior sections fix them by role.
+- must take a **construct's** starter from the same file, which rules on every C# form.
+- must not reintroduce a table here — a starter belongs with the thing it starts, and one roster is what made this file grow.
 
 ## Summary — tightest accurate sentence
 

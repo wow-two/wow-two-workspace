@@ -79,4 +79,4 @@ For a library that ships `IServiceCollection` / host extensions (the SDK pattern
 ## Specific naming lives by area
 
 - which **suffix** names which **role** (one per role — `Store`→`Repository`, banned junk-drawer, new-suffix gate) → [component-names.md](../../../mla/components/components.md)
-- service / client / factory → [services.md](../../../mla/components/behavior/service.md) · query / command / handler → [mediator.md](../../../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](../../constructs/records.md)
+- service / client / factory → [services.md](../../../mla/components/behavior/service.md) · query / command / handler → [mediator.md](../../../mla/domains/messaging/mediator.md) · entity / settings / DTO → [models.md](../../constructs/constructs.md)

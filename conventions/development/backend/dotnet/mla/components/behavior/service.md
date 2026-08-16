@@ -21,7 +21,7 @@ Interface in `Application/`, implementation in `Infrastructure/` — the Clean A
 ### Class shape
 
 - **Non-static** class
-- **Primary constructor** for DI injection (allowed exception to the body-property rule for records — see [models.md](../../../lla/constructs/records.md))
+- **Primary constructor** for DI injection (allowed exception to the body-property rule for records — see [models.md](../../../lla/constructs/constructs.md))
 - **Sealed** unless intentionally designed for inheritance — `sealed` should be the default
 
 ### Lifetime

@@ -66,7 +66,7 @@ behavior: the moment a flow appears, the type has stopped being a model.
 
 | Level | Folder | Holds |
 |---|---|---|
-| the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/event.md) · [records](lla/constructs/records.md) |
+| the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/constructs.md) · [records](lla/constructs/constructs.md) |
 | the service-free role | [components/](lla/components/components.md) | [constants](lla/components/constants.md) · [extensions](lla/components/extensions.md) — the only two that pass the gate |
 | how it is written down | [notation/](lla/notation/notation.md) | [naming](lla/notation/naming/naming.md) · [documentation](lla/notation/documentation/documentation.md) · [style](lla/notation/style/style.md) |
 
@@ -89,8 +89,13 @@ The lead is [components.md](mla/components/components.md) — the suffix keep-li
 | [client.md](mla/components/behavior/client.md) | HTTP API wrappers — `HttpClient` injection, resilience pipeline (`AddSdkResilience`), Refit |
 | [components.md](mla/components/components.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
 | [controller.md](mla/components/behavior/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
+| [registry.md](mla/components/behavior/registry.md) | The key-to-type set — binds at composition, throws on a miss |
+| [mapper.md](mla/components/behavior/mapper.md) | The transform — total, stateless, both shapes named |
+| [entity-configuration.md](mla/components/data/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, `<inheritdoc />` on `Configure`, call order |
 | [entity.md](mla/components/data/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
 | [enum.md](lla/components/enums.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
+| [hosted-service.md](mla/components/behavior/hosted-service.md) | Host-lifetime work — `Runs` / `Schedules` starters, `BackgroundService` vs one-shot `IHostedService` |
+| [message.md](mla/components/behavior/message.md) | CQRS query/command/event + handler — `Defines`/`Represents`/`Handles` starters, inputs vs collaborators |
 | [repository.md](mla/components/behavior/repository.md) | Dapper, `IDbConnectionFactory`, `SqlNaming`, generic repositories |
 | [request-model.md](mla/components/data/request-model.md) | `*ApiRequest` bodies + the edge mapping method to the application request |
 | [response-model.md](mla/components/data/response-model.md) | `ApiResponse<T>` success envelope + DTO rules (`{Entity}Dto`) |

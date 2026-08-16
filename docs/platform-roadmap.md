@@ -1,6 +1,6 @@
 # WoW 2.0 — Platform Roadmap (Ranked Brick Backlog)
 
-*Last updated: 2026-06-20*
+*Last updated: 2026-08-15*
 
 > What platform bricks to build next, ranked by **consumers-unblocked-per-unit-effort**. The *ranking framework* is verified platform-engineering principles (cited). The *specific capability list, tool picks, and form calls* are engineering judgment grounded in current repo state — **not** independently verified (the deep-research verify pass was heavily rate-limited; see Provenance).
 > Companions: `docs/platform-model.md` (the 3 distribution forms) · `docs/wow-two-refinement.md` (vision).
@@ -25,7 +25,8 @@
 |---|---|---|---|
 | App hosting / bootstrap | infra | ✅ have | `backend.beta` (`AddApiDefaults`) |
 | Observability — emit (OTel) | infra | ✅ have | `backend.beta` |
-| Observability — store/dashboards/alerts | infra | ❌ missing | — (buy) |
+| Log store + in-app viewer | infra/dev-ex | ❌ missing → **build thin** | brick #6 |
+| Metrics/traces dashboards + alerts | infra | ❌ missing | — (buy Grafana/SigNoz) |
 | Identity — consumer-side | infra | ✅ have | `backend.beta` (16 OAuth + MFA/WebAuthn + JWT) |
 | **Identity — central IdP / SSO** | infra | ❌ missing | **DECIDED** |
 | **Secrets** | infra | 🟡 Form 2 only | `secrets-vault` |
@@ -40,6 +41,7 @@
 | Feature flags / config | product | ✅ have | `backend.beta` |
 | Comms / notifications | product | 🟡 email/Telegram | `backend.beta` comms |
 | Audit log | product | 🟡 inside secrets-vault | `secrets-vault` |
+| Feedbacks (report → triage) | product | ❌ missing → **build** | brick #7 |
 | Admin console / back-office | product | ❌ missing | — |
 | Billing / metering | product | ❌ missing | — (buy) |
 | Analytics / product metrics | data | ❌ missing | — (buy) |
@@ -68,16 +70,17 @@
 |---|---|---|---|---|---|
 | 4 | **CI/CD reusable pipelines** | skeleton → standard build/test/pack/publish/deploy workflows | n/a | **Buy/wrap** GitHub Actions reusable workflows | Verified "undifferentiated — do first." Highest fanout-per-effort; every repo uses it. Don't build a CI system. |
 | 5 | **`wow` CLI + scaffolding** | template + skill → `wow new`, `wow add <brick>` | tool | **Build thin** | Turns the catalog into a *self-service product* (the literal IDP definition). Wires bricks so a new app = near-zero infra work. Productizes `create-repo`. |
-| 6 | **Observability backend** | emit ✅ → store + dashboards + alerts | 3 (provided) | **Buy/wrap** — self-host one Grafana stack or SigNoz, or managed | You already emit OTel; close the loop **once** and every app inherits dashboards/alerts. Don't build a telemetry store. |
+| 6 | **Log store + in-app viewer** | emit ✅ → own log store + mounted `/logs` viewer | 1 → 3 | **Build thin** — structured sink to app DB + viewer; keep `OTLP` export escape hatch | Enables in-app log viewing + the feedbacks link no off-the-shelf tool gives. Guardrails: retention TTL + write-isolation. Metrics/traces dashboards stay **buy** (Grafana/SigNoz). |
 
 ### Tier 2 — product levers, medium fanout
 
 | # | Brick | State → goal | Form | Build/Buy | Why |
 |---|---|---|---|---|---|
-| 7 | **Notifications brick** | email/Telegram → multi-channel (email/push/in-app/SMS) | 1→3 | Build thin, or wrap **Novu** | Every SaaS notifies users; extend the existing comms slice. |
-| 8 | **Audit-log brick** | inside secrets-vault → standalone reusable | 1→2 | Build (harvest from `secrets-vault`) | Trust/compliance; the hash-chain pattern is already proven — extract it. |
-| 9 | **Admin / back-office brick** | missing → turnkey per-product admin UI | 1 | Build thin (atop `beta.ui` + identity) | Every SaaS wants an admin panel; high reuse once built. |
-| 10 | **Docs / knowledge site** | missing → the "knowledge + support" IDP pillar | service | **Buy/wrap** (Docusaurus / Astro Starlight) | IDP = APIs + tools + **knowledge + support**; cheap, raises catalog adoption. |
+| 7 | **Feedbacks** | missing → central triage inbox + in-app report client | 1 client + 3 service | **Build** — steal `Sentry`'s issue/event data model | Toast report → exception auto-prioritized → deep-links to the log trace (brick #6). Central + cross-app; NOT inside `drydock` (operator ≠ triage audience). |
+| 8 | **Notifications brick** | email/Telegram → multi-channel (email/push/in-app/SMS) | 1→3 | Build thin, or wrap **Novu** | Every SaaS notifies users; extend the existing comms slice. |
+| 9 | **Audit-log brick** | inside secrets-vault → standalone reusable | 1→2 | Build (harvest from `secrets-vault`) | Trust/compliance; the hash-chain pattern is already proven — extract it. |
+| 10 | **Admin / back-office brick** | missing → turnkey per-product admin UI | 1 | Build thin (atop `beta.ui` + identity) | Every SaaS wants an admin panel; high reuse once built. |
+| 11 | **Docs / knowledge site** | missing → the "knowledge + support" IDP pillar | service | **Buy/wrap** (Docusaurus / Astro Starlight) | IDP = APIs + tools + **knowledge + support**; cheap, raises catalog adoption. |
 
 ### Tier 3 — defer / buy / on-demand (anti-over-engineering)
 
@@ -100,8 +103,10 @@
 | Notifications | **Build thin or wrap Novu** |
 | Audit log | **Build** — harvest from secrets-vault |
 | Admin console | **Build thin** — atop beta.ui |
+| Feedbacks | **Build** — central triage + in-app client; steal Sentry's data model |
 | CI/CD | **Buy/wrap** — GitHub Actions |
-| Observability store | **Buy/wrap** — Grafana / SigNoz / managed |
+| Log store + viewer | **Build thin** — own sink + `/logs` viewer; keep OTLP escape hatch |
+| Metrics / alerts | **Buy/wrap** — Grafana / SigNoz |
 | Docs site | **Buy/wrap** — Docusaurus / Starlight |
 | Billing | **Buy** — Stripe / Lago |
 | Workflows | **Buy** — Temporal (on demand) |
@@ -114,6 +119,7 @@
 2. **3-distribution-forms evolution** (in-process lib → sidecar → managed). Only the modular-catalog half is verified (Dapr). The sidecar-as-form and library→service maturation (strangler-fig, "platform as a product") need fresh sourcing.
 3. **Per-capability build-vs-buy tool picks** — confirm the shortlist above with a fresh verify pass (the principle is verified; the specific tools are not).
 4. **Concrete "don't build yet" list** — service mesh, multi-cluster, full Backstage, comprehensive observability beyond `backend.beta` — directionally consistent with the verified anti-over-engineering principle but individually uncited.
+5. **Feedbacks/logs — study `Sentry` before building.** Adopt its self-hosted data model wholesale: exceptions fingerprint-grouped into issues, events roll up to issues, user-feedback linked to events. The build case rests on in-app viewing + owning the product, not on a novel store. Real incumbent is `Sentry`, not `Loki`/`ELK` (those are K8s log aggregation, correctly out of scope).
 
 ## Sources (verified)
 

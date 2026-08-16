@@ -201,6 +201,29 @@ public interface IEntity { Guid Id { get; } }
 - No unused `using` statements (analyzer enforces)
 - **`using static` is banned** — it strips the owning class off the call site; call through the class or make the method a real extension method. Rule + rationale: [naming.md](../naming/naming.md) § *`using static` is banned*
 
+
+## Directives
+
+Neither a construct nor a statement — a directive declares no type and runs nothing; it changes what a file can see.
+
+| Directive | Verdict | Rule |
+|---|---|---|
+| `using {namespace}` | use | ordered per § *`using` ordering* |
+| `global using` | use with care | one file per project owns them; a scattered `global using` is invisible at the call site |
+| `using {alias} = {type}` | use with care | only to disambiguate two types with the same name in one file |
+| `using static` | banned | write the type name at the call site — the call loses its subject otherwise |
+| `extern alias` | banned | two assemblies exporting one type is a packaging fault, fixed upstream |
+
+## Preprocessor
+
+| Directive | Verdict | Rule |
+|---|---|---|
+| `#nullable` | use | only to enable; a per-file disable hides a real warning |
+| `#if` · `#elif` · `#else` · `#endif` | use with care | a build-configuration branch, never a feature switch |
+| `#region` · `#endregion` | use with care | per § *Section dividers* |
+| `#pragma warning` | use with care | must name the warning and carry a `//` saying why |
+| `#line` · `#error` · `#warning` | use with care | generator output and build-time assertions only |
+
 ## Banned
 
 - `dynamic` — reach for generics or polymorphism.
