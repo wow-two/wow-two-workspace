@@ -36,13 +36,37 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - may close with a `### Verification` iteration — always last, bare noun, ordered `[ ] {action} → {expected}` checks
 - must carry meta `**Status:** … · **Type:** … · **Started:** … · **Completed:** …` (those four only); declare a `Type`; title is a plain noun phrase
 
+## Prose inside a version doc (REQUIRED)
+
+The task-form rules govern task lines. This governs everything else on the page, which is where residue actually accumulates.
+
+- must keep a **completed** iteration's prose to zero. Its compact task lines are the whole record; a `>` blockquote or a standing paragraph under a done iteration is residue whether it was written last week or at the start.
+- must not carry a fact in a version doc that outlives the version. A version doc is time-scoped and gets archived; these are not, and each has a real home:
+
+| Residual fact | Home |
+|---|---|
+| Design tokens, palettes, type scales | the design system / `@theme`, never a version doc |
+| A deferred item and why | the backlog in `engineering-planning` |
+| A known coverage gap or stub | the test suite's own doc, or an open task |
+| A dated verification run | the `**Completed:**` meta field, which already holds it |
+| An architectural constraint that still binds | `engineering/architecture/` |
+
+- must not restate meta in the body — a run date, a status, or a completion date belongs in the `**Status:** …` line and nowhere else.
+- must not keep **re-scoping history** — no `**Rescoped {date}** — X moved to v0.9`, no note that an item arrived from elsewhere, no record of what a version used to contain. A task moves between iterations and versions many times as priorities shift; each move would leave a note, and the notes outnumber the tasks. **The current task list IS the scope**, and git holds every earlier shape of it. This is the same rule as *must move an item, never leave a forwarding stub*, applied to the version as a whole.
+- may keep prose under an **open** iteration when its open tasks need it, and must delete that prose when the iteration closes.
+
 ## Lifecycle
 
 - `⏳ Planned` → `🚧 In Progress` → `✅ Complete`
 - must open a version when planning it and close it when its tasks are done — set `Completed`, flip `Status`; one active at a time
 - must not advance to the next version until the current is `✅ Complete` **and** the developer explicitly says to proceed — never pre-declare, queue, or auto-begin the next version (in chat or in the plan); finish, report, and stop
 - must **verify completion with the developer** before marking a version / iteration complete — never self-declare it
-- may **drop a completed iteration's tasks + steps** once verified — keep the bare `### Iteration N — Name` heading; git holds the detail
+- must treat a `Verification` iteration's checks as the **developer's manual pass** — they tick on the developer's word, not on evidence in the tree; every other task ticks only on shipped code
+- must **move an unshipped task to the next version** when closing a version — a closed version's task list describes only what shipped. Carry it to the iteration whose focus it fits, or open a new one named for that focus; never name the new iteration after where the task came from, and never leave a note that it moved
+- must not apply that rule **within** an open version — a closed iteration inside an in-progress version may sit beside open ones, since iterations are not worked in order
+- must **strip a completed iteration's sub-steps** once verified — a sub-step itemizes *how* to build something already built, so it is spent the moment the iteration closes; git holds it
+- must leave the completed iteration's **tasks** in place, one compact line each, as the record of what the version delivered — rewrite any that were never compact rather than carrying the sprawl forward
+- may drop the tasks too once the whole version is `✅ Complete`, keeping the bare `### Iteration N — Name` heading
 
 ## Rules
 

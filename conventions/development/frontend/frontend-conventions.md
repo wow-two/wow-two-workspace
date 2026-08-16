@@ -33,6 +33,7 @@
 | File | What it covers |
 |---|---|
 | [components.md](presentation/components.md) | One-component-per-folder, props (`readonly`, **destructure** w/ inline defaults), file structure, UI terminology, variants |
+| [vue-sfc.md](presentation/vue-sfc.md) | **Vue SFCs** — two `<script>` blocks · macro-first order · `Fires`/`The`/`Emits` verbs for emits, slots, computed, watch · 120 wrap (Prettier + `max-len`) · `AriaAttribute` over magic strings · `useAttrs` + `@vue-ignore` heritage |
 | [component-catalog.md](presentation/component-catalog.md) | The reference frontend's components by **kind** (screens · views · controls · fields · displays) — a "what exists" lookup |
 | [forms.md](presentation/forms.md) | `useAppForm` engine pin (`src/form.ts`) · `*Values` + zod schema · `form.Field` × `Field` chrome · ProblemDetails → field errors · `validateOn` · arrays · `form.engine` escape hatch · house-engine `play()` stories |
 | [hooks.md](presentation/hooks.md) | `use*` naming, object vs tuple return, `Manages`/`Provides access to`, abort on unmount |

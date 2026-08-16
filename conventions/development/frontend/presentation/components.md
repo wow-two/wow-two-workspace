@@ -1,5 +1,7 @@
 # Components
 
+> React-shaped. The Vue SFC counterpart — blocks, macro order, emit / slot / watch verbs, `useAttrs` — is [vue-sfc.md](vue-sfc.md).
+
 *Last updated: 2026-07-09*
 
 > How to shape a component and its props — one component per folder, a `readonly` props `interface`, and the doc keywords that name each part. A prop is **not** a C# property, so it never reads `Gets or sets`.

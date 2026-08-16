@@ -44,6 +44,11 @@ Excalidraw's own size buttons. A raw number that is not one of these renders at 
 ## Box size — one height, everywhere
 
 - must give every box the **same height: `90`** — mixed heights read as a hierarchy the diagram does not have
+- **entity cards are the one exemption.** A box whose job is to carry a field list — a record shape, a
+  table, a message contract — is an *entity card*: it holds a title line and its fields, and its height
+  follows its field count. A diagram mixes the two kinds freely, but every card in one diagram uses the
+  same width and the same per-field pitch, so the varying height reads as "more fields", never as rank.
+  Step boxes in the same diagram stay at `90`.
 - must size width to the longest label at `M`, in steps, not per box — `420` for a step in a chain, wider for a lane
 - must keep `90` even for a box holding one word; the whitespace is the point
 - should define it once in the generator (`BOX_H = 90`) and never pass a literal height
@@ -75,8 +80,9 @@ Excalidraw's own palette, three roles only:
 | the thing it is confused with | `#1971c2` | `#a5d8ff` |
 | a warning or measured cost | `#e03131` | — |
 
-- must colour at most 2 boxes — if everything is highlighted, nothing is
+- must colour at most 5 boxes — if everything is highlighted, nothing is
 - should reserve the second colour for the item readers conflate with the first; the contrast is the point
+- a diagram that legends its colours (provenance, ownership, state) spends the 5 on **one** such scale, never two
 
 ---
 

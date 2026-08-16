@@ -1,28 +1,9 @@
 # Component documentation
 
-## Summary
+*Last updated: 2026-08-15*
 
-Must 
+> Pointer only — XML-doc rules for a component's own type and members live in `code-style/`.
 
-- Be one-liner
-- Explain the entity with compact details
-- Use keywords specified for the given entity
-
-Must Not
-
-- 
-
-Should
-
-### Examples
-
-#### Good 
-
-```C#
-
-///<summary>
-
-```
-
-
-#### Bad
+- Format, the three gates, required tags per type-kind, cross-references, anti-patterns → [../code-style/documentation.md](../dotnet/lla/documentation.md)
+- `<summary>` starter table and tone → [../code-style/documentation/summary.md](../dotnet/lla/documentation/summary.md)
+- Suffix → role vocabulary that decides which starter applies → [../foundation/component-names.md](../dotnet/mla/components/components.md)

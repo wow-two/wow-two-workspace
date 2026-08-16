@@ -45,7 +45,7 @@ export const ModuleShape = { … } as const;
 ## 4. Members and documentation
 
 - must document each member with a JSDoc one-liner starting **`Refers to …`** — what the value stands for.
-- must use a **PascalCase key** + a **camelCase value** — the value *is* the wire string ([serialization casing](../../backend/presentation/serialization.md#contract)).
+- must use a **PascalCase key** + a **camelCase value** — the value *is* the wire string ([serialization casing](../../backend/dotnet/mla/platform/serialization.md#contract)).
 - must **not** add an `Unresolved` / `Unknown` sentinel member — keep three concerns separate:
   - **nothing selected** → `null` / optional field (form state); omit on send, never emit null.
   - **"any / all"** → a real member present on **both** sides, or modeled as absence.

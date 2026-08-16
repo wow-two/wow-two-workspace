@@ -1,6 +1,6 @@
 # Frontend Architecture
 
-*Last updated: 2026-07-07*
+*Last updated: 2026-08-15*
 
 A React/TS app is a Clean-Arch stack — layers at `src/` root, each sliced by domain, one inward dependency direction. Drill down: **layer → domain → sub-domain → file**.
 
@@ -137,7 +137,20 @@ A **place** is a URL; a **route renders the same place at every breakpoint** —
 
 ## Restraint
 
-- must start at the screen; extract a shared component / hook only when a second consumer is real — no speculative widgets / features (the FSD 2.x lesson).
+- must start at the screen; extract a shared component / hook **within the app** only when a second consumer is real — no speculative widgets / features (the FSD 2.x lesson).
+- scoped to in-app extraction; the SDK boundary uses the opposite trigger → [SDK extraction](#sdk-extraction).
+
+## SDK extraction
+
+The trigger is **genericness, not consumer count** — the inverse of *Restraint*, because the SDK is shared across the whole portfolio and the second consumer is a matter of time, not of chance.
+
+- must extract a surface to `@wow-two-beta/ui` (or `ui-vue`) as soon as it is **generic** — one consumer is enough.
+- must not wait for a second app to need it; "no other app uses it yet" is not a reason to keep it in the product.
+- must extract at the **earliest** point it is generic — a later extraction pays migration cost in every app that copied it meanwhile.
+- must keep in the app only what encodes what the **product is** — its business logic, its brand surface.
+- may build inline first when speed matters, and must extract in the pairing Adoption version — never leave it behind.
+- must fix the SDK rather than work around a gap in a product — beta-forever: publish, then repin.
+- landing / pricing / FAQ / blog chrome is generic; a product-specific hero or demo is not.
 
 ## Future
 
@@ -171,8 +184,8 @@ Two shapes, by app count — both under `engineering/codebase/{slug}.frontend-se
 
 - **single app (default)** — one Vite app with the layered `src/` above; no workspace. Use until a 2nd app or genuine cross-app reuse appears — don't pre-build a workspace.
 - **pnpm workspace (multi-app)** — `packages/{common,ui,domain}` (`@{brand}/*`) + lowercase app folders, each with the same layered `src/`. `"workspace:*"` ≈ .NET `<ProjectReference>` · `pnpm-workspace.yaml` ≈ `.sln` · `packages/common/` ≈ a `Common/` project.
-- **package boundaries** — `@{brand}/ui` = dumb components (no data/context/localStorage) · `@{brand}/common` = shared hooks/utils/identity (side effects OK) · `@{brand}/domain` = pure types/enums (no React). Extract to a package only when **≥ 2 apps** need it.
-- `@wow-two-beta/ui` = the ecosystem library every product consumes; a repo's `@{brand}/ui` holds only product components not worth upstreaming yet.
+- **package boundaries** — `@{brand}/ui` = dumb components (no data/context/localStorage) · `@{brand}/common` = shared hooks/utils/identity (side effects OK) · `@{brand}/domain` = pure types/enums (no React). Extract to a **repo-local** package only when **≥ 2 apps in that repo** need it — the ecosystem SDK uses the other trigger → [SDK extraction](#sdk-extraction).
+- `@wow-two-beta/ui` = the ecosystem library every product consumes; a repo's `@{brand}/ui` holds only **product-specific** components — generic ones go upstream immediately, not "eventually".
 
 ## Dev server
 

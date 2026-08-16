@@ -54,7 +54,7 @@ The `*Extensions` suffix is borrowed from .NET extension methods — a deliberat
 
 ## Resource-access abstractions — `*Broker`
 
-A swappable app-side seam over a **client-side resource** — `localStorage`, `sessionStorage`, a Redux store, an in-memory map — is a **`*Broker`**: the contract `StorageBroker`, its instances `localStorageBroker` / `memoryBroker`, and the injected dependency a `broker` param / option. It borrows the backend **`Broker`** term ([component-names.md](../../backend/foundation/component-names.md) — "app-side seam over an external dependency"), so the same word names the same idea on both sides of the stack. Reach for it only for a resource seam; a plain helper stays `*Helpers` / `*Extensions`.
+A swappable app-side seam over a **client-side resource** — `localStorage`, `sessionStorage`, a Redux store, an in-memory map — is a **`*Broker`**: the contract `StorageBroker`, its instances `localStorageBroker` / `memoryBroker`, and the injected dependency a `broker` param / option. It borrows the backend **`Broker`** term ([component-names.md](../../backend/dotnet/mla/components/components.md) — "app-side seam over an external dependency"), so the same word names the same idea on both sides of the stack. Reach for it only for a resource seam; a plain helper stays `*Helpers` / `*Extensions`.
 
 ## App-shell baseline components — `App*`
 

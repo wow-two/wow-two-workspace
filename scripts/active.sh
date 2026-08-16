@@ -51,6 +51,7 @@ PROJECTS=(
   "arcade|ventures/ventures.arcade/engineering/codebase/arcade.backend-services/Arcade.sln|ventures/ventures.arcade/engineering/codebase/arcade.frontend-services"
   "museums-gallery|ventures/ventures.museums-gallery/engineering/codebase/museums-gallery.backend-services/MuseumsGallery.sln|ventures/ventures.museums-gallery/engineering/codebase/museums-gallery.frontend-services"
   "tnis|ventures/ventures.tnis/engineering/codebase/tnis.backend-services/tnis.backend-services.slnx|ventures/ventures.tnis/engineering/codebase/tnis.frontend-services"
+  "tnis-mintrans|ventures/ventures.tnis-mintrans/engineering/codebase/tnis-mintrans.backend-services/TnisMintrans.sln|ventures/ventures.tnis-mintrans/engineering/codebase/tnis-mintrans.frontend-services"
 )
 
 MODE="both"     # both | backend | frontend

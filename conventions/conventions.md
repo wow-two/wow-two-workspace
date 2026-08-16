@@ -94,24 +94,21 @@ Cross-area: **[swappable-modules.md](development/swappable-modules.md)** — eng
 | SDK / library repo shape · `engineering/` + npm package under `engineering/codebase/{slug}/` · `src/` source-only + `tests/{unit,stories}` · config repoint · dist-only publish | [development/repo/structure/sdk-structure.md](development/repo/structure/sdk-structure.md) |
 | Commit-message format (`{type}: {past-tense verb} {subject}`, 50–70 chars, subject only · one cohesive change) **+ commit protocol** — agent stages + commits; the human pushes, and history ops need a rapid-building marker (hook-enforced) **+ large files** — LFS vs gitignore, and repairing a binary already in pushed history | [development/repo/version-control/git.md](development/repo/version-control/git.md) |
 
-### backend/ — .NET conventions (by sub-domain) · [backend-conventions.md](development/backend/backend-conventions.md)
+### backend/ — .NET conventions (cut by scope) · [dotnet-conventions.md](development/backend/dotnet/dotnet-conventions.md)
 
-Meta: `authoring` (cite symbols, not namespaces). Sub-domains:
+Backend rules live under the stack that owns them (`backend/dotnet/`), and each stack is cut by **how far a rule reaches**.
 
-| Sub-domain | Docs |
-|---|---|
-| `build/` | `central-package-management` · `directory-build-props` — solution-root `Directory.{Packages,Build}.props` (CPM + shared MSBuild) |
-| `code-style/` | `documentation` · `naming` · `code-organization` · `members` · `models` · `idioms` |
-| `architecture/` | `service-architecture` · `domain-structuring` · `host-configuration` · `services` |
-| **`persistence/`** (focus) | `database` · `entities` · `enums` · `data-access` · `migrations/` (`migrations` · `bespoke-migrations` · `migration-dialects` · `ef-migrations` · `dbup-migrations` · `migration-tooling`) |
-| `presentation/` | `controllers` · `controllers-known-endpoints` · `request-models` · `response-models` · `serialization` · `api-context-building` · `problem-details` |
-| `runtime/` | `settings` · `launch-profiles` |
-| `foundation/` | `component-names` · `result-pattern` · `validation` · `time` |
-| **`integrations/`** (focus) | `clients` |
-| `testing/` | `testing` · `test-databases` |
-| `messaging/` | `mediator` |
-| `identity/` | `jwt-auth` |
-| `observability/` · `platform/` | proposed — write as built |
+| Scope | Reaches | Docs |
+|---|---|---|
+| `lla/` | one symbol | `naming` · `documentation/` (6 blocks) · `members` · `code-organization` · `models` · `idioms` · `banned-constructs` |
+| `mla/components/` | a kind of type you declare | `components` · `service` · `client` · `broker` · `repository` · `controller` · `request-model` · `response-model` · `entity` · `enum` · `settings` · `result` · `validator` |
+| `mla/layers/` | where a type lives | `layers` · `domain-structuring` · `testing` · `test-databases` |
+| `mla/platform/` | how the service builds, starts and answers | `build/` · `host-configuration` · `startup-defaults` · `launch-profiles` · `time` · `serialization` · `problem-details` · `api-context-building` · `known-endpoints` |
+| `mla/domains/` | a concrete technology or use case | `identity/` · `messaging/` · `persistence/` (+ `migrations/`) |
+| `hla/` | between our own services | gateway · gRPC contracts · cross-service events · quotas — **empty by design** |
+
+**Routing.** Kind of type → `mla/components/{kind}.md` · any symbol → `lla/` · where it lives → `mla/layers/` ·
+build and start → `mla/platform/` · a technology or use case → `mla/domains/{domain}/` · both ends ours → `hla/`.
 
 ### frontend/ — React / TS code style · [frontend-conventions.md](development/frontend/frontend-conventions.md)
 

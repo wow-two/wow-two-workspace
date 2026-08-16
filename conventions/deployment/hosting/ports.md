@@ -3,7 +3,7 @@
 *Last updated: 2026-07-31*
 
 > Single source of truth for allocated dev ports — **check here before picking one** to avoid collisions.
-> Backend rule: a **single `https` profile** binds two ports per service — **HTTPS on the even port, HTTP on the adjacent odd port** (`even`, `even + 1`); TLS terminated upstream in prod — see [backend/launch-profiles.md](../../development/backend/runtime/launch-profiles.md). Frontend (Vite) = an **even** port (HTTPS via mkcert).
+> Backend rule: a **single `https` profile** binds two ports per service — **HTTPS on the even port, HTTP on the adjacent odd port** (`even`, `even + 1`); TLS terminated upstream in prod — see [backend/launch-profiles.md](../../development/backend/dotnet/mla/platform/launch-profiles.md). Frontend (Vite) = an **even** port (HTTPS via mkcert).
 
 ## Allocated
 
@@ -34,5 +34,6 @@
 | transportbrain (hackathon Track 2 submission) | API | 8246 https / 8247 http |
 | tbs.demo | demo — jury-facing solution page, own repo + Vercel (Vite) | 8248 |
 | transportbrain | Transport Brain Studio — planner console (Vite) | 8249 |
+| tnis-mintrans | ministry handoff cut — API · Vite | 8250 https / 8251 http · 8252 |
 
-**Next free backend even port: 8250.** Append a row whenever you allocate.
+**Next free backend even port: 8254.** Append a row whenever you allocate.

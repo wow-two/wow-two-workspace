@@ -187,7 +187,7 @@ A release is a **cut line across vectors**, not a vector's own version.
 
 *Last updated: {YYYY-MM-DD}*
 
-Convention: [`vector-track.md`](…/conventions/planning/vector-track/vector-track.md).
+Convention: [`vector-track.md`](vector-track.md).
 
 | Vector | Archetype | Rung | Status | Owns |
 |---|---|---|---|---|

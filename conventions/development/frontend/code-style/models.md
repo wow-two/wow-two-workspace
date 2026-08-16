@@ -45,7 +45,7 @@ Every client-side data model carries a **`*Dto`** suffix — it marks "a data sh
 ## 3. Shape + doc
 
 - must use `interface` for an object shape; `type` only for a union / alias / enum value-set.
-- must open the type doc with **`Represents`** for a data model (an interface that holds data) — one line; **`Defines`** only for an abstraction / contract / enum. (We have no classes; a data interface *represents* its data — mirrors [../backend/code-style/documentation.md](../../backend/code-style/documentation.md) + the frontend [documentation.md](documentation.md) verb table.)
+- must open the type doc with **`Represents`** for a data model (an interface that holds data) — one line; **`Defines`** only for an abstraction / contract / enum. (We have no classes; a data interface *represents* its data — mirrors [../backend/code-style/documentation.md](../../backend/dotnet/lla/documentation.md) + the frontend [documentation.md](documentation.md) verb table.)
 
 ```typescript
 /** Represents an issued invoice and its lifecycle status. */
