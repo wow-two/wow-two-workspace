@@ -65,8 +65,8 @@ public static class WifiSsidEncodingExtensions
 - may be `async` when the receiver's own work is asynchronous, returning `Task<T>` or `ValueTask<T>`.
 - may use `=>` for a member that returns or delegates — extensions take no collaborators to accumulate
   ([style](../notation/style/style.md) § *The body*).
-- must produce its result from the receiver and its arguments alone — a method that joins two collaborators' results is a `Service`.
-- must declare a constant here when this class is its only caller, and in a `Constants` class the moment a second caller appears.
+- must produce its result from the receiver and its arguments alone — joining two collaborators makes it a `Service`.
+- must declare a constant here while this class is its only caller — a second caller moves it to `Constants`.
 - must order constants first, then methods.
 
 ```csharp

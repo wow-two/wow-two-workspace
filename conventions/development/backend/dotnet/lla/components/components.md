@@ -4,13 +4,13 @@
 
 > A role that owns both its shape and its role with no service around it.
 > Purpose — keep the service-free roles out of MLA, where every other role needs a layer to mean anything.
-> Use case — reach here for `Constants`, `Extensions` and `Enums`; anything else is [`mla/components/`](../../mla/components/components.md).
+> Use case — `Constants`, `Extensions`, `Enums`; the rest is [MLA components](../../mla/components/components.md).
 
 ## The gate [REQUIRED]
 
 - must place a role here only when it is **self-sufficient** — declared, and immediately doing its whole job alone.
 - must place it in [`mla/components/`](../../mla/components/components.md) when it is **inert without a collaborator**.
-- must not read simplicity as self-sufficiency — an `Entity` is a plain record and still fails, because it cannot be read or written until a store exists.
+- must not read simplicity as self-sufficiency — an `Entity` fails, because nothing reads it until a store exists.
 - must run the test by demonstration: declare the role in a program with nothing else, and use it.
 
 | Role | Self-sufficient because |
@@ -21,9 +21,9 @@
 
 ## Adding a component [REQUIRED]
 
-- must give the component **one file**, named for the role in the plural — `constants.md`, `extensions.md`, `enums.md`.
+- must give each component **one file**, named for the role in the plural — `constants.md`, `enums.md`.
 - must carry the three `##` sections below, in order; a component with nothing to say in one omits it, never renames it.
-- must state only the folder **name** it wraps itself in; which layer or domain that folder sits in is [`mla/layers/`](../../mla/layers/domain-structuring.md).
+- must state only the folder **name**, never where it sits ([layers](../../mla/layers/domain-structuring.md)).
 - may override any [`../notation/`](../notation/notation.md) rule, stating the override in its own file.
 - must cite `../notation/` rather than restate a default it does not override.
 
@@ -33,10 +33,14 @@
 | Declaration | Type doc · Type name | the type's doc fields, and the type's own name |
 | Content | Member docs · Members | each member's doc fields, and the members themselves |
 
-- must give each doc field its own sub-heading; a field the component does not declare is forbidden on it ([documentation](../notation/documentation/documentation.md) § *Declared fields only*).
-- must write each rule as what the code **must have**, never as what it must not be — a banned shape belongs in the ❌ example, not in a rule.
-- must close every doc sub-heading **and** the `Members` sub-heading with one ✅ / ❌ pair; the ❌ must fail a rule stated directly above it.
-- must state a constraint as its own rule when no positive rule already excludes it — a starter rule fixes the starter, so a wrong starter is only an ❌; nothing about a correct starter forbids a type from bridging two services, so that needs a rule of its own.
+- must give each doc field its own sub-heading.
+- must not sub-head a field the component does not declare.
+  - [documentation](../notation/documentation/documentation.md) § *Declared fields only*
+- must write each rule as what the code **must have** — a banned shape goes in the ❌ example, not a rule.
+- must close every doc sub-heading and `Members` with one ✅ / ❌ pair; the ❌ must fail a rule stated above.
+- must state a constraint as its own rule only when no positive rule already excludes it.
+  - a starter rule already fixes the starter, so a wrong starter is only an ❌.
+  - no starter rule forbids bridging two services, so that constraint needs its own rule.
 - must state a member **order** rule in `Members` — a reader cannot predict an order the doc never fixes.
 
 ````markdown
@@ -95,12 +99,12 @@
 {good}
 // ❌ {why it fails}
 {bad}
-````
+```
 
 ## See also
 
 - {link} — {what it owns}
-```
+````
 
 ## See also
 

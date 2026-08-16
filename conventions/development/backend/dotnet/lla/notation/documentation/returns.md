@@ -7,16 +7,17 @@
 ## Required, unless there is nothing to return [REQUIRED]
 
 - must carry `<returns>` on every method whose return type is not `void`, `Task`, or `ValueTask`.
-- must exempt exactly those three — a method returning nothing has nothing to describe, and `Task` alone is the absence of a value.
-- must carry it on `Task<T>` / `ValueTask<T>` — the `T` is the value, and the wrapper is a mechanism the caller already sees.
-- **consistency is the reason**, the same one [params](params.md) § *Every parameter, every time* runs: a per-method judgment leaves a reader unable to tell an omission from a decision.
+- must exempt exactly those three — `Task` alone is the absence of a value.
+- must carry it on `Task<T>` / `ValueTask<T>` — the `T` is the value, the wrapper a visible mechanism.
+- **consistency is the reason** ([params](params.md) § *Every parameter, every time*).
+  - a per-method judgment leaves a reader unable to tell an omission from a decision.
 
-## What it says
+## What it carries
 
-- must name **the value**, not the act of returning it — `The stored code, or null when the slug is unknown.`, never `Returns the code.`
+- must name **the value**, not the act of returning it — never `Returns the code.`
 - must state the **null / empty case** when one exists — that is the fact a caller most often gets wrong.
 - must name the referent, like every other block ([documentation](documentation.md) § *Name the referent*).
-- must not restate the `<summary>` — if the summary already carries the whole answer, the summary is doing the returns block's job and one of them is redundant.
+- must not restate the `<summary>` — a summary carrying the whole answer makes one of the two redundant.
 
 ```csharp
 // ✅ the value, and the boundary case

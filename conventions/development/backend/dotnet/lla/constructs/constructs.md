@@ -103,18 +103,33 @@ A ban here is about the **construct**, whatever role holds it. A ban that depend
 [`mla/components/`](../../mla/components/components.md).
 
 - **`event`** — reach for an `IEvent` on the mediator bus. Four failures, and a service host hits every one:
-  - the handler cannot be awaited — it returns `void`, so `async void` is the only way to await inside it, and its exceptions surface unobserved.
-  - the lapsed listener — the publisher holds a strong reference to every subscriber, so one that never unsubscribes never gets collected.
-  - the null-invocation race — the last subscriber can detach between the null check and the call, and the call throws.
-  - one throwing handler aborts the rest — a multicast delegate walks its list in order, so the first exception stops every later subscriber.
+  - the handler cannot be awaited — it returns `void`, so its exceptions surface unobserved.
+  - the lapsed listener — the publisher holds a strong reference, so a subscriber that stays is never collected.
+  - the null-invocation race — the last subscriber detaches between check and call, and the call throws.
+  - one throwing handler aborts the rest — the first exception stops every later subscriber.
   - an `IEnumerable<IObserver>` set injected by hand is the same shape and folds the same way.
-- **positional records for data carriers** — reach for body properties with `{ get; init; }` ([style](../notation/style/style.md)).
+- **positional records for data carriers** — reach for `{ get; init; }` body properties.
 - **`dynamic`** — reach for generics or polymorphism; the compiler stops checking and the failure moves to runtime.
 - **`using static`** — reach for the type name at the call site ([naming](../notation/naming/naming.md) § *Banned*).
 
 ## Data components
 
 A construct carrying **data** answers what a value *is*. The role fixes the starter, and the shape follows from it.
+
+### Location
+
+#### Folder
+- must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
+  [domain structuring](../../mla/layers/domain-structuring.md) states which layer it may appear in.
+
+#### File
+- must give the type its own file, named for the type: `Channel.cs`, `IEntity.cs`, `ChannelGetAllQuery.cs`.
+- must name a generic-only type by its base name — `Repository.cs` for `Repository<T>`.
+- may share one file with its non-generic sibling when both sit at the same abstraction level and read as one concept
+  with a default-type overload. The non-generic name wins: `IEntity.cs`.
+- must keep a `Result`'s nested `Success` / `Failure` in its file — they are inner types.
+- must split two unrelated traits, or two siblings whose shapes differ.
+- must give a nested type its own file unless the rule above places it.
 
 ### Type doc
 
@@ -126,7 +141,6 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 - must document a domain-meaningful parameter, and skip a conventional one.
 
 ### Type name
-- must give the type its own file, named for it; a generic and non-generic pair may share one.
 - must name the thing carried, never the carrier — `Channel`, not `ChannelData`.
 
 ### Member docs
@@ -135,7 +149,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 - must start a property with **Gets**, **Gets or sets** or **Sets**, matching its accessors.
 - must start a field holding a fixed value with **Holds** — `const`, `static readonly`, `readonly`.
 - must start a field keeping changing state with **Keeps** — the verb says the value moves.
-- must name the referent unless the value is the type's own ([documentation](../notation/documentation/documentation.md)).
+- must name the referent unless the value is the type's own ([referents](../notation/documentation/documentation.md)).
 
 ```csharp
 // ✅ accessor and mutability visible from the first word
@@ -160,7 +174,21 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 
 ## Behavior components
 
-A construct carrying **behavior** answers what a type *does*. It has no value identity, so equality is meaningless on it.
+A construct carrying **behavior** answers what a type *does*. It has no value identity.
+
+### Location
+
+#### Folder
+- must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
+  [domain structuring](../../mla/layers/domain-structuring.md) states which layer it may appear in.
+
+#### File
+- must give the type its own file, named for the type: `CodesController.cs`, `StripeBillingBroker.cs`.
+- must name a generic-only type by its base name — `Repository.cs` for `Repository<T>`.
+- may share one file with its non-generic sibling when both sit at the same abstraction level and read as one concept
+  with a default-type overload. The non-generic name wins: `IEntity.cs`.
+- must split two unrelated traits, or two siblings whose shapes differ.
+- must give a nested type its own file unless the rule above places it.
 
 ### Type doc
 
@@ -172,7 +200,6 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must carry a directive, a spec reference, or a constraint the signature hides.
 
 ### Type name
-- must give the type its own file, named for it; a generic and non-generic pair may share one.
 - must carry the role suffix from the keep-list ([components](../../mla/components/components.md)).
 
 ### Member docs

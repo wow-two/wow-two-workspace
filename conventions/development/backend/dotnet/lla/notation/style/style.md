@@ -21,16 +21,17 @@ public interface IEntity { Guid Id { get; } }
 ```
 
 ### Imports
-- `System.*` first, then `Microsoft.*`, then third-party, then project namespaces — IDE auto-sort handles this; do not hand-order
+- `System.*` → `Microsoft.*` → third-party → project namespaces — IDE auto-sort handles it; never hand-order
 - No unused `using` statements (analyzer enforces)
-- **`using static` is banned** — it strips the owning class off the call site; call through the class or make the method a real extension method. Rule + rationale: [naming](../naming/naming.md) § *`using static` is banned*
+- **`using static` is banned** — it strips the owning class off the call site.
+  - call through the class, or make it a real extension ([naming](../naming/naming.md) § *`using static` is banned*).
 
 Neither a construct nor a statement — a directive declares no type and runs nothing; it changes what a file can see.
 
 | Directive | Verdict | Rule |
 |---|---|---|
 | `using {namespace}` | use | ordered per § *`using` ordering* |
-| `global using` | use with care | one file per project owns them; a scattered `global using` is invisible at the call site |
+| `global using` | use with care | one file per project owns them; scattered, it is invisible at the call site |
 | `using {alias} = {type}` | use with care | only to disambiguate two types with the same name in one file |
 | `using static` | banned | write the type name at the call site — the call loses its subject otherwise |
 | `extern alias` | banned | two assemblies exporting one type is a packaging fault, fixed upstream |
@@ -89,7 +90,7 @@ and the first `no` blocks the expression body — a component that grants `=>` s
 
 ### Declaring a value
 - must use `var` when the initializer names the type — `var codes = new List<CodeEntity>();` repeats nothing.
-- must write the type when the initializer does **not** show it — a method call returning an unobvious type, a ternary, a chained LINQ result.
+- must write the type when the initializer does **not** show it — a call, a ternary, a chained LINQ result.
 - the rule is not a ban: `var` is the default, and spelling the type is the exception it earns.
 
 ### Literals
@@ -123,10 +124,12 @@ var sql = $"""
 ```
 
 ## Width
-**120 characters, hard.** Rider and ReSharper draw their right margin there by default, so the guide is already on screen; the limit is what keeps two files legible side by side on a 1920 display.
+**120 characters, hard.** Rider and ReSharper draw the margin there by default, so the guide is already on
+screen; the limit keeps two files legible side by side on a 1920 display.
 
 - Applies to every line — code, XML doc comments, string literals in source.
-- **Doc comments break the limit most often, and this limit is the *last* gate they pass.** Run the three gates in `documentation.md` § *Three gates* first — convention, then compaction, then length. A block wrapped without that pass hides the defect that made it long.
+- **Doc comments break the limit most often, and this limit is the *last* gate they pass.**
+  - run `documentation.md` § *Three gates* first — a block wrapped without that pass hides the defect.
 - Only a block that survives both earlier gates and still exceeds 120 goes multi-line, tags on their own lines:
 
 ```csharp
@@ -141,9 +144,9 @@ var sql = $"""
 /// <summary>Shared payload-encoding primitives for the static <see cref="CodeContent"/> types — escaping and formatting helpers ported byte-for-byte from the frontend's <c>contentTypes.ts</c>, so a code encoded here decodes identically to one the builder previewed.</summary>
 ```
 
-- **Code over 120** wraps at the natural boundary — one argument per line, one LINQ operator per line, one object-initializer member per line. No justification needed; the chain's shape is the reason.
-- **Exempt:** a single string literal or URL that cannot be split without changing its value (a user-agent, a connection string, a token in a comment), and generated code. Concatenating one across lines to satisfy the limit costs more than it buys.
-- No second, looser tier. 150 is outside every mainstream standard (Prettier 80 · Black 88 · Google Java 100 · rustfmt 100 · ktlint 120), and two 150-char panes no longer fit a 1920 display.
+- **Code over 120** wraps at the natural boundary — one argument, one LINQ operator, one initializer member per line.
+- **Exempt:** a string literal or URL that cannot be split without changing its value, and generated code.
+- No second, looser tier — two 150-char panes no longer fit a 1920 display.
 
 - **Long SQL clauses** — break into one column/condition per line when a line exceeds ~120 chars
 - **SELECT** — one column per line when >2 columns

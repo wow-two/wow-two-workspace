@@ -441,3 +441,7 @@ Startup tasks (DB init, seeding, warm-up) move host-side too — into `Configure
 | `MapFallbackToPage()` | end | Falls back to a Razor Page |
 | `MapFallbackToAreaController()` | end | Falls back to a controller action in an area |
 | `MapFallbackToAreaPage()` | end | Falls back to a Razor Page in an area |
+
+## Documentation
+
+- must leave `Program.cs` undocumented — its four statements are the shape.

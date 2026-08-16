@@ -1,10 +1,15 @@
 # Exceptions
 
-*Last updated: 2026-06-17*
+*Last updated: 2026-08-16*
 
 > The `<exception>` block — document only the exceptions a method throws itself, not propagated ones.
 
 ## Exceptions
 
-- A method documents the exceptions **it itself throws** with `/// <exception cref="…">{trigger}</exception>` — **not** exceptions propagated from callees (inner / nested).
-  - ✅ `<exception cref="MigrationDriftException">An applied migration's checksum no longer matches its source.</exception>`
+- must document the exceptions a method throws **itself**, never one propagated from a callee.
+- must write the block as `/// <exception cref="…">{trigger}</exception>`.
+
+```csharp
+// ✅ the trigger, on an exception this method raises
+/// <exception cref="MigrationDriftException">An applied migration's checksum no longer matches its source.</exception>
+```

@@ -3,7 +3,7 @@
 *Last updated: 2026-08-16*
 
 > How a settled concept gets written down — its name, its documentation, its layout.
-> Purpose — sit between the abstraction and the first keystroke, so a component doc never re-argues how to spell things.
+> Purpose — sit between the abstraction and the first keystroke, so no component doc re-argues spelling.
 > Use case — reach here while turning a decided component into source.
 
 ## The three
