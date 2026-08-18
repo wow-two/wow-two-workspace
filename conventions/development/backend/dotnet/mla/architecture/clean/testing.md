@@ -1,6 +1,6 @@
 # Testing
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > The sixth [layer](clean.md) — its projects, its tiers, and how a test is named. Its own `tests/` solution folder.
 > Purpose — end-to-end over unit: run the real flow, mock as little as can be run for real.
@@ -48,7 +48,7 @@ Per feature, success **and** the edges (`401` auth, `404` ownership with **no ex
   - **`{Product}.Tests.E2E`** — the full API over HTTP via host-boot (real Postgres, real pipeline). The **primary tier** — push request-flow coverage here; it catches serialization / mediator / model-binding / filter failures that green handlers miss. Ships a `README.md` noting the Docker prerequisite + coverage.
 - A **descriptive `{Type}`** is allowed for a specialized suite that doesn't fit the three tiers — e.g. **`{Product}.Tests.Migrations`** for migrator-engine tests. Keep it a single noun naming the suite's subject.
 - **The bare `{Product}.Tests` name is disallowed** — ambiguous about its type. Create a `{Product}.Tests.{Type}` project instead.
-- The tier maps 1:1 to the DB-selection tiers in [test-databases.md](../../domains/persistence/test-databases.md): `Tests.Unit` → pure-logic (no DB) · `Tests.Integration` → repository / handler (`RelationalTestDb<TContext>`) · `Tests.E2E` → host-boot (`MultiHostFixture` + `PostgresFixture`).
+- The tier maps 1:1 to the DB-selection tiers in [test-databases.md](../../domains/persistence/testing/test-databases.md): `Tests.Unit` → pure-logic (no DB) · `Tests.Integration` → repository / handler (`RelationalTestDb<TContext>`) · `Tests.E2E` → host-boot (`MultiHostFixture` + `PostgresFixture`).
 - Existing apps (`SmartQr.*`, `SecretsVault.*`) are being renamed to match; stragglers get retrofitted.
 
 ---

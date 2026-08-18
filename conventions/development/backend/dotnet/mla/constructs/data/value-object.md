@@ -32,7 +32,8 @@
 ```
 
 ### Construct
-- must declare a `sealed record` — identity is the values, so value equality is the correct claim.
+- must declare a `sealed record` — identity is the values, so value equality is the correct claim →
+  [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 - must declare no key — a type carrying its own identity is an [entity](entity.md).
 
 ```csharp

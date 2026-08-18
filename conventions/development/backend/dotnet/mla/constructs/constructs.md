@@ -1,6 +1,6 @@
-# Component names
+# Constructs
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > The canonical suffix→role vocabulary for backend types — one name per role, the suffix declaring the responsibility.
 > Purpose — when `Store`, `Repository` and `Provider` all mean data access, a reader cannot infer role from a name.
@@ -30,6 +30,7 @@ A rename that builds and passes is done — the compiler and the tests are the w
 ## Keep-list
 
 One suffix per role. Where another doc owns the role, that doc is the **authority** and this row is the index.
+Split by what the type is for — [data](data/data.md) holds, [behavior](behavior/behavior.md) does.
 
 | Suffix | Role | Authority |
 |---|---|---|
@@ -41,8 +42,8 @@ One suffix per role. Where another doc owns the role, that doc is the **authorit
 | `Repository` | data access — rows in, rows out | [repository](behavior/repository.md) |
 | `Factory` | runtime instance creation, per key or per request | [factories](patterns/factories.md) |
 | `Registry` | key → type or capability bindings, registered at composition | [registry](behavior/registry.md) |
-| `Tracker` | live status many producers push into, persisted nowhere | [service](behavior/service.md) |
-| `Extensions` | the static-logic tier over a domain — no injection, no state | [extensions](../../lla/components/extensions.md) |
+| `Tracker` | live status many producers push into, persisted nowhere | — |
+| `Extensions` | the static-logic tier over a domain — no injection, no state | [extensions](../components/extensions.md) |
 | `Handler` | the receiver of one dispatched message | [handler](behavior/handler.md) |
 | `Command` · `Query` · `Event` | a dispatched use case — write, read, fan-out | [application request](data/application-request.md) |
 | `Validator` | input validation for one request | [validator](behavior/validator.md) |
@@ -58,17 +59,19 @@ One suffix per role. Where another doc owns the role, that doc is the **authorit
 | `Policy` | decides whether, when, or how often another operation runs | [policy](behavior/policy.md) |
 | `Settings` | a config section bound through `IOptions<T>` | [settings](../components/settings.md) |
 | `Options` | behavior knobs passed in code, bound from nothing | § *`Settings` vs `Options`* |
-| `DbContext` | the EF unit of work | [database](../domains/persistence/schema/database.md) |
-| `Configuration` | an EF `IEntityTypeConfiguration<T>` | [entity configuration](../domains/persistence/ef/entity-configuration.md) |
-| `Constants` | a holder of `const` and `static readonly` values | [constants](../../lla/components/constants.md) |
-| `Mapper` | any deterministic in→out transform, owning no data | § *`Mapper` vs `Registry`* |
+| `DbContext` | the EF unit of work | [database](../domains/persistence/database/database.md) |
+| `Configuration` | an EF `IEntityTypeConfiguration<T>` | [entity configuration](../domains/persistence/access/ef/entity-configuration.md) |
+| `Constants` | a holder of `const` and `static readonly` values | [constants](../components/constants.md) |
+| `Mapper` | any deterministic in→out transform, owning no data | [mapper](behavior/mapper.md) |
 | `Pipeline` · `PipelineStep` | an ordered multi-step flow, and one step of it | [pipelines](patterns/pipelines.md) |
 | `Middleware` · `Filter` · `Interceptor` | a framework hook — exempt from the gate | — |
 | `Cipher` · `Hasher` · `Issuer` · `Authenticator` | one cryptographic or auth operation | — |
+| `Renderer` | turns a model into a representation of it — text, markup, an image | — |
+| `Generator` | derives a value from its inputs — an id, a code, a matrix | — |
 | `Rasterizer` | vector → pixels | — |
 | `Spec` | a declarative input shape a renderer consumes — not a wire `Dto` | — |
 | `Json` | one type's persisted JSON seam — its `Options` plus `Serialize` / `Deserialize` | [json](../components/json.md) |
-| `Enum` | a closed set of named options | [enums](../../lla/components/enums.md) |
+| `Enum` | a closed set of named options | [enums](../components/enums.md) |
 
 **Scope.** Every suffix here names a type inside a .NET service. A browser-side type is a wire projection of one, so it
 carries none of them; what the frontend calls its own types is [the frontend's](../../../../frontend/frontend-conventions.md).
@@ -180,19 +183,22 @@ A confirmed suffix earns a keep-list row and a doc in the same pass. The doc sta
 wherever it is used. Whatever varies by technology or by flow belongs to the domain that uses it.
 
 - must give each component one file, named for the suffix it defines — `mapper.md` for `Mapper`.
-- must carry the two `##` sections in the template, in order; a component omits a section rather than renaming it.
+- must carry the `##` sections in order — `Location` · `Declaration` · `Content`; omit a section rather than rename it.
 - must name the folder as the **plural of the suffix** — `Mapper` → `Mappers/`, `Entity` → `Entities/`.
 - must state only the folder **name**, never its layer ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must not state a technology, a registration, or an end-to-end flow — a [domain](../domains/) owns those.
-- must not state members, member docs or shape — the SDK owns a type it declares, the domain owns the rest.
 - must cite [notation](../../lla/notation/notation.md) rather than restate a default it does not override.
 - must land before the first implementation — an unwritten baseline is what lets `Normalizer` ship beside `Mapper`.
+- may close with `## Neighbours` — links out, one line each, carrying no rules.
 
 | Section | Sub-headings | States |
 |---|---|---|
 | Location | Folder · File | the folder name that wraps it, and the file's name |
 | Declaration | Type doc · Construct · Type name | the doc fields, the form declared, and the name |
+| Content | Member docs · Members | the members, when this doc is what fixes them |
 
+- must omit `Content` when the shape belongs elsewhere — the SDK for a type it declares, the domain for the rest.
+- must carry `Content` when the members **are** the contract, as a [component](../components/components.md) does.
 - must give the construct its own `### Construct` sub-heading — `sealed record`, `sealed class`, `static class`.
 - must keep a member fact out of `Type name` — `init`-only and `required` are the construct's, ruled at
   [lla constructs](../../lla/constructs/constructs.md) § *Data components*.
@@ -235,8 +241,8 @@ wherever it is used. Whatever varies by technology or by flow belongs to the dom
 - must {rule}
 ````
 
-[LLA's template](../../lla/components/components.md) § *Adding a component* keeps a third `Content` section, because an
-LLA role is self-sufficient: its members are the whole contract, and no domain exists to own them.
+[The component template](../components/components.md) § *Adding a component* keeps a third `Content` section, because a
+component is self-sufficient: its members are the whole contract, and no domain exists to own them.
 
 ---
 

@@ -45,7 +45,7 @@ public abstract class EventSagaStep : IEventSagaStep
 - must not go past one level of inheritance; a three-deep chain hides which override runs.
 - must not leave a hook that a subclass **must** call at a particular point — make the base call it instead.
 - must not use a template method to share utility code — that is an `Extensions` class
-  ([lla components](../../../lla/components/components.md)).
+  ([components](../../components/components.md)).
 
 ---
 
@@ -53,4 +53,4 @@ public abstract class EventSagaStep : IEventSagaStep
 
 - [hosted service](../behavior/hosted-service.md) — the most common base we derive from.
 - [strategies](strategies.md) — the composition alternative, and the default when either would work.
-- [entity configuration](../../domains/persistence/ef/entity-configuration.md) — the EF hooks the context base applies.
+- [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) — the EF hooks the context base applies.

@@ -34,7 +34,7 @@
 ### Construct
 - must declare a `sealed record`.
 - must reference no ORM type; the domain assembly stays provider-free.
-- must implement the keyed contract → [entity contracts](../../domains/persistence/schema/entity-contracts.md).
+- must implement the keyed contract → [entity contracts](../../domains/persistence/entities/entity-contracts.md).
 - member shape (`{ get; init; }`, positional) →
   [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 

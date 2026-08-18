@@ -14,7 +14,7 @@
 - must serialize `DateTimeOffset` / `DateOnly` / `TimeOnly` / `TimeSpan` as ISO-8601 strings.
 
 > Wire vs storage: this is the **API** enum form (camelCase string). DB storage is a separate concern — snake_case text
-> ([enums](../../../lla/components/enums.md)). One enum → `active` on the wire, `active` in the column, `Active` in code.
+> ([enums](../../components/enums.md)). One enum → `active` on the wire, `active` in the column, `Active` in code.
 
 ---
 

@@ -13,7 +13,7 @@
 - must not declare a static `Instance` property, a private constructor, or a `Lazy<T>` self-holder.
 - must be thread-safe when registered singleton — a singleton is entered concurrently by every request.
 - must keep a `static` class for stateless logic only — `Constants` and `Extensions`
-  ([lla components](../../../lla/components/components.md)).
+  ([components](../../components/components.md)).
 
 ```csharp
 // ✅ the container owns the lifetime

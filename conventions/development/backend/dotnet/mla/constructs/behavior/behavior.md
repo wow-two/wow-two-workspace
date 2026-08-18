@@ -1,6 +1,6 @@
 # Behavior components
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > The component kinds whose identity is what they do.
 > Purpose — one suffix per verb, so a name carries the responsibility rather than the shape.
@@ -28,6 +28,9 @@
 
 ## Shared rules
 
-- must declare a `sealed class` — value equality is wrong on a type whose identity is what it does.
-- must take collaborators through the constructor, never a service locator.
-- must start the type summary with the role's own verb, and an interface over it with **Defines**.
+- must declare a `sealed class` — value equality is wrong on a type whose identity is what it does →
+  [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
+- must take collaborators through the constructor, never a service locator →
+  [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
+- must start the type summary with the role's own verb, and an interface over it with **Defines** →
+  [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.

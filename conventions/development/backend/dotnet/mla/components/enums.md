@@ -20,7 +20,7 @@
 
 ### Type doc
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Defines**.
 - must name the question the enum answers, never its answers.
 - must survive a new member — a summary that lists values goes false the moment an eleventh arrives.
@@ -42,10 +42,10 @@
 
 ### Member docs
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Refers to**, then state what the option means.
 
-#### [Remarks](../notation/documentation/remarks.md)
+#### [Remarks](../../lla/notation/documentation/remarks.md)
 - must carry `<remarks>` only for a constraint a consumer would otherwise get wrong.
 
 ```csharp
@@ -62,7 +62,7 @@ Completed,
 - must take the default `int` backing type.
 - must use `[Flags]` only when the members are genuinely bitwise.
 - may use `=>` only in an `Extensions` class over the enum — a member here binds a name to a value and has no body
-  ([style](../notation/style/style.md) § *The body*).
+  ([style](../../lla/notation/style/style.md) § *The body*).
 - must place a default or unset member first.
 - must order the rest by their own level when one exists, ascending or descending, and by declaration order otherwise.
 
@@ -83,5 +83,5 @@ Medium,
 
 ## Neighbours
 
-- [summary](../notation/documentation/summary.md) — the starter table
-- [database](../../mla/domains/persistence/schema/database.md) — how a stored enum maps to a column
+- [summary](../../lla/notation/documentation/summary.md) — the starter table
+- [database](../domains/persistence/database/database.md) — how a stored enum maps to a column

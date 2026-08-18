@@ -22,7 +22,8 @@
 
 #### [Summary](../../../lla/notation/documentation/summary.md)
 - must start with **Represents**, and name the body it carries.
-- must carry no `<remarks>` — a request body directs the consumer to nothing.
+- must carry no `<remarks>` — a request body directs the consumer to nothing; this overrides
+  [remarks](../../../lla/notation/documentation/remarks.md) § *Never required*.
 
 ```csharp
 // ✅ names the action's body
@@ -32,7 +33,7 @@
 ```
 
 ### Construct
-- must declare a `public sealed record`.
+- must declare a `public sealed record` → [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 
 ### Type name
 - must be named `{Verb}{Noun}ApiRequest`, verb-first — it exists for one controller action.

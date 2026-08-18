@@ -35,7 +35,8 @@
 
 ### Construct
 - must declare a `sealed class` with a primary constructor taking its connection or context.
-- must use a block body `{ }` from the start — a query gains a filter, a projection, a log line.
+- must use a block body `{ }` from the start — a query gains a filter, a projection, a log line
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ### Type name
 - must suffix with `Repository`, prefixed by the rows it reaches — `OlxListingsRepository`.

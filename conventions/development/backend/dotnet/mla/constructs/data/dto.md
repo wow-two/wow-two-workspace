@@ -32,7 +32,8 @@
 ```
 
 ### Construct
-- must declare a `sealed record` — identity is the values it carries.
+- must declare a `sealed record` — identity is the values it carries →
+  [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 
 ### Type name
 - must suffix with `Dto`, entity-first and singular — `CodeDto`, `RuleDto`.

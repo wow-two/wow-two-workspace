@@ -1,6 +1,6 @@
 # Conventions — Development — Backend (.NET)
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > .NET conventions for every backend service under `wow-two-ws/`. Lookup table — open a file when the task
 > touches it; do not pre-read. Cut by **scope**: how far a rule reaches.
@@ -10,9 +10,11 @@
 
 | Scope | Reaches | Holds |
 |---|---|---|
-| `lla/` | one symbol | naming · doc blocks · members · idioms · banned constructs |
+| `lla/` | one symbol | `constructs/` (what C# offers) · `notation/` (how any symbol is written) |
 | `mla/` | one service, and everything it talks to | `constructs/` · `components/` · `architecture/` · `platform/` · `domains/` |
 | `hla/` | between our own services | gateway · gRPC contracts · cross-service events · quotas |
+
+Each scope's own lead: [lla](lla/lla.md) · [mla](mla/mla.md) · [hla](hla/hla.md).
 
 **Routing.** A kind of type you declare → `mla/constructs/{kind}.md`. A thing complete on its own → `mla/components/`. How any symbol is written → `lla/`.
 Where a type lives → `mla/architecture/`. How the service builds and starts → `mla/platform/`. A concrete
@@ -21,7 +23,7 @@ technology or use case → `mla/domains/{domain}/`. A rule spanning services we 
 **The test between `mla/` and `hla/`:** do we own both ends? A third party is adapted in `mla/`, never contracted in `hla/`.
 **The three levels, and where each lands.** A C# construct is [constructs](lla/constructs/constructs.md). A role's shape and its
 documentation land wherever the rule reaches: **does it need a service around it?** No → `lla/` (`Constants`, `Extensions`).
-Yes → `mla/components/` (`Entity`, `Controller`, `Broker`). A ban follows its rule — construct bans in `lla/`, role bans with the role.
+Yes → `mla/constructs/` (`Entity`, `Controller`, `Broker`). A ban follows its rule — construct bans in `lla/`, role bans with the role.
 
 **The test between baseline and a domain:** would the rule survive if the feature were deleted? Yes → baseline. No → the domain that owns it.
 
@@ -91,7 +93,7 @@ Three levels, and they never share a folder ([conventions](../../../conventions.
 | Level | Answers | Lives in |
 |---|---|---|
 | **construct** | what C# offers, and which of it we use or forbid — `record` · `class` · `interface` · `enum` · `struct` · `delegate` | [constructs/](lla/constructs/constructs.md) |
-| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components](lla/components/components.md) |
+| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components](mla/components/components.md) |
 | **definition** | the whole component — folder, file, type doc, type name, member doc, content | each component's own file, via the six-section template |
 
 **The role level fixes the starters.** A data model — `record`, `struct` — takes **Represents**. An interface over a data
@@ -101,8 +103,22 @@ behavior: the moment a flow appears, the type has stopped being a model.
 | Level | Folder | Holds |
 |---|---|---|
 | the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/constructs.md) · [records](lla/constructs/constructs.md) |
-| the service-free role | [components/](lla/components/components.md) | [constants](lla/components/constants.md) · [extensions](lla/components/extensions.md) — the only two that pass the gate |
+| the service-free role | [components/](mla/components/components.md) | [constants](mla/components/constants.md) · [extensions](mla/components/extensions.md) — the only two that pass the gate |
 | how it is written down | [notation/](lla/notation/notation.md) | [naming](lla/notation/naming/naming.md) · [documentation](lla/notation/documentation/documentation.md) · [style](lla/notation/style/style.md) |
+
+The leaves those folders hold:
+
+| File | What it covers |
+|---|---|
+| [statements](lla/constructs/statements.md) | Every statement and expression form, with a verdict |
+| [indexers](mla/components/indexers.md) | `this[…]` — accessor starters, and what the key selects |
+| [summary](lla/notation/documentation/summary.md) | `<summary>` — the mandated first word per type-kind, plus tone |
+| [remarks](lla/notation/documentation/remarks.md) | `<remarks>` — never required; the ten frames |
+| [params](lla/notation/documentation/params.md) | `<param>` — one per parameter, always |
+| [typeparams](lla/notation/documentation/typeparams.md) | `<typeparam>` — carried when it can be got wrong |
+| [returns](lla/notation/documentation/returns.md) | `<returns>` — required on every method that returns a value |
+| [inline](lla/notation/documentation/inline.md) | `//` inside a body — the maintainer's doc, never shipped |
+| [exceptions](lla/notation/documentation/exceptions.md) | `<exception>` — only what a method throws itself |
 
 **Membership in `components/`** — a role passes only when it owns **both its shape and its role with no service around it**.
 The gate is a demonstration: show it declared *and used* in a program that has no services. An `Entity` fails, because an entity
@@ -114,7 +130,8 @@ A component that does not override cites `notation/` rather than restating it.
 
 ### `mla/constructs/` — a role we define
 
-Split by what the type is for: [data/](mla/constructs/data/entity.md) holds, [behavior/](mla/constructs/behavior/service.md) does.
+Split by what the type is for: [data/](mla/constructs/data/data.md) holds,
+[behavior/](mla/constructs/behavior/behavior.md) does.
 The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list, the folds, and the coining gate.
 
 | File | What it covers |
@@ -125,9 +142,9 @@ The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list,
 | [controller.md](mla/constructs/behavior/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
 | [registry.md](mla/constructs/behavior/registry.md) | The key-to-type set — binds at composition, throws on a miss |
 | [mapper.md](mla/constructs/behavior/mapper.md) | The transform — total, stateless, both shapes named |
-| [entity-configuration.md](mla/domains/persistence/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, `<inheritdoc />` on `Configure`, call order |
+| [entity-configuration.md](mla/domains/persistence/access/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, `<inheritdoc />` on `Configure`, call order |
 | [entity.md](mla/constructs/data/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
-| [enum.md](lla/components/enums.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
+| [enum.md](mla/components/enums.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
 | [hosted-service.md](mla/constructs/behavior/hosted-service.md) | Host-lifetime work — `Runs` / `Schedules` starters, `BackgroundService` vs one-shot `IHostedService` |
 | [application request](mla/constructs/data/application-request.md) | The dispatched `Query` / `Command` / `Event` — folder, starters, `{Domain}{Action}{Kind}` |
 | [handler](mla/constructs/behavior/handler.md) | The receiver bound to one message — `Handles` starter, collaborators via the constructor |
@@ -142,6 +159,30 @@ The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list,
 | [service.md](mla/constructs/behavior/service.md) | Service / Client / Broker / Factory / Repository shape, lifetime + doc starters |
 | [settings.md](mla/components/settings.md) | Settings records — `sealed record`, `init`-only, `IOptions<T>` binding |
 | [validator.md](mla/constructs/behavior/validator.md) | Input validation — `IValidator<T>`, mediator validation behavior |
+
+#### `patterns/` — a pattern named in the literature
+
+| File | What it covers |
+|---|---|
+| [patterns](mla/constructs/patterns/patterns.md) | The catalogue — a verdict per pattern, and the doc gate |
+| [adapters](mla/constructs/patterns/adapters.md) | Our contract satisfied by delegating to a foreign type |
+| [ambient context](mla/constructs/patterns/ambient-context.md) | A per-request value flowing with the async context |
+| [builders](mla/constructs/patterns/builders.md) | Configuration accumulated across calls, closed into one value |
+| [circuit breaker](mla/constructs/patterns/circuit-breaker.md) | Stops calling a failing dependency for a while |
+| [decorators](mla/constructs/patterns/decorators.md) | One implementation wrapped, a behavior added around the call |
+| [factories](mla/constructs/patterns/factories.md) | Instances the container cannot resolve on its own |
+| [null object](mla/constructs/patterns/null-object.md) | A contract satisfied by doing nothing |
+| [outbox](mla/constructs/patterns/outbox.md) | A message staged in the state change's transaction, sent after commit |
+| [pipelines](mla/constructs/patterns/pipelines.md) | Ordered steps wrapping one call, each calling the next |
+| [prototype](mla/constructs/patterns/prototype.md) | A value copied and changed where it differs — `record` `with` |
+| [proxies](mla/constructs/patterns/proxies.md) | A stand-in carrying calls to an implementation elsewhere |
+| [sagas](mla/constructs/patterns/sagas.md) | A multi-step process undone by compensating each completed step |
+| [service locator](mla/constructs/patterns/service-locator.md) | Banned — and the legitimate container references |
+| [singleton](mla/constructs/patterns/singleton.md) | One instance per process, owned by the container |
+| [state machines](mla/constructs/patterns/state-machines.md) | The states a lifecycle passes through |
+| [strategies](mla/constructs/patterns/strategies.md) | Interchangeable implementations, chosen at composition |
+| [template method](mla/constructs/patterns/template-method.md) | An abstract base fixing the order |
+| [unit of work](mla/constructs/patterns/unit-of-work.md) | One transactional boundary per use case |
 
 ### `mla/components/` — a thing complete on its own
 
@@ -164,7 +205,6 @@ One folder per architecture pattern. The lead states the solution grouping; the 
 | [architecture](mla/architecture/architecture.md) | Pattern catalogue + solution-folder grouping (`services/ platform/ libraries/ tools/ tests/`) + `.slnx` encoding |
 | [clean architecture](mla/architecture/clean/clean.md) | The six layers (Api / Application / Domain / Infrastructure / Persistence / Testing), dependency direction, deviations |
 | [domain structuring](mla/architecture/clean/domain-structuring.md) | Subdomain pattern, `Core/` vs operation folders, role-group naming, default placement |
-| [test databases](mla/domains/persistence/test-databases.md) | Test-DB tiers (`RelationalTestDb<TContext>` · `MultiHostFixture` · `MigratorHarness`), Postgres default, `WOW2_TEST_DB` switch |
 | [testing](mla/architecture/clean/testing.md) | E2E-first (Testcontainers + `WebApplicationFactory`, Respawn); unit for pure logic; harness mirrors the SDK scaffold |
 
 ### `mla/platform/` — how the service is built, started and answers
@@ -178,8 +218,12 @@ One folder per architecture pattern. The lead states the solution grouping; the 
 | [host configuration](mla/platform/startup/host-configuration.md) | `HostConfiguration.Configure` + Extensions split, slim `Program.cs` |
 | [known-endpoints.md](mla/platform/responses/known-endpoints.md) | Fixed identity / system endpoints — `api/identity/*`, `api/system/status` |
 | [launch-profiles.md](mla/platform/startup/launch-profiles.md) | `launchSettings.json` — a single `https` profile, even/odd port pair from `ports.md` |
+| [platform](mla/platform/platform.md) | The bucket lead — `build/` · `startup/` · `responses/` |
 | [problem-details.md](mla/platform/responses/problem-details.md) | RFC-7807 error responses — `Problem()`, `IErrorHttpStatusCodeMapper`, global handler |
+| [responses](mla/platform/responses/responses.md) | Sub-domain lead — one success shape, one error shape |
+| [results.md](mla/platform/responses/results.md) | `AppResult<TSuccess>` — the outcome contract every layer returns |
 | [serialization.md](mla/platform/responses/serialization.md) | JSON wire contract — camelCase props + **camelCase string enums** + null-omit + ISO dates; wired once in `AddControllers()` |
+| [startup](mla/platform/startup/startup.md) | Sub-domain lead — how a host is composed, and what runs first |
 | [startup-defaults.md](mla/platform/startup/startup-defaults.md) | `AddApiDefaults()` / `UseApiDefaults()` boot floor — what the bundle folds in, `ApiDefaultsOptions` tuning |
 | [time.md](mla/components/time.md) | Time abstraction — `TimeProvider`, no `DateTime.Now` |
 
@@ -190,16 +234,30 @@ Each domain is one folder: the lead states the contract, and every technology-ti
 | Domain | What it covers |
 |---|---|
 | [domains](mla/domains/domains.md) | The shape every domain follows, the built four, and the recognized five |
-| [persistence](mla/domains/persistence/persistence.md) | Schema-first contract + `ef/` · `dapper/` · `sql/` · `dbup/` providers |
-| [schema](mla/domains/persistence/schema/database.md) | Column constraints, type mappings, the schema-first rule, strategy index |
-| [ef migrations](mla/domains/persistence/ef/ef-migrations.md) | EF code-first migrations — `AddEfMigrationsRunner<TContext>` |
-| [entity configuration](mla/domains/persistence/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, call order |
-| [bespoke migrations](mla/domains/persistence/sql/bespoke-migrations.md) | Bespoke-SQL migrator — `AddDatabaseBespokeMigrations`, layout, drift |
-| [migration dialects](mla/domains/persistence/sql/migration-dialects.md) | Writing Apply/Rollback SQL — quoting, rollback idioms, `@no-transaction` |
-| [migration tooling](mla/domains/persistence/sql/migration-tooling.md) | `dotnet tool` CLIs — packaging, exit codes, destructive-op guard |
-| [dbup migrations](mla/domains/persistence/dbup/dbup-migrations.md) | DbUp forward-only scripts — `AddDbUpRunner` |
+| [persistence](mla/domains/persistence/persistence.md) | Schema-first contract + the four axes: entities · database · access · migrations |
+| [access](mla/domains/persistence/access/access.md) | How code reaches a row — EF tracked, Dapper untracked |
+| [ef mapping](mla/domains/persistence/access/ef/ef-mapping.md) | `DbContext`, entity configurations, what never to configure |
+| [dapper](mla/domains/persistence/access/dapper/dapper.md) | Connections, SQL conventions, type handlers, generic CRUD |
+| [postgres](mla/domains/persistence/database/postgres/postgres.md) | Type mappings, numeric units, native enum types, column constraints |
+| [database](mla/domains/persistence/database/database.md) | Engine lead — which engine, and what it fixes |
+| [entity contracts](mla/domains/persistence/entities/entity-contracts.md) | Identity, audit, soft-delete, tenancy |
+| [migration strategies](mla/domains/persistence/migrations/migrations.md) | Picking `Bespoke`, `Ef` or `DbUp` |
+| [test databases](mla/domains/persistence/testing/test-databases.md) | The tier a test picks, and the provider switch |
+| [ef](mla/domains/persistence/access/ef/ef.md) | Provider lead — the change tracker and the mapping |
+| [ef migrations](mla/domains/persistence/migrations/ef/ef-migrations.md) | EF code-first migrations — `AddEfMigrationsRunner<TContext>` |
+| [entity configuration](mla/domains/persistence/access/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, call order |
+| [sql](mla/domains/persistence/migrations/sql/sql.md) | Provider lead — ordered scripts, and the tooling around them |
+| [bespoke migrations](mla/domains/persistence/migrations/sql/bespoke-migrations.md) | Bespoke-SQL migrator — `AddDatabaseBespokeMigrations`, layout, drift |
+| [migration dialects](mla/domains/persistence/migrations/sql/migration-dialects.md) | Writing Apply/Rollback SQL — quoting, rollback idioms, `@no-transaction` |
+| [migration tooling](mla/domains/persistence/migrations/sql/migration-tooling.md) | `dotnet tool` CLIs — packaging, exit codes, destructive-op guard |
+| [dbup migrations](mla/domains/persistence/migrations/dbup/dbup-migrations.md) | DbUp forward-only scripts — `AddDbUpRunner` |
+| [dapper](mla/domains/persistence/access/dapper/dapper.md) | Provider lead — a connection and hand-written SQL |
 | [messaging](mla/domains/messaging/messaging.md) | Dispatch contract, the in-process message set, and the transport providers |
 | [mediator](mla/domains/messaging/mediator/mediator.md) | `ISender` / `IPublisher`, pipeline behaviors, registration |
 | [identity](mla/domains/identity/identity.md) | The claim-set contract + `jwt/` · cookie · OAuth providers |
 | [jwt auth](mla/domains/identity/jwt/jwt-auth.md) | JWT bearer — token issuance and validation wiring |
+| [api](mla/domains/api/api.md) | The HTTP surface contract — action naming, attributes, content, response mapping |
 | [api messages](mla/domains/api/api-messages.md) | Request naming, sub-blocks, the envelope, the edge mapping |
+| [integrations](mla/domains/integrations/integrations.md) | The client/broker seam, and where degradation sits |
+| [http](mla/domains/integrations/http/http.md) | Outbound HTTP — registration, resilience, cross-cutting handlers |
+| [validation](mla/domains/validation/validation.md) | Phases, layer independence, rule codes, the HTTP mapping |

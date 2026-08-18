@@ -1,6 +1,6 @@
 # Clean Architecture
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > The six layers a backend service splits into, and the direction its references run.
 > Use case — every backend service; a throwaway spike deviates under § *Deviation*.
@@ -19,6 +19,7 @@
 - must give each layer its own class-library project, so the dependency rule is compiler-enforced
 - must declare an interface in Application and its implementation in Infrastructure
 - must not list the components a layer holds here — each domain states what it declares, per layer
+- must leave the folders inside a layer to [domain structuring](domain-structuring.md)
 
 ---
 

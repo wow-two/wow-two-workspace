@@ -1,6 +1,6 @@
 # Test Databases
 
-*Last updated: 2026-06-23*
+*Last updated: 2026-08-18*
 
 > What — which database a backend test runs against and how the tier picks it: Postgres by default, SQLite as a switchable speed fallback.
 > Purpose — fidelity by default (the test DB matches production) while keeping a no-Docker fast lane for when the Postgres suite gets slow.
@@ -16,7 +16,7 @@ Pick the tier by what the test exercises; each MUST use the SDK harness, never a
 - **migrator-engine** — apply / rollback / drift over real SQL → `MigratorPostgresFixture` + `MigratorHarness` (`Testing.Data`).
 
 - E2E + migrator tiers are Postgres-only (they boot the real engine) — the SQLite switch below applies to the **repository / handler** tier.
-- E2E-first rationale + the full integration stack live in [testing.md](../../architecture/clean/testing.md); this doc governs only the DB-selection seam.
+- E2E-first rationale + the full integration stack live in [testing.md](../../../architecture/clean/testing.md); this doc governs only the DB-selection seam.
 
 ---
 

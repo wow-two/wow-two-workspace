@@ -1,15 +1,20 @@
 # Controller known endpoints
 
-*Last updated: 2026-08-15*
+*Last updated: 2026-08-18*
 
-> Identity & system endpoints whose controller, route, action name, and path are **fixed across every app** — `api/identity/*`, `api/system/status`.
-> Purpose — one identity surface in every product, so a frontend (and the coming frontend beta SDK) targets the same paths everywhere; no `auth/login` here, `admin/session` there.
-> Use case — reach for this when adding or renaming any sign-in / sign-out / current-user / guest / status endpoint, or aligning a controller that predates the convention.
+> Identity and system endpoints whose controller, route, action name and path are fixed across every app —
+> `api/identity/*`, `api/system/status`.
+> Purpose — one identity surface per product, so a frontend targets the same paths everywhere; no `auth/login`
+> here and `admin/session` there.
+> Use case — adding or renaming a sign-in, sign-out, current-user, guest or status endpoint, or aligning a
+> controller that predates the convention.
 
 ## Identity — `IdentityController` @ `api/identity`
 
-- Controller: `sealed IdentityController`, `[Route("api/identity")]`, `/// <summary>Exposes identity over HTTP.</summary>`.
-- Implement only the capabilities the app has — but when you do, the **action name + path are exactly these** (verb may vary by mechanism):
+- must declare `sealed IdentityController` with `[Route("api/identity")]`.
+- must summarize it `Exposes identity over HTTP.`
+- must implement only the capabilities the app has.
+- must take the exact action name and path below for each one implemented; the verb may vary by mechanism.
 
 | Capability | Action | Path | Verb | Summary |
 |---|---|---|---|---|
@@ -21,24 +26,35 @@
 | Refresh | `Refresh` | `refresh` | `POST` | `Refreshes the session.` |
 | OAuth callback | `Callback` | `callback` | `GET` | `Completes the OAuth callback.` |
 
-- **Verb by mechanism** — credential / token sign-in is a `POST` (it carries a body); an external-IdP challenge that only redirects is a `GET` (`sign-in` → 302 to the provider). Path stays `sign-in` either way.
-- **Mechanism is never in the summary** — OAuth vs password vs guest is *how* (`Begins sign-in.`, not `Challenges the GitHub scheme.`). See [controllers.md › Documentation](../../constructs/behavior/controller.md).
-- **OAuth callback** — only expose `callback` as an action if the controller handles it; if the auth middleware owns `CallbackPath`, leave it there and keep that path in sync — don't add a dead action.
+- must `POST` a credential or token sign-in — it carries a body.
+- must `GET` an external-IdP challenge that only redirects — `sign-in` → 302 to the provider.
+- must keep the path `sign-in` either way.
+- must keep the mechanism out of the summary — OAuth, password and guest are *how*: `Begins sign-in.`, never
+  `Challenges the GitHub scheme.` ([controller](../../constructs/behavior/controller.md) § *Type doc*).
+- must expose `callback` as an action only when the controller handles it.
+- must leave `CallbackPath` with the auth middleware when the middleware owns it, and keep that path in sync
+  rather than adding a dead action.
 
 ---
 
 ## System — `SystemController` @ `api/system`
 
-- Controller: `sealed SystemController`, `[Route("api/system")]`, `/// <summary>Exposes system status over HTTP.</summary>` — the same `Exposes` starter every controller takes.
-- `Status` → `GET api/system/status` — liveness / service identity, plus any app-specific health fact (e.g. the vault's seal state). `[AllowAnonymous]` (the sign-in screen hits it pre-auth).
-- The `Status` **action** summary stays abstract — `Reports service liveness.` / `Reports the vault's seal state.`; never the payload shape.
+- must declare `sealed SystemController` with `[Route("api/system")]`.
+- must summarize it `Exposes system status over HTTP.` — the `Exposes` starter every controller takes.
+- must expose `Status` at `GET api/system/status` — liveness, service identity, and any app-specific health
+  fact such as the vault's seal state.
+- must mark `Status` `[AllowAnonymous]` — the sign-in screen hits it pre-auth.
+- must keep the `Status` action summary abstract, never the payload shape — `Reports service liveness.`,
+  `Reports the vault's seal state.`
 
 ---
 
 ## Migration
 
-- `AuthController` → `IdentityController`; `api/auth` or `api/admin/session` → `api/identity`.
-- `Login` → `SignIn` · `Logout` → `SignOut` · `me` stays `Me`.
-- **Grep the whole backend**, not just the controller — `CallbackPath`, `returnUrl`, cookie paths, reverse-proxy / path-prefix auth rules may hard-code the old path. Update every reference.
-- If a path-prefix policy (e.g. everything under `api/admin` is `[Authorize]`) is load-bearing, flag it before moving a route out of that prefix.
-- The frontend caller changes with it — update its paths in the same pass.
+- must rename `AuthController` → `IdentityController`, and `api/auth` or `api/admin/session` → `api/identity`.
+- must rename `Login` → `SignIn` and `Logout` → `SignOut`; `me` stays `Me`.
+- must grep the whole backend, not only the controller — `CallbackPath`, `returnUrl`, cookie paths and
+  reverse-proxy or path-prefix auth rules may hard-code the old path. Update every reference.
+- must flag a load-bearing path-prefix policy — everything under `api/admin` being `[Authorize]`, say — before
+  moving a route out of that prefix.
+- must update the frontend caller's paths in the same pass.

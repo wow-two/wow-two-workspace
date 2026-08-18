@@ -20,7 +20,7 @@
 
 ### Type doc
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Contains**.
 - must name the set the values belong to.
 
@@ -50,12 +50,12 @@ public static class ChannelSlugsConstants
 
 ### Member docs
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Holds**.
 - must name the authority that fixes the value — a spec, a wire format, a third-party contract.
 - must state the shape of a format string, never its slots.
 
-#### [Remarks](../notation/documentation/remarks.md)
+#### [Remarks](../../lla/notation/documentation/remarks.md)
 - must carry `<remarks>` only to name the spec the value answers to — `Follows RFC 6068.`
 
 ```csharp
@@ -71,7 +71,7 @@ public const string OpenNetwork = "nopass";
 - must use `const` for a compile-time value, `static readonly` for anything else.
 - must assign a literal, or an expression built from literals declared above it.
 - may use `=>` for a member that returns or delegates — a constants class holds values, not logic that grows
-  ([style](../notation/style/style.md) § *The body*).
+  ([style](../../lla/notation/style/style.md) § *The body*).
 - must order from the primitive value to the composed one, or in the order the flow consumes them.
 - must separate every constant from the next with one blank line.
 - must split a group into its own file once the class passes 60 lines — regions hide length, files state it.
@@ -89,5 +89,5 @@ public static readonly string PayloadShape = WifiFormats.BuildShape();
 
 ## Neighbours
 
-- [summary](../notation/documentation/summary.md) — the starter table
-- [style](../notation/style/style.md) — lifting a structured literal into a named `const`
+- [summary](../../lla/notation/documentation/summary.md) — the starter table
+- [style](../../lla/notation/style/style.md) — lifting a structured literal into a named `const`

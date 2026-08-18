@@ -11,7 +11,7 @@
 - must stage through `IOutbox.EnqueueAsync` inside the business transaction — the row and the state change share one
   `SaveChangesAsync` (`src/Messaging/Reliability/MessagingReliability.cs`).
 - must register the EF-backed outbox with `AddEfOutbox<TContext>`, map it with `modelBuilder.ApplyOutboxModel()`, and
-  own the `outbox_messages` DDL in a migration ([migrations](../../domains/persistence/schema/migrations.md)).
+  own the `outbox_messages` DDL in a migration ([migrations](../../domains/persistence/migrations/migrations.md)).
 - must dispatch out of band — `AddEfOutboxDispatcher<TContext>` runs the drain, never the request thread.
 - must pair the outbox with an **inbox** on the consuming side — `AddEfInbox<TContext>`, `IInboxProcessor` — because
   at-least-once delivery means a duplicate arrives.

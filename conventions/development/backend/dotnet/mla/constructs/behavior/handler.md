@@ -33,7 +33,8 @@
 
 ### Construct
 - must declare a `sealed class` — a handler has no value identity.
-- must take collaborators through the constructor; an input belongs on the message.
+- must take collaborators through the constructor; an input belongs on the message →
+  [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
 
 ### Type name
 - must suffix with `Handler` and name it for its message — `ChannelGetAllQueryHandler`.

@@ -64,7 +64,7 @@ may describe the present.
 Ten frames, each answering a different question the signature leaves open. `n` counts occurrences across the workspace.
 
 - must reach for the frame whose question the reader is actually asking.
-- must treat a `<remarks>` fitting none of them as rationale, which § *Everything else is cut* removes.
+- must treat a `<remarks>` fitting none of them as rationale, which § *What it carries* removes.
 
 | Frame | Opener | Answers | Carrier | n |
 |---|---|---|---|---|
@@ -95,7 +95,7 @@ the wrong reading the sentence displaces.
 ## Multi-line — the same three gates [REQUIRED]
 
 A `<remarks>` earns extra lines the way a `<summary>` does: it clears **convention → compaction → length**
-([documentation](documentation.md) § *What it carries*). Readability is not a ground, and a multi-step
+(§ *What it carries*). Readability is not a ground, and a multi-step
 flow is not a licence — it must survive gates 1 and 2 before length is even asked.
 
 - must not wrap a block that has not cleared gates 1 and 2 — a multi-line `<remarks>` is evidence they were skipped.

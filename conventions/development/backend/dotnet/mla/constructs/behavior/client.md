@@ -33,7 +33,8 @@
 
 ### Construct
 - must declare a `sealed class` taking its transport through a primary constructor.
-- must use a block body `{ }` from the start — a call gains a header, a guard, a log line later.
+- must use a block body `{ }` from the start — a call gains a header, a guard, a log line later
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ```csharp
 // ✅

@@ -245,6 +245,6 @@ the plain noun — *"the rule set"*, not `<see cref="CodeRuleSet"/>`.
 
 - [models.md](../../constructs/constructs.md) — record style + general property rules
 - [entities.md](../../../mla/constructs/data/entity.md) — entity-specific doc rules
-- [enums](../../components/enums.md) — enum value documentation
+- [enums](../../../mla/components/enums.md) — enum value documentation
 - [services.md](../../../mla/constructs/behavior/service.md) — service / client / factory naming
 - [mediator](../../../mla/domains/messaging/mediator/mediator.md) — query/command/handler naming + docs

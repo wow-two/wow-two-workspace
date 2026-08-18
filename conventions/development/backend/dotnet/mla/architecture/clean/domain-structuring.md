@@ -73,7 +73,7 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 
 ## Component folders across layers
 
-A component states its folder **name** once ([components](../../../lla/components/components.md) § *Adding a component*);
+A component states its folder **name** once ([components](../../components/components.md) § *Adding a component*);
 where that folder may appear is this file's rule, and the two together are not duplication.
 
 - must allow a component folder in **any** layer that declares the component — `Enums/` is legal under Domain, Application and Infrastructure alike.
@@ -99,5 +99,5 @@ Domain and Infrastructure mirror each other but aren't forced to be 1:1. Infrast
                           ←── (no domain) → Publishing/  (infra-only, formats + sends)
 ```
 
-Which layer declares an [entity](../../constructs/data/entity.md) or an [enum](../../../lla/components/enums.md) is the
+Which layer declares an [entity](../../constructs/data/entity.md) or an [enum](../../components/enums.md) is the
 declaring domain's call; this file governs only the folder it lands in.

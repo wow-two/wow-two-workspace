@@ -89,11 +89,10 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 
 - must declare a data carrier as a `sealed record` with body properties, never positional (§ *Data components*).
 - must declare behavior as a `sealed class` — value equality would be wrong on a type whose identity is what it does.
-- must give a `static class` a `Constants` or `Extensions` role only
-  ([constants](../components/constants.md) · [extensions](../components/extensions.md)).
+- must give a `static class` a role that carries no instance state; which roles those are is MLA's to name.
 - must have a measured allocation reason before any `struct` form — the default is a reference type.
 - must prefer `Func<>` / `Action<>` over a named `delegate` unless the name earns itself.
-- must put one `enum` per file; the domain-mapping rules are MLA ([enums](../components/enums.md)).
+- must put one `enum` per file; the role and its mapping rules are MLA.
 - must let the role pick an `interface` doc starter ([summary](../notation/documentation/summary.md)).
 - must clear the six gates in [style](../notation/style/style.md) § *The body* before an expression-bodied member.
 
@@ -123,7 +122,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 ### Location
 
 #### Folder
-- must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
+- must sit in the folder its component doc names — [components](../../mla/components/components.md) states the folder, and
   [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File
@@ -185,7 +184,7 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 ### Location
 
 #### Folder
-- must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
+- must sit in the folder its component doc names — [components](../../mla/components/components.md) states the folder, and
   [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File

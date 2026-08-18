@@ -8,8 +8,8 @@
 
 The first word of every `<summary>` is fixed by what the thing is.
 
-- must take a **type's** starter from its component doc — [lla components](../../components/components.md)
-  or [mla constructs](../../../mla/constructs/constructs.md).
+- must take a **type's** starter from its own doc — [components](../../../mla/components/components.md)
+  or [constructs](../../../mla/constructs/constructs.md).
 - must take a **member's** starter from [constructs](../../constructs/constructs.md), which fixes them by role.
 - must take a **construct's** starter from the same file, which rules on every C# form.
 - must not reintroduce a table here — a starter belongs with the thing it starts.
@@ -98,7 +98,7 @@ The companion rule: **a summary states the referent (what the thing *is*), never
 splits a field that earns a summary from one that does not is the **role it plays**, never the access modifier:
 
 - **a value** — a `const`, a compiled `Regex`, a timeout, a format string, a table name; the summary names the
-  authority that fixes the choice ([constants](../../components/constants.md)).
+  authority that fixes the choice ([constants](../../../mla/components/constants.md)).
 - **state the type mutates** — a cache, an accumulator, a live-execution map; the summary names what it holds and
   the invariant that keeps it correct.
 - **an injected collaborator** — `private readonly IClock _clock`, an `ILogger<T>`, a repository. **No summary** —

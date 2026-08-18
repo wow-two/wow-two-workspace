@@ -11,7 +11,7 @@
 - must be a pattern with a **settled name in the literature** — `Factory`, `Decorator`, `Adapter`, `Strategy`.
 - must state what the pattern buys in this codebase, never what the book says it buys.
 - must live in `mla/`, not `lla/`: a pattern needs collaborators to mean anything, so it fails the self-sufficiency
-  gate ([lla components](../../../lla/components/components.md) § *The gate*).
+  gate ([components](../../components/components.md) § *The gate*).
 - must not restate a component's rules — a pattern a component doc already owns is a row below, not a doc
   ([components](../constructs.md)).
 
@@ -35,7 +35,7 @@ A pattern earns its own file only when **we write the type**. Everything else is
 - must carry `Shape` · `Use` · `Limits` · `Components`, in that order, after the description blockquote.
 - must show one short C# fence in `Shape` — the form we write, not the book's UML.
 - must name in `Components` every component the pattern touches, and stop there; the component's own rules stay there.
-- must add the component template's `Location` · `Declaration` · `Content` when the pattern also names a keep-listed
+- must add the template's `Location` · `Declaration` · `Content` when the pattern also names a keep-listed
   suffix — [factories](factories.md) is that case, and today the only one.
 - must name the file for the pattern: plural when it names a type kind (`decorators.md`), singular when it names a
   policy or a flow (`outbox.md`).
@@ -149,7 +149,7 @@ The pattern is real and in use; another doc is its authority, and this row only 
 | Result / Either | `results.md` § *Rules* | `AppResult<TSuccess>` collapsed with `.Match` |
 | Dependency Injection | `constructs.md:243` | constructor injection |
 | Claim Check | `outbox.md` § *Limits* | store the payload, stage the pointer |
-| MVC | `controller.md` § *No business logic* | a controller that dispatches and maps |
+| MVC | `api.md` § *Action content* | a controller that dispatches and maps |
 
 ---
 

@@ -16,7 +16,7 @@
 | [api request](api-request.md) | the body one controller action binds |
 | [application request](application-request.md) | the message a caller dispatches in-process |
 | [result](result.md) | an operation's outcome — a success or an `AppError` |
-| [entity configuration](../../domains/persistence/ef/entity-configuration.md) | an EF mapping for one entity |
+| [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) | an EF mapping for one entity |
 
 ---
 

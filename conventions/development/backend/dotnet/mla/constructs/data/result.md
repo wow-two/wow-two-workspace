@@ -32,7 +32,8 @@
 ```
 
 ### Construct
-- must declare a `sealed record` — a result is its values.
+- must declare a `sealed record` — a result is its values →
+  [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 - must not carry an HTTP status; `AppErrorType` is transport-agnostic and maps at the edge.
 
 ```csharp

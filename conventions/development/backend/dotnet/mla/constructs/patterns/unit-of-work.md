@@ -11,12 +11,12 @@
 - must use the `DbContext` as the unit of work on the EF path — it tracks the changes, and `SaveChangesAsync`
   is the commit.
 - must not declare an `IUnitOfWork` interface wrapping it; the wrapper adds a name and hides the tracker
-  ([database](../../domains/persistence/schema/database.md)).
+  ([database](../../domains/persistence/database/database.md)).
 - must call `SaveChangesAsync` **once per use-case**, in the handler that owns it — never inside a repository method.
 - must open an explicit transaction only when the work spans two contexts or mixes EF with raw SQL; otherwise
   `SaveChangesAsync` already runs in one.
 - must accept that the Dapper path has **no** unit of work — one fresh connection per operation, so multi-statement
-  atomicity is the SQL's job ([dapper](../../domains/persistence/dapper/dapper.md) § *Connections*).
+  atomicity is the SQL's job ([dapper](../../domains/persistence/access/dapper/dapper.md) § *Connections*).
 
 ```csharp
 // ✅ the handler owns the commit point
@@ -47,6 +47,6 @@ await context.SaveChangesAsync(ct);
 ## Components
 
 - [repository](../behavior/repository.md) — the write side, and why the Dapper path owns no transaction.
-- [database](../../domains/persistence/schema/database.md) — the `DbContext` contract and the schema-first rule.
+- [database](../../domains/persistence/database/database.md) — the `DbContext` contract and the schema-first rule.
 - [outbox](outbox.md) — the messaging half that must share the same commit.
 - [handler](../behavior/handler.md) — the handler that owns the boundary.

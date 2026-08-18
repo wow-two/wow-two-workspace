@@ -30,7 +30,7 @@ Neither a construct nor a statement — a directive declares no type and runs no
 
 | Directive | Verdict | Rule |
 |---|---|---|
-| `using {namespace}` | use | ordered per § *`using` ordering* |
+| `using {namespace}` | use | ordered per § *The file's frame* |
 | `global using` | use with care | one file per project owns them; scattered, it is invisible at the call site |
 | `using {alias} = {type}` | use with care | only to disambiguate two types with the same name in one file |
 | `using static` | banned | write the type name at the call site — the call loses its subject otherwise |
@@ -40,7 +40,7 @@ Neither a construct nor a statement — a directive declares no type and runs no
 |---|---|---|
 | `#nullable` | use | only to enable; a per-file disable hides a real warning |
 | `#if` · `#elif` · `#else` · `#endif` | use with care | a build-configuration branch, never a feature switch |
-| `#region` · `#endregion` | use with care | per § *Section dividers* |
+| `#region` · `#endregion` | use with care | per [constructs](../../constructs/constructs.md) § *Behavior components* |
 | `#pragma warning` | use with care | must name the warning and carry a `//` saying why |
 | `#line` · `#error` · `#warning` | use with care | generator output and build-time assertions only |
 
@@ -205,4 +205,4 @@ var sql =
 ## Neighbours
 
 - [constructs](../../constructs/constructs.md) — the constructs and statements these rules lay out
-- [components](../../components/components.md) — the components that grant an expression body
+- [components](../../../mla/components/components.md) — the components that grant an expression body

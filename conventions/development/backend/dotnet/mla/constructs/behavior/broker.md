@@ -33,7 +33,8 @@
 
 ### Construct
 - must declare a `sealed class` behind one interface.
-- must use a block body `{ }` from the start — a degradation policy gains a step as the seam grows.
+- must use a block body `{ }` from the start — a degradation policy gains a step as the seam grows
+  ([style](../../../lla/notation/style/style.md) § *The body*).
 
 ### Type name
 - must name the interface for the capability — `IBillingBroker`.

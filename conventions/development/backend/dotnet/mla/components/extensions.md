@@ -20,7 +20,7 @@
 
 ### Type doc
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Extends**, then `<see cref>` the target, then `for {purpose}`.
 - must name the purpose category, never the methods it holds.
 
@@ -40,7 +40,7 @@
 - must name the target type only when the target **is** the domain — `ServiceCollectionExtensions`.
 - must not carry an interface's `I` into the class name — the `I` belongs to the interface, and a class is not one.
 - must narrow to `{Area}ServiceCollectionExtensions` for DI registration in a library
-  ([naming](../notation/naming/naming.md) § *Registration and extension-method naming*).
+  ([naming](../../lla/notation/naming/naming.md) § *Registration and extension-method naming*).
 - may name a **closed** family rather than one member — a union's fixed variant list, never an open bag of related types.
 
 ```csharp
@@ -56,7 +56,7 @@ public static class WifiSsidEncodingExtensions
 
 ### Member docs
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start the `<summary>` with the method's own verb — `Adds`, `Maps`, `Encodes`.
 - must carry a `<param>` for every parameter, the receiver included.
 - must carry `<returns>` unless the method returns `void`, `Task` or `ValueTask`.
@@ -77,7 +77,7 @@ public static class WifiSsidEncodingExtensions
 - must be reachable by its type name at the call site.
 - may be `async` when the receiver's own work is asynchronous, returning `Task<T>` or `ValueTask<T>`.
 - may use `=>` for a member that returns or delegates — extensions take no collaborators to accumulate
-  ([style](../notation/style/style.md) § *The body*).
+  ([style](../../lla/notation/style/style.md) § *The body*).
 - must produce its result from the receiver and its arguments alone — joining two collaborators makes it a `Service`.
 - must declare a constant here while this class is its only caller — a second caller moves it to `Constants`.
 - must order constants first, then methods.

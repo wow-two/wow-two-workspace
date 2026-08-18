@@ -30,14 +30,14 @@
 
 ### Member docs
 
-#### [Summary](../notation/documentation/summary.md)
+#### [Summary](../../lla/notation/documentation/summary.md)
 - must start with **Gets**, **Gets or sets** or **Sets**, matching its accessors.
 - must state what the key **selects**, never only what is returned.
 
-#### [Params](../notation/documentation/params.md)
+#### [Params](../../lla/notation/documentation/params.md)
 - must carry a `<param>` for the key.
 
-#### [Returns](../notation/documentation/returns.md)
+#### [Returns](../../lla/notation/documentation/returns.md)
 - must name the element and the case where the key matches nothing.
 
 ```csharp
@@ -55,11 +55,11 @@ public CodeRule? this[int order] => _rules.GetValueOrDefault(order);
 - must expose one indexer per type; a second key means the type wraps two sets.
 - must not throw for a missing key when a nullable return can state the same thing.
 - may use `=>` for the accessor that returns the element — a keyed lookup returns, and a lookup does not grow
-  ([style](../notation/style/style.md) § *The body*).
+  ([style](../../lla/notation/style/style.md) § *The body*).
 
 ---
 
 ## Neighbours
 
 - [components](components.md) — the self-sufficiency gate
-- [summary](../notation/documentation/summary.md) — accessor starters
+- [summary](../../lla/notation/documentation/summary.md) — accessor starters

@@ -9,7 +9,7 @@
 ## What lives here
 
 - [entity configuration](entity-configuration.md) — `IEntityTypeConfiguration<T>` mapping and call order
-- [ef migrations](ef-migrations.md) — `AddEfMigrationsRunner<TContext>` and the code-first flow
+- [ef migrations](../../migrations/ef/ef-migrations.md) — `AddEfMigrationsRunner<TContext>` and the code-first flow
 
 ---
 
