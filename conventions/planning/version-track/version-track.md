@@ -11,6 +11,8 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - must start at `v0.1`; minor-increment `Y`; bump major `X` only at `Y = 100` or a breaking change
 - must treat the latest folder as the active one
 
+---
+
 ## Scope
 
 - must be exactly one type, declared on the meta line:
@@ -24,6 +26,8 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - must plan only the next version — future work waits in the backlog
 - a cycle is `Feature` → `Adoption`; 1 cycle = 2 versions (full model → `../../development/dev-cycle.md`)
 
+---
+
 ## Structure
 
 - must group `### Iteration {N} — {noun}` → `[ ]` tasks; the iteration name is its focus noun, no `: {goal}` clause
@@ -35,6 +39,8 @@ A per-version progress doc — the iterations and capabilities a product ships i
 - must stay capability-grained — never per-endpoint, per-field, or naming a table / class / file
 - may close with a `### Verification` iteration — always last, bare noun, ordered `[ ] {action} → {expected}` checks
 - must carry meta `**Status:** … · **Type:** … · **Started:** … · **Completed:** …` (those four only); declare a `Type`; title is a plain noun phrase
+
+---
 
 ## Prose inside a version doc [REQUIRED]
 
@@ -55,6 +61,8 @@ The task-form rules govern task lines. This governs everything else on the page,
 - must not keep **re-scoping history** — no `**Rescoped {date}** — X moved to v0.9`, no note that an item arrived from elsewhere, no record of what a version used to contain. A task moves between iterations and versions many times as priorities shift; each move would leave a note, and the notes outnumber the tasks. **The current task list IS the scope**, and git holds every earlier shape of it. This is the same rule as *must move an item, never leave a forwarding stub*, applied to the version as a whole.
 - may keep prose under an **open** iteration when its open tasks need it, and must delete that prose when the iteration closes.
 
+---
+
 ## Lifecycle
 
 - `⏳ Planned` → `🚧 In Progress` → `✅ Complete`
@@ -68,6 +76,8 @@ The task-form rules govern task lines. This governs everything else on the page,
 - must leave the completed iteration's **tasks** in place, one compact line each, as the record of what the version delivered — rewrite any that were never compact rather than carrying the sprawl forward
 - may drop the tasks too once the whole version is `✅ Complete`, keeping the bare `### Iteration N — Name` heading
 
+---
+
 ## Rules
 
 - must write a transient plan at `engineering/planning/version-track/v{X.Y}/{iter-slug}.md` at iteration start (what + how), review before implementing, delete when done
@@ -79,6 +89,8 @@ The task-form rules govern task lines. This governs everything else on the page,
 - must not keep a `## Log` — git is the history
 - must **move** an item that changes iteration, never leave a forwarding stub (`→ moved to Iteration N`). The destination line is the record; a stub duplicates state and goes stale the moment the item moves again
 - must not name the current iteration in the doc — it is the first one with open boxes. A `(current)` tag is a second source of truth that rots on every advance
+
+---
 
 ## Template — copy below the line
 

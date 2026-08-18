@@ -91,6 +91,8 @@ model, has nowhere to live on it, and needs nothing injected is an extension.
 - Governs *all-caps runs* only — a mixed-case proper name (`OAuth`, `SendGrid`, `MailKit`) is unaffected.
 - Canonical for the whole ecosystem — the backend-beta SDK follows it too (`docs/architecture/package-layout.md`).
 
+---
+
 ## Banned
 
 - **Hungarian notation** — `m_`, `s_`, a leading `_` on anything but a private field.
@@ -99,10 +101,12 @@ model, has nowhere to live on it, and needs nothing injected is an extension.
   - [components](../../../mla/components/components.md) § *Banned*
 - **`using static`** — see § *`using static` is banned* above.
 
+---
+
 ## Specific naming lives by area
 
 - which **suffix** names which **role** (one per role, `Store`→`Repository`, banned junk-drawer, new-suffix gate)
   → [components](../../../mla/components/components.md)
-- service / client / factory → [services](../../../mla/components/behavior/service.md)
-- query / command / handler → [mediator](../../../mla/domains/messaging/mediator.md)
+- service / client / factory → [services](../../../mla/constructs/behavior/service.md)
+- query / command / handler → [mediator](../../../mla/domains/messaging/mediator/mediator.md)
 - entity / settings / DTO → [constructs](../../constructs/constructs.md)

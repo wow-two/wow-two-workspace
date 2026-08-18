@@ -23,7 +23,9 @@ var applied = await history.GetAppliedAsync(connection, ct);
 
 - ❌ `// This loop iterates over the directories and for each one it checks whether…` (multi-line / restates code)
 
-## What it never carries
+---
+
+## Exclusions
 
 - Internal types and members — warnings are suppressed; a brief one-liner only when context isn't obvious
 - Auto-generated code — skip
@@ -33,7 +35,9 @@ var applied = await history.GetAppliedAsync(connection, ct);
 - **Rationale / justification essays** — `// stays in the handler because it's a business rule`.
   - a genuinely non-obvious *why* is **one** terse line, never a note re-explaining the code.
 
-## See also
+---
+
+## Neighbours
 
 - [documentation](documentation.md) — the routing table that sends a fact here
 - [style](../style/style.md) — how the line the comment sits above is laid out

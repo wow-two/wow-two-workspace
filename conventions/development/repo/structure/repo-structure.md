@@ -19,6 +19,8 @@
 
 A product repo *ships a thing to users*; a library repo *is consumed by other repos*. Don't force one shape into the other.
 
+---
+
 ## 2. Canonical layout (product / venture repo)
 
 ```
@@ -66,6 +68,8 @@ A product repo *ships a thing to users*; a library repo *is consumed by other re
 > as a **dot-prefix** so multiple open repos never collide on a bare `backend-services/` /
 > `frontend-services/` folder name in an IDE.
 
+---
+
 ## 2.1 Business-folder layout (the venture layer)
 
 > The venture-side counterpart to `engineering/`. In repos still on the `business/`+`platform/` shape
@@ -88,6 +92,8 @@ business/                          ← the venture layer — model · positionin
 - **Subfolders, created as needed** (omit until real, per §4): `analysis/` · `marketing/` · `planning/` · `flows/`.
 - **`planning/` is the *business* roadmap** — keep it distinct from `platform/planning/` (the technical roadmap); cross-reference, don't merge.
 
+---
+
 ## 3. Doc rule — no README below root
 
 - **`README.md` lives only at the repo root** (GitHub entry), beside `CLAUDE.md`.
@@ -96,25 +102,33 @@ business/                          ← the venture layer — model · positionin
   `README.md`. The lead doc orients: what's here, why, pointers.
 - Additional docs sit beside the lead with meaningful names (`planning/` → `planning.md` + `backlog.md` + `rules.md`).
 
+---
+
 ## 4. Folders, not loose files — grow-ready by default
 
 - **If a concern can grow past one file, it is a folder from day one** — don't start as a loose file and migrate later.
 - **Create now the folders the repo will need**; omit only the truly-N/A ones (add when real).
 - Proven set (Haven): product → `features/ flows/ planning/ marketing/`; engineering → `architecture/ codebase/ development/ deployment/ planning/ versions/ research/ scripts/`.
 
+---
+
 ## 5. Naming rules — the non-negotiables
 
 1. **Top-level dirs are exactly `product/` and `engineering/`** (lowercase). Plus root `README.md`, `CLAUDE.md`, `.claude/`.
 2. **All code lives under `engineering/codebase/`.** Always a `codebase/` wrapper — never services directly under `engineering/`.
 3. **The code dirs are exactly `codebase/{slug}.backend-services/` and `codebase/{slug}.frontend-services/`** (dot-prefixed with the repo `{slug}`; + optional `database/`, `pipelines/`). Never bare `backend-services`/`frontend-services`, never `backend`/`frontend`, never `{name}.backend`, never a loose dir outside `codebase/`. **Rationale:** the `{slug}.` prefix keeps the two folders uniquely named so several repos open side-by-side in IDEs never collide on identical `backend-services/` / `frontend-services/` folder names. (`{slug}` = the repo's distinctive lowercase hyphenated name — its last dot-segment, e.g. `secrets-vault`, `drydock`; product-template = `sample`.)
-4. **`{slug}.backend-services/` holds the solution + projects directly — solution file is `{slug}.backend-services.slnx`.** Exactly `.slnx` (the XML format, **not** legacy `.sln`), named after its folder so it opens in the IDE under the matching name (e.g. `smartqr.backend-services.slnx`, `drydock.backend-services.slnx`). Beside it sit `Directory.Packages.props` (Central Package Management) + `Directory.Build.props` (shared MSBuild props) — the MSBuild layer, inherited by every project → [`backend/build/build.md`](../../backend/dotnet/mla/platform/build/build.md). Projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.slnx` encoding) → [`backend/service-architecture.md`](../../backend/dotnet/mla/layers/layers.md). (Apps only — library/SDK repos use their own package layout.)
+4. **`{slug}.backend-services/` holds the solution + projects directly — solution file is `{slug}.backend-services.slnx`.** Exactly `.slnx` (the XML format, **not** legacy `.sln`), named after its folder so it opens in the IDE under the matching name (e.g. `smartqr.backend-services.slnx`, `drydock.backend-services.slnx`). Beside it sit `Directory.Packages.props` (Central Package Management) + `Directory.Build.props` (shared MSBuild props) — the MSBuild layer, inherited by every project → [`backend/build/build.md`](../../backend/dotnet/mla/platform/build/build.md). Projects `{Brand}.{Domain}[.{SubDomain}]` PascalCase. Clean-Arch layers + **solution-folder grouping** (`services/ platform/ libraries/ tools/ tests/`, the `product → platform` ref rule, `.slnx` encoding) → [backend architecture](../../backend/dotnet/mla/architecture/architecture.md). (Apps only — library/SDK repos use their own package layout.)
 5. **`{slug}.frontend-services/` holds the app directly (single) or a pnpm workspace (multi)** — app folders (lowercase) + `packages/` for shared (`@{brand}/common`, `@{brand}/ui`).
 6. **Per-repo `development/` guidelines defer to shared conventions** (`wow-two-ws/conventions/*.md`) — only repo-specific deltas live in the repo.
+
+---
 
 ## 6. Tests
 
 - **Backend:** a `tests/` folder inside `codebase/{slug}.backend-services/`, its projects in the same solution (`{Brand}.{Domain}.Tests`).
 - **Frontend:** colocated with the code (`*.test.ts(x)` beside source, or `__tests__/`).
+
+---
 
 ## 7. Typed clients / contracts
 
@@ -122,11 +136,15 @@ business/                          ← the venture layer — model · positionin
 - A backend's typed client consumed by **another backend** → a package project inside `codebase/{slug}.backend-services/` (`{Brand}.{Service}.Client` / `.Abstractions`), referenced or published like any package.
 - **No** separate top-level `contracts/`.
 
+---
+
 ## 8. Deployment
 
 - **One image per deployable service is the unit;** `docker compose` *orchestrates* them — it is not an alternative to per-service images.
 - **Single-service** → a `Dockerfile` is enough (+ optional compose for local env/volumes). **Multi-service** → per-service Dockerfiles + one compose.
 - **Location:** `engineering/deployment/` holds `Dockerfile` + `docker-compose.yml`; **build context = `engineering/codebase/`** (compose: `context: ../codebase`, `dockerfile: ../deployment/Dockerfile`); `.dockerignore` at the context root (`codebase/`). The `Dockerfile` `COPY`s the context's `{slug}.backend-services/` + `{slug}.frontend-services/` (prefixed paths).
+
+---
 
 ## 9. Single-service vs multi-service
 
@@ -135,6 +153,8 @@ business/                          ← the venture layer — model · positionin
 | **Single** (drydock, smart-qr, secrets-vault) | solution + Clean-Arch projects directly | the Vite app directly (`package.json` at root) |
 | **Multi** (haven) | one folder per service under a shared solution | pnpm workspace: app folders + `packages/` |
 
+---
+
 ## 10. Migration ripple (do in lockstep with any rename)
 
 The two code dirs carry the repo `{slug}.` prefix (`{slug}.backend-services/`, `{slug}.frontend-services/`) — any rename touches every path that names them:
@@ -142,6 +162,8 @@ The two code dirs carry the repo `{slug}.` prefix (`{slug}.backend-services/`, `
 - **`wow-two-ws/scripts/active.sh`** — the `PROJECTS` registry (backend `.sln` + frontend dir paths → both prefixed).
 - Each repo's **deploy script** (SPA → `wwwroot` relative path: `..`/`..`/`{slug}.backend-services`/`{Brand}.Api`/`wwwroot`), **`Dockerfile`** (`COPY {slug}.backend-services/` + `COPY {slug}.frontend-services/`), **`.dockerignore`** (`{slug}.backend-services/{Brand}.Api/wwwroot/`), and **compose** context.
 - **`.sln`/`.slnx`:** moving/renaming the backend folder as a unit preserves its relative project refs; a depth change (introducing `codebase/`) re-paths only *external* references, not the solution internals.
+
+---
 
 ## 11. Audit — product repos vs this standard (2026-06-10)
 
@@ -157,12 +179,16 @@ The two code dirs carry the repo `{slug}.` prefix (`{slug}.backend-services/`, `
 
 > The 2026-06-09 audit is **superseded** — the top-level names changed (`business-logic/`+`platform-development/` → `product/`+`engineering/`) and `src/`→`codebase/`, plus the no-README rule.
 
+---
+
 ## 12. Ecosystem naming
 
 - **Orgs:** lowercase, hyphenated — `wow-two-sdk`.
 - **Repos:** `{org}.{domain}[.{subdomain}]`, lowercase, dot-separated — `sdk.language.core`, `platform.storage.cache`.
 - **NuGet:** PascalCase branded — `WoW.Two.Sdk.Language.Core`.
 - **Branches:** `main` · `feature/*` · `fix/*` · `docs/*`. **Commits:** conventional (`feat:`/`fix:`/`docs:`/`refactor:`).
+
+---
 
 ## 13. Image publishing (the deploy artifact)
 

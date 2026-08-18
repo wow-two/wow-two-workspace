@@ -1,6 +1,6 @@
 # Constants
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > A static class holding values the codebase names once.
 > Purpose — one home for a value's authority, so a literal never has to be explained twice.
@@ -13,6 +13,8 @@
 
 ### File
 - must give each constants class its own file, named for the type.
+
+---
 
 ## Declaration
 
@@ -29,8 +31,11 @@
 /// <summary>Contains constants.</summary>
 ```
 
+### Construct
+- must declare a `public static class`.
+
 ### Type name
-- must declare `public static class {Name}Constants`, or `{Name}` when the noun already reads as a set.
+- must be named `{Name}Constants`, or `{Name}` when the noun already reads as a set.
 
 ```csharp
 // ✅
@@ -38,6 +43,8 @@ public static class ChannelSlugs
 // ❌ the suffix says nothing the noun does not
 public static class ChannelSlugsConstants
 ```
+
+---
 
 ## Content
 
@@ -78,7 +85,9 @@ public const string PayloadShape = Scheme + "T:{0};S:{1};P:{2};;";
 public static readonly string PayloadShape = WifiFormats.BuildShape();
 ```
 
-## See also
+---
+
+## Neighbours
 
 - [summary](../notation/documentation/summary.md) — the starter table
 - [style](../notation/style/style.md) — lifting a structured literal into a named `const`

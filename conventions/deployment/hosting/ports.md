@@ -3,7 +3,7 @@
 *Last updated: 2026-07-31*
 
 > Single source of truth for allocated dev ports — **check here before picking one** to avoid collisions.
-> Backend rule: a **single `https` profile** binds two ports per service — **HTTPS on the even port, HTTP on the adjacent odd port** (`even`, `even + 1`); TLS terminated upstream in prod — see [backend/launch-profiles.md](../../development/backend/dotnet/mla/platform/launch-profiles.md). Frontend (Vite) = an **even** port (HTTPS via mkcert).
+> Backend rule: a **single `https` profile** binds two ports per service — **HTTPS on the even port, HTTP on the adjacent odd port** (`even`, `even + 1`); TLS terminated upstream in prod — see [backend/launch-profiles.md](../../development/backend/dotnet/mla/platform/startup/launch-profiles.md). Frontend (Vite) = an **even** port (HTTPS via mkcert).
 
 ## Allocated
 

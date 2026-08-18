@@ -1,18 +1,20 @@
 # Summary
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > The `<summary>` block — the mandated first word per type-kind, plus tone. The canonical summary reference.
 
 ## Starter table [REQUIRED]
 
-The first word of every `<summary>` is fixed by what the thing is, and this file no longer holds the roster.
+The first word of every `<summary>` is fixed by what the thing is.
 
 - must take a **type's** starter from its component doc — [lla components](../../components/components.md)
   or [mla components](../../../mla/components/components.md).
 - must take a **member's** starter from [constructs](../../constructs/constructs.md), which fixes them by role.
 - must take a **construct's** starter from the same file, which rules on every C# form.
 - must not reintroduce a table here — a starter belongs with the thing it starts.
+
+---
 
 ## Summary — tightest accurate sentence
 
@@ -33,6 +35,8 @@ The first word of every `<summary>` is fixed by what the thing is, and this file
 - An **indexer** takes the property starter its accessors name; its summary states **what the key selects**
   - ✅ `Gets the routing rule at the given order.` ❌ `Gets the rule.`
   - the key is a value, so it also carries a `<param>` ([params](params.md))
+
+---
 
 ## The falsifiability test [REQUIRED]
 
@@ -64,10 +68,7 @@ The companion rule: **a summary states the referent (what the thing *is*), never
 - **`<remarks>` is exempt** — a directive may describe the present, and is expected to stop being true
   - `Swap in MaxMind GeoLite2 to make country rules match.`
 
-## Extension classes
-
-Moved — see [extensions](../../components/extensions.md).
-
+---
 
 ## Properties on entities + DTOs
 
@@ -89,13 +90,15 @@ Moved — see [extensions](../../components/extensions.md).
 - **Don't restate type-implied facts** — `DateTimeOffset` is already a timestamp, so never "UTC timestamp";
   `IHasXmin` already implies Postgres, so never "Postgres xmin" on the member
 
-## Fields — role decides, not visibility
+---
+
+## Fields
 
 `const` · `static readonly` · `readonly` take **`Holds`**; a field whose state changes takes **`Keeps`**. What
 splits a field that earns a summary from one that does not is the **role it plays**, never the access modifier:
 
 - **a value** — a `const`, a compiled `Regex`, a timeout, a format string, a table name; the summary names the
-  authority that fixes the choice (§ *Constants* below).
+  authority that fixes the choice ([constants](../../components/constants.md)).
 - **state the type mutates** — a cache, an accumulator, a live-execution map; the summary names what it holds and
   the invariant that keeps it correct.
 - **an injected collaborator** — `private readonly IClock _clock`, an `ILogger<T>`, a repository. **No summary** —
@@ -104,10 +107,7 @@ splits a field that earns a summary from one that does not is the **role it play
 The test: **does the declaration leave a "why this?" unanswered?** A value and a state field do; a collaborator's
 type name is the whole answer.
 
-## Constants
-
-Moved — a `Constants` class is an LLA role ([constants](../../components/constants.md)).
-
+---
 
 ## Extract a format string when the literal has structure
 
@@ -118,6 +118,8 @@ A literal with fixed structural parts is a **contract shape**, not an implementa
 - the constant then shows the whole shape in one place, which interpolation scatters across the expression
 - a bare prefix (`$"tel:{phone}"`) stays inline — there is no shape to see
 - keep the segments that appear conditionally as their own constants, so the parent shape stays readable
+
+---
 
 ## Expression body vs block
 

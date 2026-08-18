@@ -32,6 +32,8 @@ A handoff (`handoff.md`) exists for exactly one purpose: **loading a fresh chat 
 
 Distinguish it from the version-track's **transient iteration plan** (`v{X.Y}/{iter-slug}.md`), which is also delete-when-done but serves the *current* chat's own build, not the next chat's start.
 
+---
+
 ## Task form — shared by all tracks
 
 - must write each task **verb-first** — a concrete action, never a noun phrase or an `X → Y` mapping. `Move api.ts to integration/`, not `api.ts → integration`.

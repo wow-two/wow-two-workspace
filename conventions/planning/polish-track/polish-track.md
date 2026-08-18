@@ -11,12 +11,16 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 - must start at `p0.1`; minor-increment `Y`; bump major `X` only at `Y = 100`
 - must treat the latest folder as the active one
 
+---
+
 ## Scope
 
 - must not change observable behavior — same inputs, same outputs, before and after; the test suite is green on both sides
 - may refactor at **any size, in-app** — rename, dedupe, split, move, re-layer, restructure folders / domains, rewrite at parity; the functionality already exists, polish just reshapes it
 - must escalate anything that changes behavior, a bug included, to the backlog — never land it here
 - SDK extraction (moving code out to a shared package) is polish only when **minor** (one small component); a large or interconnected extraction (a whole layer / many coupled components) is a version `Adoption`, not polish
+
+---
 
 ## Structure
 
@@ -25,6 +29,8 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 - must follow the shared **Task form** — verb-first, fewest words ([planning-conventions.md](../planning-conventions.md))
 - must not add a per-step status, ledger, or coverage map — git is the record
 - must carry a **one-word** `**Status:** {Planned | In-Progress | Done}` and nothing more — no dates, no per-iteration summary; that context belongs in a handoff doc (write one when the chat's context fills), not the plan
+
+---
 
 ## Lifecycle
 
@@ -35,6 +41,8 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 - must **verify completion with the developer** before marking an iteration / task done — Claude never self-declares it complete
 - may **drop a completed iteration's tasks + steps** once verified — keep the bare `## Iteration N — Name` heading (the arc); git holds the detail. Keeps the doc lean
 
+---
+
 ## Rules
 
 - must run opportunistically — no cadence, no timebox; batch any number of files, or none for a long stretch
@@ -42,6 +50,8 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 - must not keep a `## Log` — git is the history
 - must keep every iteration / section heading a **bare name** — just the focus noun; no `(done)` / `(final)` / parenthetical / status label; the `[ ]` / `[x]` checkboxes carry done-state
 - must not frame or report the work as *closing* / *finalizing* the track — report per iteration (*did X, Y; Z remaining*); the track is open-ended (add iterations freely), never pushed toward closure
+
+---
 
 ## Template — copy below the line
 
@@ -53,6 +63,8 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
 
 **Status:** Planned
 
+---
+
 ## Iteration 1 — Content-type registry
 
 - [ ] Slim the registry
@@ -60,6 +72,8 @@ A per-iteration cleanup doc — behavior-invariant changes to existing code, gro
   - [ ] split the monolithic type list per file
 - [ ] Relocate the wire models
   - [ ] `CreateCodeRequest` / `UpdateCodeRequest` → `integration/codes/models`
+
+---
 
 ## Iteration 2 — Design view
 

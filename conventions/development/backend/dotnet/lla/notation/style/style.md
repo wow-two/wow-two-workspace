@@ -44,6 +44,8 @@ Neither a construct nor a statement — a directive declares no type and runs no
 | `#pragma warning` | use with care | must name the warning and carry a `//` saying why |
 | `#line` · `#error` · `#warning` | use with care | generator output and build-time assertions only |
 
+---
+
 ## The signature
 - **More than 2 parameters** — multiline (one parameter per line)
 - **2 or fewer parameters** — single line
@@ -71,6 +73,8 @@ var rows = await conn.QueryAsync<DimensionRow>(
 var rows = await conn.QueryAsync<DimensionRow>(new CommandDefinition(sql, parameters, cancellationToken: ct));
 ```
 
+---
+
 ## The body
 
 ### Shape
@@ -81,7 +85,7 @@ and the first `no` blocks the expression body — a component that grants `=>` s
 1. must be a single expression with no statement body.
 2. must fit one line inside the 120-character budget.
 3. must hold no intermediate worth naming — an intermediate you would want to breakpoint fails here.
-4. must not branch, and must not chain more than one call.
+4. must not branch — a conditional is a step, and a step wants a name; a fluent chain is one expression.
 5. must not be a construction — `new Foo(a, b)` is a body, however short, because a constructed shape gains members.
 6. must belong to a component whose doc grants `=>` — the grant is per component, and the default is a block body.
 
@@ -123,13 +127,34 @@ var sql = $"""
     """;
 ```
 
+---
+
+## Chains
+
+- must not cap a chain's length — a chain is one expression, however many calls it carries.
+- must keep a chain on one line while it fits the 120-character budget.
+- must break an overflowing chain onto one call per line, each line opening with the dot.
+- must not split a chain that already fits — a break earns its place only by overflow.
+
+```csharp
+// ✅ fits, so it stays on one line
+RuleFor(x => x.Ssid).NotEmpty().MaximumLength(32);
+// ✅ overflows, so every call takes a line
+RuleFor(x => x.Password)
+    .NotEmpty()
+    .MinimumLength(8)
+    .WithMessage("A network password is at least 8 characters.");
+```
+
+---
+
 ## Width
 **120 characters, hard.** Rider and ReSharper draw the margin there by default, so the guide is already on
 screen; the limit keeps two files legible side by side on a 1920 display.
 
 - Applies to every line — code, XML doc comments, string literals in source.
 - **Doc comments break the limit most often, and this limit is the *last* gate they pass.**
-  - run `documentation.md` § *Three gates* first — a block wrapped without that pass hides the defect.
+  - run its field's own test first ([documentation](../documentation/documentation.md)) — a block wrapped without that pass hides the defect.
 - Only a block that survives both earlier gates and still exceeds 120 goes multi-line, tags on their own lines:
 
 ```csharp
@@ -175,7 +200,9 @@ var sql =
      """;
 ```
 
-## See also
+---
+
+## Neighbours
 
 - [constructs](../../constructs/constructs.md) — the constructs and statements these rules lay out
 - [components](../../components/components.md) — the components that grant an expression body

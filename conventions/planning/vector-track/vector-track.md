@@ -13,6 +13,8 @@ A per-vector build doc — one durable subject lane, the stage ladder it climbs,
 - must not use it on a single-subsystem product — one lane is a `rough` / `version` track with extra ceremony
 - must not use it to replace `rough` / `version` / `polish` — a vector runs one of them internally
 
+---
+
 ## Concurrency model
 
 | Level | Shape | What it needs |
@@ -23,6 +25,8 @@ A per-vector build doc — one durable subject lane, the stage ladder it climbs,
 
 - must keep a vector's own progress linear — the chat's value is that its back-and-forth reads as one thread
 - must not parallelise stages inside a vector to go faster — that rebuilds the mixed-subject chat this track prevents
+
+---
 
 ## The cut
 
@@ -37,6 +41,8 @@ A per-vector build doc — one durable subject lane, the stage ladder it climbs,
 - must not let a chat create `{vector}/{vector}.md` for an unlisted vector — the folder existing is what makes the lane real
 - must test a proposed cut against its seams: **no seam may span more than 2 vectors** — a 3-lane seam means the cut runs through the middle of one subject
 
+---
+
 ## Scope
 
 - must own an exclusive file-glob set, declared `**Owns:**` — no file belongs to two vectors
@@ -46,12 +52,16 @@ A per-vector build doc — one durable subject lane, the stage ladder it climbs,
 - must not open a vector for a one-off whole-tree job — a port, a rename, a framework bump runs single-lane first
 - must leave docs that plan nothing off the board — research, marketing and pitch material are not engineering lanes
 
+---
+
 ## Location & naming
 
 - must place each vector at `engineering/planning/vector-track/{vector}/{vector}.md` — one folder per vector
 - must keep the lead doc at `engineering/planning/vector-track/vector-track.md` — the table, the release cuts, the seams
 - must name a vector for its **subject** — lowercase, one word where possible: `map`, `layout`, `simulation`, `platform`
 - must not version a vector — a vector is durable; versions live inside it
+
+---
 
 ## Archetypes
 
@@ -69,6 +79,8 @@ A vector's stages come from its archetype, never from the instance. Three ladder
 - must not carry a stage the vector will never reach
 - must read `system`'s `render` as **the vertical's own output layers**, never the host surface's primitives — the surface owns the canvas, the icon set and the zoom logic, and publishes them as an API
 
+---
+
 ## Grain
 
 | Track | An iteration is | A task is |
@@ -84,6 +96,8 @@ A vector's stages come from its archetype, never from the instance. Three ladder
 - must not write a task into a lane doc **in place of doing it**, unless a named blocker stops it — writing it down reads as progress and the item is then found only by whoever reopens the doc
 - must follow the shared **Task form** — verb-first, one action per bullet ([planning-conventions.md](../planning-conventions.md))
 
+---
+
 ## Seams
 
 A seam is the only way two vectors touch.
@@ -95,6 +109,8 @@ A seam is the only way two vectors touch.
 - must resolve a file two vectors both want by **moving it into one `Owns:` set** — never by coordinating access
 - must re-cut the vectors when a seam reaches 3 lanes — see § *The cut*
 
+---
+
 ## Chats & agents
 
 - must run **one chat per vector** — its questions share a subject, so the developer answers from one loaded context
@@ -103,6 +119,8 @@ A seam is the only way two vectors touch.
 - must have each agent report in three lines — **changed · green · needs-decision**
 - must queue a `needs-decision` to the vector doc, never answer it mid-fan-out
 
+---
+
 ## Git
 
 The index is a single shared object. Every chat in the tree writes to the same one, so two lanes staging at once produce a commit carrying both.
@@ -110,6 +128,8 @@ The index is a single shared object. Every chat in the tree writes to the same o
 - must stage a single lane's files, only when the developer asks — paths from that vector's `Owns:` set and nothing else
 - must hand the commit and the push to the developer ([git.md](../../development/repo/version-control/git.md))
 - must leave an unexpected change alone and report it — it is another lane's in-flight work
+
+---
 
 ## Build
 
@@ -135,6 +155,8 @@ trap 'rmdir .vector/build.lock' EXIT
 - must put the token at `.vector/` in the repo root, gitignored — never inside the tracked `vector-track/`
 - may run a lane-local check without the token — `tsc --noEmit`, a single project, the lane's own tests
 
+---
+
 ## Shared state
 
 | Shared thing | Rule |
@@ -145,6 +167,8 @@ trap 'rmdir .vector/build.lock' EXIT
 | Dev server ports | one lane runs the app; the others read the running instance |
 | Dependency bumps | `platform`'s call, announced on the seam before landing |
 
+---
+
 ## Structure
 
 - must group `## Iteration {N} — {rung}` → `- [ ]` **task**, one line, no nesting; `{rung}` is the ladder word
@@ -153,6 +177,8 @@ trap 'rmdir .vector/build.lock' EXIT
 - must carry a **one-word** `**Status:** {Planned | In-Progress | Done}` — no dates, no per-iteration summary
 - may append a `> {note}` under an iteration for a seam dependency or a lane marker, never for rationale
 - must not add a per-task status, ledger, or coverage map — git is the record
+
+---
 
 ## Lifecycle
 
@@ -163,6 +189,8 @@ trap 'rmdir .vector/build.lock' EXIT
 - may **drop a completed iteration's tasks**, keeping the bare heading — git holds the detail
 - must retire a vector by marking it `Done` and leaving the doc — the `Owns:` set is the record of who held those files
 
+---
+
 ## Releases
 
 A release is a **cut line across vectors**, not a vector's own version.
@@ -170,6 +198,8 @@ A release is a **cut line across vectors**, not a vector's own version.
 - must name each release in the lead doc as `{version} = {vector}@{rung} · {vector}@{rung} · …`
 - must cut a release only on rungs, never mid-rung
 - must not hold every vector to the cut — a vector past its named rung keeps going
+
+---
 
 ## Lead doc
 
@@ -179,6 +209,8 @@ A release is a **cut line across vectors**, not a vector's own version.
 - must not carry diagnosis, defect narrative or demo notes — those live in the catalogue and the vector docs
 - must not keep a `## Log` — git is the history
 - must write a handoff doc when a chat's context fills — the plan never carries session state
+
+---
 
 ## Template — lead doc
 
@@ -206,6 +238,8 @@ Convention: [`vector-track.md`](vector-track.md).
 
 - `v0.3` = `map@perf` · `simulation@serve`
 ```
+
+---
 
 ## Template — vector doc
 

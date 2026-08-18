@@ -14,6 +14,8 @@
 ### File
 - must sit with its type, never split into a partial.
 
+---
+
 ## Declaration
 
 ### Type doc
@@ -21,6 +23,8 @@
 
 ### Type name
 - must be `this[…]`; C# fixes the name, so nothing is chosen here.
+
+---
 
 ## Content
 
@@ -53,7 +57,9 @@ public CodeRule? this[int order] => _rules.GetValueOrDefault(order);
 - may use `=>` for the accessor that returns the element — a keyed lookup returns, and a lookup does not grow
   ([style](../notation/style/style.md) § *The body*).
 
-## See also
+---
+
+## Neighbours
 
 - [components](components.md) — the self-sufficiency gate
 - [summary](../notation/documentation/summary.md) — accessor starters

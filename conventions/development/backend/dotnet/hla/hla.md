@@ -11,6 +11,8 @@
 - **`hla/` when we own both ends** — a gRPC contract, a cross-service event schema, a shared quota, the gateway's routing rules.
 - **`mla/` when we own one end** — a third party is *adapted*, never contracted. Its client, broker and observed limits live in `mla/domains/`.
 
+---
+
 ## Empty by design
 
 Nothing here yet, and the folder is named ahead of its contents on purpose: without it, the first gateway or gRPC rule lands in

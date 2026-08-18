@@ -13,6 +13,8 @@
 - must document every parameter of a constructor taking values, and of a mixed one.
 - `<param>` is exempt from *Mandated comment* ([documentation](documentation.md) § *Comment anti-patterns*).
 
+---
+
 ## What it carries
 
 A method is one process. A `<param>` says what the parameter **is to that process**.

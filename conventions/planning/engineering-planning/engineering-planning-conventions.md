@@ -16,11 +16,15 @@ here. Shape proven on Haven (10 versions shipped).
 - **Log** — dated journal of version scope/close events and notable pivots (git holds the rest).
 - Repos may add **reference sections** (component tracker, infra/endpoints, troubleshooting) as useful — keep them below the four above.
 
+---
+
 ## Rules
 
 - **Backlog is ordered, not future-version-tagged.** Don't pin items to specific future versions (v1.2, v1.5…) — that predicts next-next versions. Order by pull priority; the next version pulls from the top.
 - **The Versions table grows on close.** A planned version is one row (theme + ⏳); fill Deliverables and flip to ✅ when its iterations are done.
 - **Durable only.** Per-version task detail lives in version docs; how-to lives in architecture docs.
+
+---
 
 ## Template — copy below the line
 
@@ -29,6 +33,8 @@ here. Shape proven on Haven (10 versions shipped).
 # {Brand} — Engineering Planning
 
 *Last updated: {YYYY-MM-DD}*
+
+---
 
 ## Versions
 
@@ -40,11 +46,15 @@ capability; post-MVP minor = feature batch, major = milestone. Timebox: ≤1 wee
 | v0.1 | {theme} | {what shipped} | ✅ |
 | v1.0 | {theme} | — | ⏳ |
 
+---
+
 ## Decisions
 
 | Decision | Rationale |
 |---|---|
 | {decision} | {why} |
+
+---
 
 ## Backlog
 
@@ -56,6 +66,8 @@ Type: `feature` · `issue` · `check` · `idea`. Strike-through + ✅ when done 
 | Item | Type | Notes |
 |---|---|---|
 | {item} | feature | {note} |
+
+---
 
 ## Log
 

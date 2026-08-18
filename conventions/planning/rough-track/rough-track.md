@@ -13,12 +13,16 @@ Named for the construction rough-in: every system run and working, nothing cover
 - must not open a version track while a rough track is active — there is nothing stable to version yet
 - must not use it for incremental work on a settled product — that is `version-track.md`
 
+---
+
 ## Location & naming
 
 - must place each version at `engineering/planning/rough-track/r{X.Y}/r{X.Y}.md` — one folder per version, file named after its folder
 - must keep the lead doc `engineering/planning/rough-track/rough-track.md` — the active version + a link to this convention
 - must start at `r0.1`; minor-increment `Y`; bump major `X` only at `Y = 100`
 - must treat the latest folder as the active one
+
+---
 
 ## Scope
 
@@ -27,6 +31,8 @@ Named for the construction rough-in: every system run and working, nothing cover
 - must not refactor for its own sake — reshaping existing code is `polish-track.md`
 - must not extract to an SDK — extraction is decided at the seam, after the track closes
 - must not decompose into user-facing features — that is the version track's grain
+
+---
 
 ## Grain
 
@@ -45,6 +51,8 @@ The three tracks differ in grain. This is the whole distinction:
 - must keep tasks flat, 2–5 per iteration
 - must follow the shared **Task form** — verb-first, one action per bullet, fewest words ([planning-conventions.md](../planning-conventions.md))
 
+---
+
 ## Structure
 
 - must group `## Iteration {N} — {name}` → `- [ ]` **task**, one line, no nesting
@@ -52,6 +60,8 @@ The three tracks differ in grain. This is the whole distinction:
 - must carry a **one-word** `**Status:** {Planned | In-Progress | Done}` and nothing more — no dates, no per-iteration summary
 - may append a `> {note}` under an iteration for a dependency or a lane marker, never for rationale
 - must not add a per-task status, ledger, or coverage map — git is the record
+
+---
 
 ## Lifecycle
 
@@ -65,6 +75,8 @@ The three tracks differ in grain. This is the whole distinction:
 - must not advance to the next version (`r0.2`) until the current is `Done` **and** the developer says to proceed
 - may **drop a completed iteration's tasks** once the iteration is done — keep the bare `## Iteration N — Name` heading; git holds the detail
 
+---
+
 ## Rules
 
 - must order iterations by **dependency**, not by value — the ordering is what gets cut when the clock runs out
@@ -74,6 +86,8 @@ The three tracks differ in grain. This is the whole distinction:
 - must not keep a `## Log` — git is the history
 - must not frame the work as *closing* or *finalizing* — report per task (*built X, Y; Z remaining*)
 - must write a handoff doc when the chat's context fills — the plan never carries session state
+
+---
 
 ## Template — copy below the line
 
@@ -85,11 +99,15 @@ The three tracks differ in grain. This is the whole distinction:
 
 **Status:** Planned
 
+---
+
 ## Iteration 1 — Layer registry
 
 - [ ] Emit a manifest carrying delivery kind, style, provenance and zoom bands per layer.
 - [ ] Switch the client loader on delivery kind.
 - [ ] Drive level of detail from one aggregation rule rather than per-layer code.
+
+---
 
 ## Iteration 2 — Coverage labels
 

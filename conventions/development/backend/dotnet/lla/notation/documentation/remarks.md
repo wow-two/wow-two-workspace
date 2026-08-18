@@ -13,6 +13,26 @@ having something the summary cannot hold, and most types do not.
 - must not add a `<remarks>` because a component-kind seems to warrant one — a `Service` or `Repository` with a
   sufficient summary carries none.
 - must omit it entirely when the summary already says enough.
+- must not carry one on a test method — the name states the case, and a test has no consumer to direct.
+- must not carry one on a `const` or `static readonly` — a value has no behavior to direct.
+- must leave a value's whole doc to its `<summary>`: not how a caller uses it, not what it means downstream.
+- must not carry one where no `<summary>` exists — a `<remarks>` adds to a description, it never replaces one.
+- may sit beside `<inheritdoc/>`, which supplies the description from the base.
+
+### Overrides
+
+- must omit it on a purely declarative override — a body that only declares makes `<inheritdoc />` the whole doc.
+  - `Configure` on an EF configuration, a validator's rule constructor, a mapper's transform.
+  - `ExecuteAsync` on a hosted service — the work it starts lives in the services it calls.
+- must carry it beside `<inheritdoc />` when the override adds a fact the caller relies on — a narrowed contract,
+  a side effect, or a failure mode the base does not have.
+
+### Computed members
+
+- must carry it on a property or field whose evaluation calls a method or reaches I/O — the access reads as free.
+- must omit it on a pure expression over the type's own fields — `FullName => $"{First} {Last}"`.
+
+---
 
 ## What it carries
 
@@ -36,6 +56,8 @@ Everything else is cut:
 
 `<remarks>` is exempt from the falsifiability test ([summary](summary.md) § *The falsifiability test*) — a directive
 may describe the present.
+
+---
 
 ## Frames — the shapes that recur
 
@@ -68,23 +90,31 @@ the wrong reading the sentence displaces.
 - must not aim a `<remarks>` at the next editor — IntelliSense ships it to every consumer.
   - a maintainer fact goes in a `//` ([documentation](documentation.md) § *Where a fact belongs*).
 
+---
+
 ## Multi-line — the same three gates [REQUIRED]
 
 A `<remarks>` earns extra lines the way a `<summary>` does: it clears **convention → compaction → length**
-([documentation](documentation.md) § *What it carries*). Readability is not a ground, and a numbered
+([documentation](documentation.md) § *What it carries*). Readability is not a ground, and a multi-step
 flow is not a licence — it must survive gates 1 and 2 before length is even asked.
 
 - must not wrap a block that has not cleared gates 1 and 2 — a multi-line `<remarks>` is evidence they were skipped.
-- must cap at **5 lines, tags included** — no exception, numbered flow or otherwise.
+- must not open a line with a severity glyph — `⚠`, `❗`, `NOTE:`; a `<remarks>` is already the consumer directive.
+- must state a known defect the caller works around in `<remarks>`, and one only the maintainer acts on in a `//`.
+- must cap at **5 lines, tags included** — no exception, flow or otherwise.
+- must carry a multi-line block as **bullets**, one claim per line — never numbered steps, never running sentences.
+- must compact each bullet the way a convention bullet is compacted — drop the linker, drop a subject already given.
+- must not use `<list>` markup — three tags per item leaves no room under a 5-line cap.
+- may use `<para>` only when the block is genuinely two paragraphs of sentences, each as compact as a bullet.
 - must move a flow needing more to the module's `.standard.md` and reference it.
 - must cut any step the caller cannot act on — state what a consumer must know, never the itinerary.
 
 ```csharp
-// ✅ 5 lines, tags included — the "Seed flow:" preamble and the internal steps cut at gate 1
+// ✅ 5 lines, tags included — bullets, one claim each, the "Seed flow:" preamble cut at gate 1
 /// <summary>Provides channel and pipeline seeding on application startup.</summary>
 /// <remarks>
-///   1. Read channels from the seed file
-///   2. Upsert channels and sources via EF Core
-///   3. Insert missing pipeline rows with code defaults
+///   - reads channels from the seed file
+///   - upserts channels and their sources
+///   - inserts missing pipeline rows with code defaults
 /// </remarks>
 ```

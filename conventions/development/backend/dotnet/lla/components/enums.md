@@ -14,6 +14,8 @@
 ### File
 - must give each enum its own file, named for the type.
 
+---
+
 ## Declaration
 
 ### Type doc
@@ -33,6 +35,8 @@
 ### Type name
 - must be singular — `ChannelType`, never `ChannelTypes`.
 - must carry the domain noun and nothing else — `PipelineRunStatus`, never `PipelineRunStatusEnum`.
+
+---
 
 ## Content
 
@@ -75,7 +79,9 @@ None,
 Medium,
 ```
 
-## See also
+---
+
+## Neighbours
 
 - [summary](../notation/documentation/summary.md) — the starter table
-- [database](../../mla/domains/persistence/database.md) — how a stored enum maps to a column
+- [database](../../mla/domains/persistence/schema/database.md) — how a stored enum maps to a column

@@ -11,6 +11,8 @@
 A **construct** declares a type. A **statement** or **expression** runs inside one. Both are layer 1, so both sit in
 this folder; the split is only whether the form produces a declaration or an effect.
 
+---
+
 ## The forms
 
 Exhaustive through C# 13 / .NET 10. A form we have never written is still listed, with a verdict.
@@ -134,7 +136,9 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 - must promote a structural interpolated string to a `const` — interpolation is for a message.
 - must gate `lock` behind a `private readonly` object, never `this` and never a public field.
 
-## See also
+---
+
+## Neighbours
 
 - [constructs](constructs.md) — the forms that declare a type
 - [style](../notation/style/style.md) — how the text around these is laid out

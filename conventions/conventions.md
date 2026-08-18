@@ -12,6 +12,8 @@
 2. Open that ONE file (leaf files live in the area sub-folders).
 3. A repo-level rule (`workbench/{repo}/CLAUDE.md` or `.claude/rules/`) **overrides** a convention for that repo.
 
+---
+
 ## Authoring a convention
 
 Every convention doc follows this shape:
@@ -56,6 +58,12 @@ Rules:
   rationale / analysis doc and link it.
 - **Density** — super-compact bullets, imperatives, one fact per line. No prose paragraph > 2 lines. Code fence for multi-line only; backticks for every
   identifier.
+- **A convention states the rule, never its history** — no "this used to be X", no "renamed from Y", no section
+  justifying a change against what came before. A change that is right needs no defence, and a reader looking up a rule
+  pays for the story on every read. Git carries the history; the doc carries the rule.
+- **A convention is rules, not description** — the doc states what a reader must do, and a sentence that only describes
+  the world belongs in the description blockquote or in an analysis doc. Reach for a bullet before a paragraph, a table
+  before a bullet list, and an RFC keyword before a verb phrase.
 - **Directive rules** — write each rule as `- must {action}` / `- must not {action}` / `- may {action}`: one atomic rule per bullet, the exact action, no rationale unless it changes what's done. Turn a description ("the latest folder is active") into a directive ("must treat the latest folder as active").
 - **Plain-noun headers** — section headers are flat nouns (`Scope`, `Invariant`, `Naming`, `Lifecycle`), never narrative phrases (`The wall`).
 - **Hard wrap** — wrap prose at **150 cols** (the editor's setting).
@@ -75,8 +83,11 @@ Rules:
 - **One example per doc-comment section, placed last** — it sits after the final field sub-heading so it covers every field the section declared, not only the first.
 - **A table degrades to bullets** — if any row would exceed 120 characters, the table becomes bullet points. A wrapped cell is unreadable, and the wrap is the signal that the rows carry sentences rather than fields.
 - **No files beside folders** — once a folder holds a sub-folder, every other doc in it gets its own folder too. The folder's own lead doc (`{folder}.md`) is the single exception.
+- **A folder earns a lead doc at two docs** — `{folder}.md` says what the folder covers and indexes its contents. A folder holding exactly one doc needs none: that doc is its own lead, and a second file announcing the first is padding.
 - **Bullet case** — a bullet is a **lowercase fragment**, not a sentence (capitalize only an identifier / proper noun that opens it). Terse `key - detail` fragments; `controllers.md` is the reference.
 - **Order is normative** — list sections and their bullets in the **order they're applied**; readers + adopters follow that order unless a special case is called out (e.g. the attribute order, the doc-block order in `controllers.md`).
+
+---
 
 ## Domains
 
@@ -111,17 +122,17 @@ Backend rules live under the stack that owns them (`backend/dotnet/`), and each 
 
 | Scope | Reaches | Docs |
 |---|---|---|
-| `lla/` | one symbol | `naming` · `documentation/` (6 blocks) · `members` · `code-organization` · `models` · `idioms` · `banned-constructs` |
-| `mla/components/` | a kind of type you declare | `components` · `service` · `client` · `broker` · `repository` · `controller` · `request-model` · `response-model` · `entity` · `enum` · `settings` · `result` · `validator` |
-| `mla/layers/` | where a type lives | `layers` · `domain-structuring` · `testing` · `test-databases` |
+| `lla/` | one symbol | `constructs/` · `components/` (service-free roles) · `notation/` (naming · documentation · style) |
+| `mla/components/` | a kind of type you declare | `components` · `data/` · `behavior/` · `patterns/` |
+| `mla/architecture/` | where a type lives | `architecture` · `clean/` (`clean` · `domain-structuring` · `testing` · `test-databases`) |
 | `mla/platform/` | how the service builds, starts and answers | `build/` · `host-configuration` · `startup-defaults` · `launch-profiles` · `time` · `serialization` · `problem-details` · `api-context-building` · `known-endpoints` |
 | `mla/domains/` | a concrete technology or use case | `identity/` · `messaging/` · `persistence/` (+ `migrations/`) |
 | `hla/` | between our own services | gateway · gRPC contracts · cross-service events · quotas — **empty by design** |
 
-**Routing.** Kind of type → `mla/components/{kind}.md` · any symbol → `lla/` · where it lives → `mla/layers/` ·
+**Routing.** Kind of type → `mla/components/{kind}.md` · any symbol → `lla/` · where it lives → `mla/architecture/` ·
 build and start → `mla/platform/` · a technology or use case → `mla/domains/{domain}/` · both ends ours → `hla/`.
 
-### frontend/ — React / TS code style · [frontend-conventions.md](development/frontend/frontend-conventions.md)
+### frontend/ — frontend conventions (cut by scope) · [the frontend index](development/frontend/frontend-conventions.md)
 
 | Group | File |
 |---|---|
@@ -141,11 +152,15 @@ build and start → `mla/platform/` · a technology or use case → `mla/domains
 | Vector-track docs — subject lanes, one chat each: archetype ladders, seams, git + build contention, release cuts + template | [planning/vector-track/vector-track.md](planning/vector-track/vector-track.md) |
 | Engineering planning — repo roadmap + backlog | [planning/engineering-planning/engineering-planning-conventions.md](planning/engineering-planning/engineering-planning-conventions.md) |
 
+---
+
 ## agentic-workflow — index: [agentic-workflow/agentic-workflow.md](agentic-workflow/agentic-workflow.md)
 
 | Need | File |
 |---|---|
 | Parallel chats on one tree · assume-intentional / no-revert · lane discipline · scope containment · commit discipline | [agentic-workflow/agentic-workflow.md](agentic-workflow/agentic-workflow.md) |
+
+---
 
 ## marketing — index: [marketing/marketing-conventions.md](marketing/marketing-conventions.md)
 
@@ -158,11 +173,15 @@ build and start → `mla/platform/` · a technology or use case → `mla/domains
 | Content formats — short-form video + content library (viral · sell · educate) | [marketing/channels/content-formats.md](marketing/channels/content-formats.md) |
 | Meme templates — reusable meme/cultural/trending-audio shells (Nobody's-gonna-know · two-button · expanding-brain · POV …) | [marketing/channels/meme-templates.md](marketing/channels/meme-templates.md) |
 
+---
+
 ## design — index: [design/design-conventions.md](design/design-conventions.md)
 
 | Need | File |
 |---|---|
 | Design exploration — variant-driven (a few in-context options → pick → lock → cascade → spec) · other modes · mode-selection · per-app spec shape | [design/research/design-exploration.md](design/research/design-exploration.md) |
+
+---
 
 ## deployment — index: [deployment/deployment-conventions.md](deployment/deployment-conventions.md)
 
@@ -171,9 +190,13 @@ build and start → `mla/platform/` · a technology or use case → `mla/domains
 | Single-host serving (product / venture) — SPA baked into the backend `wwwroot` (vite `outDir` + static-serve + `BuildSpa` target + dev proxy) · CORS posture | [deployment/hosting/single-host-serving.md](deployment/hosting/single-host-serving.md) |
 | Port ledger — allocated dev ports | [deployment/hosting/ports.md](deployment/hosting/ports.md) |
 
+---
+
 ## Scaffolding
 
 - New conformant repo → skill **`create-repo`**. Template repo: `workbench/wow-two-sdk-beta/wow-two-sdk-beta.product-template/`.
+
+---
 
 ## Precedence
 

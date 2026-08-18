@@ -4,13 +4,15 @@
 
 > The `<returns>` block — required on every method that returns a value.
 
-## Required, unless there is nothing to return [REQUIRED]
+## Scope [REQUIRED]
 
 - must carry `<returns>` on every method whose return type is not `void`, `Task`, or `ValueTask`.
 - must exempt exactly those three — `Task` alone is the absence of a value.
 - must carry it on `Task<T>` / `ValueTask<T>` — the `T` is the value, the wrapper a visible mechanism.
 - **consistency is the reason** ([params](params.md) § *Every parameter, every time*).
   - a per-method judgment leaves a reader unable to tell an omission from a decision.
+
+---
 
 ## What it carries
 
@@ -28,7 +30,9 @@
 /// <returns>Returns the code.</returns>
 ```
 
-## See also
+---
+
+## Neighbours
 
 - [params](params.md) — the sibling rule for parameters
 - [summary](summary.md) — the starter table the summary answers to

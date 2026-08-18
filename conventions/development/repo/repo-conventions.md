@@ -16,11 +16,15 @@ Repo shape by archetype — product / venture (both stacks, one repo) vs SDK / l
 | [structure/repo-structure.md](structure/repo-structure.md) | Product / venture — top-level `product/` + `engineering/`, code under `engineering/codebase/{slug}.{backend,frontend}-services`, naming, folder-docs (no README below root), archetypes, ecosystem naming, image-publish contract (§13), repo audit |
 | [structure/sdk-structure.md](structure/sdk-structure.md) | SDK / library — `engineering/` + npm package nested under `engineering/codebase/{slug}/`, `src/` source-only + `tests/{unit,stories}`, config repoint, dist-only publish |
 
+---
+
 ## Version control
 
 | File | Covers |
 |---|---|
 | [version-control/git.md](version-control/git.md) | Commit-message format — `{type}: {past-tense verb} {subject}`, one cohesive change per commit — **+ the agent⇄human commit protocol** (agent stages + commits; the human pushes, hook-enforced) |
+
+---
 
 ## Tech stack
 

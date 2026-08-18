@@ -87,7 +87,7 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 | access modifiers | who may reach the declaration | — | `use` |
 | `unsafe` member · pointer type | a member permitted to use pointers | — | `banned` |
 
-- must declare a data carrier as a `sealed record` with body properties, never positional ([records.md](constructs.md)).
+- must declare a data carrier as a `sealed record` with body properties, never positional (§ *Data components*).
 - must declare behavior as a `sealed class` — value equality would be wrong on a type whose identity is what it does.
 - must give a `static class` a `Constants` or `Extensions` role only
   ([constants](../components/constants.md) · [extensions](../components/extensions.md)).
@@ -95,7 +95,9 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 - must prefer `Func<>` / `Action<>` over a named `delegate` unless the name earns itself.
 - must put one `enum` per file; the domain-mapping rules are MLA ([enums](../components/enums.md)).
 - must let the role pick an `interface` doc starter ([summary](../notation/documentation/summary.md)).
-- must clear the five gates in [members.md](constructs.md) before an expression-bodied member.
+- must clear the six gates in [style](../notation/style/style.md) § *The body* before an expression-bodied member.
+
+---
 
 ## Banned constructs
 
@@ -112,6 +114,8 @@ A ban here is about the **construct**, whatever role holds it. A ban that depend
 - **`dynamic`** — reach for generics or polymorphism; the compiler stops checking and the failure moves to runtime.
 - **`using static`** — reach for the type name at the call site ([naming](../notation/naming/naming.md) § *Banned*).
 
+---
+
 ## Data components
 
 A construct carrying **data** answers what a value *is*. The role fixes the starter, and the shape follows from it.
@@ -120,7 +124,7 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 
 #### Folder
 - must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
-  [domain structuring](../../mla/layers/domain-structuring.md) states which layer it may appear in.
+  [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File
 - must give the type its own file, named for the type: `Channel.cs`, `IEntity.cs`, `ChannelGetAllQuery.cs`.
@@ -172,6 +176,8 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 - must use `record struct` or `readonly record struct` only for a measured allocation reason.
 - may carry behaviour that reads its own values; a flow means it stopped being data.
 
+---
+
 ## Behavior components
 
 A construct carrying **behavior** answers what a type *does*. It has no value identity.
@@ -180,7 +186,7 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 
 #### Folder
 - must sit in the folder its component doc names — [components](../components/components.md) states the folder, and
-  [domain structuring](../../mla/layers/domain-structuring.md) states which layer it may appear in.
+  [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File
 - must give the type its own file, named for the type: `CodesController.cs`, `StripeBillingBroker.cs`.
@@ -208,6 +214,8 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must start each method with its own verb — `Adds` · `Gets` · `Creates` · `Sends` · `Maps` · `Builds`.
 - must start a property with **Gets**, **Gets or sets** or **Sets**, matching its accessors.
 - must start a collaborator field with nothing — an injected field carries no doc.
+- must start a `Lazy<T>` field with **Holds** — the value is written once, so it does not move.
+- must name the deferral on a `Lazy<T>` field — the first read pays a cost the signature hides.
 
 #### [Params](../notation/documentation/params.md)
 - must carry a `<param>` for every parameter of a documented method.
@@ -223,11 +231,19 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 
 // ❌ a partial parameter set, which is the failure params.md names
 /// <summary>Sends the OTP to the resolved Telegram chat.</summary>
+
+// ✅ Holds, plus the deferral the type signature hides
+/// <summary>Holds the compiled route table, built on first read.</summary>
+private readonly Lazy<RouteTable> routes;
+// ❌ Keeps claims the value moves, and the deferral goes unnamed
+/// <summary>Keeps the compiled route table.</summary>
 ```
 
 ### Members
 - must take collaborators through the constructor, never a service locator.
 - must hold no mutable state unless the role is a `Tracker`.
+- must reach for `Lazy<T>` only when the value is expensive and some paths never read it —
+  a scoped or singleton lifetime already defers construction to the first resolve.
 - must separate member groups with a `// ── Section ──` divider once the type passes 60 lines.
 - may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
 
@@ -236,8 +252,9 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must use `static class` only for a `Constants` or `Extensions` role.
 - must not use `struct` — a behaviour type copied by value is a bug waiting for a caller.
 
-## See also
+---
 
-- [shape.md](constructs.md) — the lead, and the rule that form is chosen never defaulted
+## Neighbours
+
 - [components](../../mla/components/components.md) — the roles these constructs carry
 - [statements](statements.md) — the forms that run inside a declaration

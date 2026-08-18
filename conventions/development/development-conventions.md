@@ -9,7 +9,7 @@
 |---|---|
 | [repo/](repo/repo-conventions.md) | Repo shape — layout & naming ([repo-structure](repo/structure/repo-structure.md)) · version control · tech stack |
 | [backend/](backend/dotnet/dotnet-conventions.md) | .NET code style — documentation, code-org, entities, enums, services, architecture, db, API, launch-profiles |
-| [frontend/](frontend/frontend-conventions.md) | React / TS code style — naming, components, hooks, forms, state/data, styling, project-structure |
+| [frontend/](frontend/frontend-conventions.md) | TypeScript conventions, cut by scope — `lla/` one symbol · `mla/` one app · `hla/` between apps |
 
 **Cross-area:** [dev-cycle.md](dev-cycle.md) — the 2-cycle app↔SDK maturation rhythm: implement a version in-app → extract stable blocks to the SDK + conventions → adopt across the active apps.
 

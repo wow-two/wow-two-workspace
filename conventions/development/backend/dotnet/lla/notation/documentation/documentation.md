@@ -22,6 +22,8 @@
 /// </summary>
 ```
 
+---
+
 ## Per-block conventions
 
 Each XML doc block has its own rules — start here:
@@ -35,6 +37,8 @@ Each XML doc block has its own rules — start here:
 - `//` inline → [inline](inline.md) — the maintainer-facing comment inside a body
 - `<exception>` → [exceptions](exceptions.md) — only exceptions the method throws itself
 
+---
+
 ## Where a fact belongs [REQUIRED]
 
 Most bad doc comments are true sentences filed in the wrong place. Route by **audience**, and the tag follows.
@@ -47,6 +51,8 @@ Most bad doc comments are true sentences filed in the wrong place. Route by **au
 - **`<summary>` / `<remarks>` ship** — to the XML doc and IntelliSense; a maintainer note there hits every consumer.
 - **A member cannot know how it is used** — claims of caller count, uniqueness or authority go in a convention.
 
+---
+
 ## Declared fields only [REQUIRED]
 
 A component doc names the doc fields its types carry, one sub-heading each. **A field the component does not declare is
@@ -55,6 +61,8 @@ forbidden on that component** — the omission is the ban, so no doc has to list
 - must add a field only by declaring it in the component doc, with the rule it obeys there.
 - must justify the addition in that sub-heading's first line — what the field carries that the declared ones cannot.
 - must not read a missing field as an oversight; a component with no `<remarks>` sub-heading forbids `<remarks>`.
+
+---
 
 ## Name the referent [REQUIRED]
 
@@ -72,6 +80,8 @@ domain noun is a signal and its absence says *this belongs to the type you are r
 - must not stretch it into who sets the value, when, or how — that is § *Where a fact belongs*.
 
 The failure it names is an **unanchored value**: a doc that describes a value and leaves its owner to inference.
+
+---
 
 ## Comment anti-patterns [REQUIRED]
 
@@ -191,6 +201,8 @@ A `<summary>` describing today's arrangement rather than what the type is — it
 Hitting the 120-char limit and wrapping to satisfy it, without running gates 1 and 2. A multi-line block is
 evidence the earlier gates were skipped until proven otherwise.
 
+---
+
 ## Cross-references [REQUIRED]
 
 A `<see cref>` is a **navigation aid**, not decoration — it earns its place when the reader must read the referenced
@@ -220,15 +232,19 @@ type to use this one correctly. It costs 20–60 chars of the 120-char budget, s
 Never write a type name as bare prose when a cref would link it **and** the link earns its place above. Otherwise use
 the plain noun — *"the rule set"*, not `<see cref="CodeRuleSet"/>`.
 
+---
+
 ## Terminology
 
 - **Collection** — say "collection" in `<summary>` for any grouping type (`List<T>`, `T[]`, `Dictionary<K,V>`)
 - **The {entity}** — name the owning entity in prose (`the channel`); the type name goes in `<see cref>`.
 
-## See also
+---
+
+## Neighbours
 
 - [models.md](../../constructs/constructs.md) — record style + general property rules
-- [entities.md](../../../mla/components/data/entity.md) — entity-specific doc rules
+- [entities.md](../../../mla/constructs/data/entity.md) — entity-specific doc rules
 - [enums](../../components/enums.md) — enum value documentation
-- [services.md](../../../mla/components/behavior/service.md) — service / client / factory naming
-- [mediator](../../../mla/domains/messaging/mediator.md) — query/command/handler naming + docs
+- [services.md](../../../mla/constructs/behavior/service.md) — service / client / factory naming
+- [mediator](../../../mla/domains/messaging/mediator/mediator.md) — query/command/handler naming + docs

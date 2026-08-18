@@ -4,7 +4,7 @@
 
 > The `<typeparam>` block — carried when a substitution can be got wrong, skipped when the name already says it.
 
-## Role decides, not presence [REQUIRED]
+## Scope [REQUIRED]
 
 A `<typeparam>` says what may be substituted and the role it plays here. A conventional name already says that,
 so documenting it restates the name — the Redundant comment anti-pattern
@@ -25,7 +25,9 @@ public interface IKeyedEntity<out TId> : IEntity;
 /// <typeparam name="TKey">The type of the key.</typeparam>
 ```
 
-## See also
+---
+
+## Neighbours
 
 - [params](params.md) — the sibling rule for method parameters
 - [summary](summary.md) — `<typeparamref>` inside a summary

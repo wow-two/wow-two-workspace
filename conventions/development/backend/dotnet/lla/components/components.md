@@ -1,6 +1,6 @@
 # Components
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > A role that owns both its shape and its role with no service around it.
 > Purpose — keep the service-free roles out of MLA, where every other role needs a layer to mean anything.
@@ -19,20 +19,23 @@
 | [Extensions](extensions.md) | the method runs on the receiver, with no collaborator to inject |
 | [Enums](enums.md) | the member names an option, and naming it is the whole contract |
 
+---
+
 ## Adding a component [REQUIRED]
 
 - must give each component **one file**, named for the role in the plural — `constants.md`, `enums.md`.
 - must carry the three `##` sections below, in order; a component with nothing to say in one omits it, never renames it.
-- must state only the folder **name**, never where it sits ([layers](../../mla/layers/domain-structuring.md)).
+- must state only the folder **name**, never where it sits ([layers](../../mla/architecture/clean/domain-structuring.md)).
 - may override any [`../notation/`](../notation/notation.md) rule, stating the override in its own file.
 - must cite `../notation/` rather than restate a default it does not override.
 
 | Section | Sub-headings | States |
 |---|---|---|
 | Location | Folder · File | the folder name that wraps it, and the file's name |
-| Declaration | Type doc · Type name | the type's doc fields, and the type's own name |
+| Declaration | Type doc · Construct · Type name | the doc fields, the form declared, and the type's own name |
 | Content | Member docs · Members | each member's doc fields, and the members themselves |
 
+- must state the declared form under `Construct` — `static class`, `enum` — and only the name under `Type name`.
 - must give each doc field its own sub-heading.
 - must not sub-head a field the component does not declare.
   - [documentation](../notation/documentation/documentation.md) § *Declared fields only*
@@ -74,6 +77,9 @@
 {bad}
 ```
 
+### Construct
+- must {rule}
+
 ### Type name
 - must {rule}
 
@@ -101,12 +107,14 @@
 {bad}
 ```
 
-## See also
+## Neighbours
 
 - {link} — {what it owns}
 ````
 
-## See also
+---
+
+## Neighbours
 
 - [constructs](../constructs/constructs.md) — the constructs these roles are built from
 - [notation](../notation/notation.md) — the defaults a component may override
