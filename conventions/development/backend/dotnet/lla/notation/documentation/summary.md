@@ -9,7 +9,7 @@
 The first word of every `<summary>` is fixed by what the thing is.
 
 - must take a **type's** starter from its component doc — [lla components](../../components/components.md)
-  or [mla components](../../../mla/components/components.md).
+  or [mla constructs](../../../mla/constructs/constructs.md).
 - must take a **member's** starter from [constructs](../../constructs/constructs.md), which fixes them by role.
 - must take a **construct's** starter from the same file, which rules on every C# form.
 - must not reintroduce a table here — a starter belongs with the thing it starts.
@@ -124,7 +124,7 @@ A literal with fixed structural parts is a **contract shape**, not an implementa
 ## Expression body vs block
 
 - **block body by default** — an expression body is for a single trivial delegation or a direct member return, and
-  only on a component that permits one ([constructs](../../constructs/constructs.md) § *The body*)
+  only on a component that permits one ([style](../style/style.md) § *The body*)
 - ✅ `public override string Encode() => this.ToPayload();` — a value object, permitted
 - ✅ `public string Slug => _slug;`
 - ❌ the same delegation on a `Service` or `Repository` — block body from the start

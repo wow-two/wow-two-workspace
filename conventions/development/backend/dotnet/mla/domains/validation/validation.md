@@ -195,7 +195,7 @@ A rule that should guide without blocking is `.WithSeverity(Severity.Warning)` �
 English in the other.
 
 > **Ships as `IErrorMessageResolver` / `IFieldErrorMessageResolver`** until the SDK sweep lands the `Resolver → Mapper` fold
-> ([component-names.md](../../components/components.md) § *Folds*). The canonical name is written here; the shipped name is what compiles today.
+> ([components](../../constructs/constructs.md) § *Folds*). The canonical name is written here; the shipped name is what compiles today.
 
 - must map a field message through `IFieldErrorMessageMapper` (`src/Foundation/Validation/`) — the SDK registers a passthrough default, so
   the seam is wired and the translation is opt-in.

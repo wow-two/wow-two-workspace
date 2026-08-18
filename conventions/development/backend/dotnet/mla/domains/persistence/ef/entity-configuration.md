@@ -65,7 +65,7 @@ public void Configure(EntityTypeBuilder<ListingEntity> builder)
 - must use a block body `{ }` from the start — the builder chain gains a call with every mapping added
   ([style](../../../../lla/notation/style/style.md) § *The body*).
 - must configure what changes runtime behaviour — the table, the key, column types, conversions,
-  relations ([database](../schema/database.md) § *What to configure*).
+  relations ([database](../schema/database.md) § *What to configure (runtime effect)*).
 - must leave the schema itself to the migration, which owns every DDL-only concern.
 - must order the calls table and key, column types, conversions, then relationships.
 
@@ -75,4 +75,4 @@ public void Configure(EntityTypeBuilder<ListingEntity> builder)
 
 - [entity.md](../../../constructs/data/entity.md) — the record this maps
 - [database](../schema/database.md) — type mappings, conventions, interceptor wiring
-- [components](../../../components/components.md) — the `Configuration` row
+- [constructs](../../../constructs/constructs.md) — the `Configuration` row

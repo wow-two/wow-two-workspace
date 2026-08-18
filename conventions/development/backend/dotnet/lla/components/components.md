@@ -4,12 +4,12 @@
 
 > A role that owns both its shape and its role with no service around it.
 > Purpose — keep the service-free roles out of MLA, where every other role needs a layer to mean anything.
-> Use case — `Constants`, `Extensions`, `Enums`; the rest is [MLA components](../../mla/components/components.md).
+> Use case — `Constants`, `Extensions`, `Enums`; the rest is [MLA constructs](../../mla/constructs/constructs.md).
 
 ## The gate [REQUIRED]
 
 - must place a role here only when it is **self-sufficient** — declared, and immediately doing its whole job alone.
-- must place it in [`mla/components/`](../../mla/components/components.md) when it is **inert without a collaborator**.
+- must place it in [`mla/constructs/`](../../mla/constructs/constructs.md) when it is **inert without a collaborator**.
 - must not read simplicity as self-sufficiency — an `Entity` fails, because nothing reads it until a store exists.
 - must run the test by demonstration: declare the role in a program with nothing else, and use it.
 

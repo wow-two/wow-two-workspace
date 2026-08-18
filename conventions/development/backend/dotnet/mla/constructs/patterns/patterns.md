@@ -135,9 +135,9 @@ The pattern is real and in use; another doc is its authority, and this row only 
 
 | Pattern | Ruled by | Reach for |
 |---|---|---|
-| Repository | `repository.md` § *No query abstraction* | hand-written SQL, or `DapperRepository<,>` |
-| Object Pool | `repository.md` § *Connections* | `CreateOpenAsync` per operation |
-| Iterator | `statements.md:37` | `yield return`, `IAsyncEnumerable<T>` |
+| Repository | `dapper.md` § *No query abstraction* | hand-written SQL, or `DapperRepository<,>` |
+| Object Pool | `dapper.md` § *Connections* | `CreateOpenAsync` per operation |
+| Iterator | `statements.md:39` | `yield return`, `IAsyncEnumerable<T>` |
 | Command | `application-request.md` § *Type name* | `{Domain}{Action}Command` and its `Handler` |
 | CQRS | `mediator.md` § *Common* | a `Query` or `Command`, one handler each |
 | Mediator | `mediator.md` § *Registration & usage* | `ISender.SendAsync`, never concrete `Mediator` |
@@ -145,9 +145,9 @@ The pattern is real and in use; another doc is its authority, and this row only 
 | Idempotency | `mediator.md` § *Pipeline behaviors* | `IIdempotent` + `IdempotencyBehavior<,>` |
 | Registry | `registry.md` § *Members* | a `Registry` that throws on an unbound key |
 | Mapper | `mapper.md` § *Members* | a total `Mapper`, handed every input |
-| Options | `components.md` § *`Settings` vs `Options`* | `Settings` from config, `Options` in code |
-| Result / Either | `result.md` § *Rules* | `AppResult<TSuccess>` collapsed with `.Match` |
-| Dependency Injection | `constructs.md:229` | constructor injection |
+| Options | `constructs.md` § *`Settings` vs `Options`* | `Settings` from config, `Options` in code |
+| Result / Either | `results.md` § *Rules* | `AppResult<TSuccess>` collapsed with `.Match` |
+| Dependency Injection | `constructs.md:243` | constructor injection |
 | Claim Check | `outbox.md` § *Limits* | store the payload, stage the pointer |
 | MVC | `controller.md` § *No business logic* | a controller that dispatches and maps |
 
@@ -161,8 +161,8 @@ The pattern names a role an existing name already owns. Don't introduce the patt
 |---|---|---|
 | Abstract Factory | a `Factory` per axis, a `Registry` for the family | `factories.md` § *Members* |
 | Bridge | a house contract, adapters behind it | `swappable-modules.md:11` |
-| Facade | `Broker` outward, `Service` inward | `components.md` § *Adding a new suffix* |
-| Observer | `Handler`, or `BackgroundService` for a poll | `components.md` § *Folds* |
+| Facade | `Broker` outward, `Service` inward | `constructs.md` § *Adding a new suffix* |
+| Observer | `Handler`, or `BackgroundService` for a poll | `constructs.md` § *Folds* |
 
 ---
 
@@ -172,11 +172,11 @@ Never declared. The rule that kills each one is written elsewhere; this table na
 
 | Pattern | Killing rule | Reach for |
 |---|---|---|
-| Composite | `components.md` § *Folds* — `Node` → `PipelineStep` | a `Pipeline` and its ordered steps |
+| Composite | `constructs.md` § *Folds* — `Node` → `PipelineStep` | a `Pipeline` and its ordered steps |
 | Flyweight | `constructs.md:94` — allocation must be measured first | a plain reference type |
-| Visitor | `result.md` § *Carriers* — `.Match` is the consume path | a `switch` over the closed union |
-| Specification | `repository.md` § *No query abstraction* | SQL that filters, composed in the query |
-| Service Locator | `constructs.md:229` | constructor injection ([service locator](service-locator.md)) |
+| Visitor | `results.md` § *Carriers* — `.Match` is the consume path | a `switch` over the closed union |
+| Specification | `dapper.md` § *No query abstraction* | SQL that filters, composed in the query |
+| Service Locator | `constructs.md:243` | constructor injection ([service locator](service-locator.md)) |
 | Event Sourcing | `database.md` § *Schema-first rule* | the row as state; an event carries the fact |
 
 ---

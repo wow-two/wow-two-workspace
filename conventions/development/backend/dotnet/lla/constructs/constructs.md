@@ -102,7 +102,7 @@ Exhaustive through C# 13 / .NET 10. A form we have never written is still listed
 ## Banned constructs
 
 A ban here is about the **construct**, whatever role holds it. A ban that depends on the role lives with that role in
-[`mla/components/`](../../mla/components/components.md).
+[`mla/constructs/`](../../mla/constructs/constructs.md).
 
 - **`event`** — reach for an `IEvent` on the mediator bus. Four failures, and a service host hits every one:
   - the handler cannot be awaited — it returns `void`, so its exceptions surface unobserved.
@@ -206,7 +206,7 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must carry a directive, a spec reference, or a constraint the signature hides.
 
 ### Type name
-- must carry the role suffix from the keep-list ([components](../../mla/components/components.md)).
+- must carry the role suffix from the keep-list ([constructs](../../mla/constructs/constructs.md)).
 
 ### Member docs
 
@@ -256,5 +256,5 @@ private readonly Lazy<RouteTable> routes;
 
 ## Neighbours
 
-- [components](../../mla/components/components.md) — the roles these constructs carry
+- [constructs](../../mla/constructs/constructs.md) — the roles these constructs carry
 - [statements](statements.md) — the forms that run inside a declaration

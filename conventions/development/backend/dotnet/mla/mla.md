@@ -6,11 +6,12 @@
 > technologies it consumes.
 > Use case — a rule that needs a service around it to mean anything, and stops at that service's boundary.
 
-## The four buckets
+## The five buckets
 
 | Bucket | Answers | Lead |
 |---|---|---|
-| [components](components/components.md) | what am I declaring | the suffix keep-list and the coining gate |
+| [constructs](constructs/constructs.md) | what role am I declaring | the suffix keep-list and the coining gate |
+| [components](components/components.md) | what is complete on its own | the self-sufficiency gate |
 | [architecture](architecture/architecture.md) | where does it live | one folder per pattern, plus the solution grouping |
 | [platform](platform/platform.md) | how does the service build, start and answer | the boot floor |
 | [domains](domains/domains.md) | which technology or use case | one folder per capability |

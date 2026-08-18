@@ -177,7 +177,7 @@ public required string Slug { get; set; }
 ```
 
 The defect is the empty predicate, never the starter — a property summary keeps its `Gets` / `Gets or sets`
-([summary](summary.md) § *Properties*). Say what the name cannot: the parent entity, units, range, what null means.
+([summary](summary.md) § *Properties on entities + DTOs*). Say what the name cannot: the parent entity, units, range, what null means.
 Not who sets it, when, or how.
 
 ### Mandated comment *(Clean Code)*

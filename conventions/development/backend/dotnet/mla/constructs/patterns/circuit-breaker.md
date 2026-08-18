@@ -9,7 +9,7 @@
 ## Shape
 
 - must take retry, breaker and timeout from **one** pipeline attached to the `Client`, never hand-rolled —
-  `AddSdkResilience` over `HttpResilienceOptions` ([client](../behavior/client.md) § *Resilience*).
+  `AddSdkResilience` over `HttpResilienceOptions` ([http](../../domains/integrations/http/http.md) § *Resilience*).
 - must register a client through a helper that already applies it — `AddRefitApiClient<TApi>` or
   `AddResilientClient<TClient>`; a bare `HttpClient` never ships.
 - must keep the order retry → circuit breaker → per-attempt timeout, inside one total-request timeout — tuning is

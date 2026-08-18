@@ -155,7 +155,7 @@ Each names *nothing* — it describes "a class that does stuff". The gate points
 
 ---
 
-## Adding a new suffix — the gate [REQUIRED]
+## Adding a new suffix [REQUIRED]
 
 Answer in order; the first **yes** picks the suffix, and coining requires four `no`s.
 

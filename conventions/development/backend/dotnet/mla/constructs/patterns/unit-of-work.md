@@ -16,7 +16,7 @@
 - must open an explicit transaction only when the work spans two contexts or mixes EF with raw SQL; otherwise
   `SaveChangesAsync` already runs in one.
 - must accept that the Dapper path has **no** unit of work — one fresh connection per operation, so multi-statement
-  atomicity is the SQL's job ([repository](../behavior/repository.md) § *Connections*).
+  atomicity is the SQL's job ([dapper](../../domains/persistence/dapper/dapper.md) § *Connections*).
 
 ```csharp
 // ✅ the handler owns the commit point

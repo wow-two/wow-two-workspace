@@ -11,10 +11,10 @@
 | Scope | Reaches | Holds |
 |---|---|---|
 | `lla/` | one symbol | naming · doc blocks · members · idioms · banned constructs |
-| `mla/` | one service, and everything it talks to | `components/` · `architecture/` · `platform/` · `domains/` |
+| `mla/` | one service, and everything it talks to | `constructs/` · `components/` · `architecture/` · `platform/` · `domains/` |
 | `hla/` | between our own services | gateway · gRPC contracts · cross-service events · quotas |
 
-**Routing.** A kind of type you declare → `mla/components/{kind}.md`. How any symbol is written → `lla/`.
+**Routing.** A kind of type you declare → `mla/constructs/{kind}.md`. A thing complete on its own → `mla/components/`. How any symbol is written → `lla/`.
 Where a type lives → `mla/architecture/`. How the service builds and starts → `mla/platform/`. A concrete
 technology or use case → `mla/domains/{domain}/`. A rule spanning services we both own → `hla/`.
 
@@ -64,9 +64,9 @@ Every rule that holds for **any** symbol, whatever kind it is: its name, its doc
 and the language constructs banned outright. A rule naming a *kind* of type is not `lla/`; a rule naming a technology is not `lla/`.
 
 ### `mla/` — one service
-Four buckets. `components/` = what am I building, one file per suffix. `architecture/` = where it lives, one folder per
-pattern, testing among the layers. `platform/` = how the service builds, starts and answers. `domains/` = a concrete
-technology or use case, one folder each.
+Five buckets. `constructs/` = the roles we define, one file per suffix. `components/` = the things complete on their own.
+`architecture/` = where it lives, one folder per pattern, testing among the layers. `platform/` = how the service builds,
+starts and answers. `domains/` = a concrete technology or use case, one folder each.
 
 - **A component has one home layer.** A kind is declared, stored and documented in one layer even when used from others.
   A `Validator` reading `Options` composes with another component that has its own home; it does not straddle. `Service` is
@@ -107,21 +107,21 @@ behavior: the moment a flow appears, the type has stopped being a model.
 **Membership in `components/`** — a role passes only when it owns **both its shape and its role with no service around it**.
 The gate is a demonstration: show it declared *and used* in a program that has no services. An `Entity` fails, because an entity
 is a model and a model needs a store and a domain. An `enum` fails, because any role an enum plays gathers logic around it.
-A role that fails belongs in [`mla/components/`](mla/components/components.md).
+A role that fails belongs in [`mla/constructs/`](mla/constructs/constructs.md).
 
 **Notation is a default set** — every rule there applies to every symbol, and a component may override it in its own file.
 A component that does not override cites `notation/` rather than restating it.
 
-### `mla/components/` — a kind of type you declare
+### `mla/constructs/` — a role we define
 
 Split by what the type is for: [data/](mla/constructs/data/entity.md) holds, [behavior/](mla/constructs/behavior/service.md) does.
-The lead is [components](mla/components/components.md) — the suffix keep-list, the folds, and the coining gate.
+The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list, the folds, and the coining gate.
 
 | File | What it covers |
 |---|---|
 | [broker.md](mla/constructs/behavior/broker.md) | The app-side seam — broker/client peering, degradation policy, `Integrates` starter |
 | [client.md](mla/constructs/behavior/client.md) | HTTP API wrappers — `HttpClient` injection, resilience pipeline (`AddSdkResilience`), Refit |
-| [components](mla/components/components.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
+| [constructs](mla/constructs/constructs.md) | Component-type naming vocabulary — canonical suffix→role keep-list · synonym folds · banned junk-drawer · new-suffix gate |
 | [controller.md](mla/constructs/behavior/controller.md) | Thin-dispatcher controllers — `ISender.SendAsync` + `AppResult.Match` |
 | [registry.md](mla/constructs/behavior/registry.md) | The key-to-type set — binds at composition, throws on a miss |
 | [mapper.md](mla/constructs/behavior/mapper.md) | The transform — total, stateless, both shapes named |
@@ -142,6 +142,18 @@ The lead is [components](mla/components/components.md) — the suffix keep-list,
 | [service.md](mla/constructs/behavior/service.md) | Service / Client / Broker / Factory / Repository shape, lifetime + doc starters |
 | [settings.md](mla/components/settings.md) | Settings records — `sealed record`, `init`-only, `IOptions<T>` binding |
 | [validator.md](mla/constructs/behavior/validator.md) | Input validation — `IValidator<T>`, mediator validation behavior |
+
+### `mla/components/` — a thing complete on its own
+
+The lead is [components](mla/components/components.md) — the self-sufficiency gate.
+
+| File | What it covers |
+|---|---|
+| [json](mla/components/json.md) | One type's persisted JSON seam — its options, its `Serialize` / `Deserialize` pair |
+| [settings](mla/components/settings.md) | The config-bound record — `sealed record`, `nameof` binding, validate-on-start |
+| [time](mla/components/time.md) | The clock seam — `TimeProvider`, `IClock`, zone resolution, cron parsing |
+
+---
 
 ### `mla/architecture/` — where a type lives
 
