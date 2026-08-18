@@ -4,7 +4,8 @@
 
 > The carrier an operation returns — a typed success or an `AppError`, never both.
 > Purpose — a caller reads the outcome from the type, so nothing depends on an exception being thrown or not.
-> Use case — any method whose failure a caller must handle; the contract itself is [platform](../../platform/responses/results.md).
+> Use case — any method whose failure a caller must handle; the contract itself is
+> [platform](../../platform/responses/results.md).
 
 ## Location
 
@@ -34,7 +35,9 @@
 ### Construct
 - must declare a `sealed record` — a result is its values →
   [constructs](../../../lla/constructs/constructs.md) § *Data components*.
+- must declare `{ get; init; }` — a result is built at the point it is returned.
 - must not carry an HTTP status; `AppErrorType` is transport-agnostic and maps at the edge.
+- must carry a [model](model.md), an entity, a value object or a primitive — never a [dto](dto.md).
 
 ```csharp
 // ✅

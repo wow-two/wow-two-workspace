@@ -38,6 +38,7 @@
 
 ### Type name
 - must suffix with `Handler` and name it for its message — `ChannelGetAllQueryHandler`.
+- must return `AppResult<T>` carrying a [model](../data/model.md), never a `Dto`.
 
 ```csharp
 // ✅

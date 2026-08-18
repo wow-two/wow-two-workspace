@@ -52,5 +52,5 @@ Three exceptions, and nothing else:
 
 - [factories](factories.md) — the sanctioned per-key resolution, and its shape.
 - [hosted service](../behavior/hosted-service.md) — the scope-per-iteration rule.
-- [host configuration](../../platform/startup/host-configuration.md) — the only layer that holds the provider by design.
+- [host configuration](../../platform/startup/host-configuration.md) — the only layer holding the provider by design.
 - [ambient context](ambient-context.md) — the sibling: a hidden value rather than a hidden dependency.

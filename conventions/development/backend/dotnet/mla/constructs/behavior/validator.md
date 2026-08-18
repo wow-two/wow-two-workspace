@@ -4,7 +4,8 @@
 
 > The type that decides whether one caller-supplied shape is well-formed.
 > Purpose — a named type per validated concept, so a rule has one home and a caller has one thing to run.
-> Use case — any external input; an internal precondition is a guard → [validation](../../domains/validation/validation.md).
+> Use case — any external input; an internal precondition is a guard →
+> [validation](../../domains/validation/validation.md).
 
 ## Location
 
@@ -36,7 +37,10 @@
 
 ### Type name
 - must suffix with `Validator`, named for the **concept** — `WifiContentValidator`.
-- must carry the full type name only when a concept has several models across layers — `ProductCreateRequestValidator`.
+- must carry the full type name only when a concept has several models across layers.
+- must return `Result<ValidationOutcome>` — the outcome carries the rule failures.
+- must reserve the failure arm for a broken run, never for a rule that did not pass.
+  - `ProductCreateRequestValidator`
 - must not inherit a model's role suffix; renaming `ProductEntity` must not force a validator rename.
 
 ```csharp

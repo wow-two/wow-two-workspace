@@ -55,7 +55,8 @@ public sealed class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRe
 
 ## Components
 
-- [mediator](../../domains/messaging/mediator/mediator.md) — `IPipelineBehavior<,>`, `AddMediatorBehavior`, the built-in set.
+- [mediator](../../domains/messaging/mediator/mediator.md) — `IPipelineBehavior<,>`, `AddMediatorBehavior`,
+  the built-in set.
 - [validator](../behavior/validator.md) — the validation step and what it throws.
 - [handler](../behavior/handler.md) — what the pipeline wraps: one message, one handler.
 - [decorators](decorators.md) — the one-wrap sibling, when the behavior applies to a single interface.

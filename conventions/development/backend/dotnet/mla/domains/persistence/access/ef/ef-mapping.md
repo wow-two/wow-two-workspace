@@ -8,15 +8,17 @@
 
 ## EF's role
 
-The schema is owned by SQL (`Migrations/NNN-name/Apply.sql`). EF Core maps C# types over that schema — it never creates, alters, or seeds it.
+SQL owns the schema (`Migrations/NNN-name/Apply.sql`).
+EF Core maps C# types over it, and never creates, alters or seeds it.
 
-- Never call `Database.EnsureCreated()` (or `Migrate()` / EF migrations). The runner (`IMigrationRunnerService.ApplyPendingAsync`, see
-  [bespoke-migrations.md](../../migrations/sql/bespoke-migrations.md)) owns DDL; EF only reads/writes rows.
-- Strip all migration-only config from `IEntityTypeConfiguration<T>` — keep only config that changes *runtime* behavior (what EF queries, tracks,
-  materializes). The waste-rule table below is the cut list.
-- A wrong EF config here is silent: it can't fail a migration (there are none), it just produces wrong SQL or missed change-tracking.
-
----
+- must never call `Database.EnsureCreated()`, `Migrate()`, or EF migrations.
+  - the runner owns DDL — `IMigrationRunnerService.ApplyPendingAsync`, see
+    [bespoke-migrations.md](../../migrations/sql/bespoke-migrations.md). EF only reads/writes rows.
+- must strip all migration-only config from `IEntityTypeConfiguration<T>`.
+  - keep only config that changes *runtime* behavior — what EF queries, tracks, materializes.
+  - the waste-rule table below is the cut list.
+- a wrong EF config here is silent — it can't fail a migration, there are none.
+  - it produces wrong SQL or missed change-tracking instead.
 
 ---
 
@@ -24,15 +26,17 @@ The schema is owned by SQL (`Migrations/NNN-name/Apply.sql`). EF Core maps C# ty
 
 ### Base class
 
-Every product DbContext inherits `AppDbContextBase` (`Data.EntityFrameworkCore`), not raw `DbContext`. The base wires SDK conventions and increments
-`IVersioned` tokens on save.
-
-- Override `OnModelCreating(ModelBuilder)` and call `base.OnModelCreating(modelBuilder)` first — the base runs
-  `ApplyConfigurationsFromAssembly(GetType().Assembly)` then `ApplyConventions()` (soft-delete query filter + `IVersioned` concurrency token, via
-  `EntityModelConventions.ApplyConventions`). Your override adds nothing about columns or DDL — only runtime mapping (relationships, conversions,
-  `Ignore`).
-- Extra model conventions (value converters, default precision) go in `ConfigureConventionsCore(ModelConfigurationBuilder)` — the base seam invoked
-  from `ConfigureConventions`. Do NOT override `ConfigureConventions` directly.
+- must inherit `AppDbContextBase` (`Data.EntityFrameworkCore`) on every product DbContext, never raw `DbContext`.
+  - the base wires SDK conventions and increments `IVersioned` tokens on save.
+- must override `OnModelCreating(ModelBuilder)` and call `base.OnModelCreating(modelBuilder)` first.
+  - the base runs `ApplyConfigurationsFromAssembly(GetType().Assembly)` then `ApplyConventions()`.
+  - `ApplyConventions()` adds the soft-delete query filter + `IVersioned` concurrency token,
+    via `EntityModelConventions.ApplyConventions`.
+  - the override adds nothing about columns or DDL — only runtime mapping (relationships, conversions, `Ignore`).
+- must put extra model conventions in `ConfigureConventionsCore(ModelConfigurationBuilder)`.
+  - value converters, default precision.
+  - it is the base seam invoked from `ConfigureConventions`.
+  - must NOT override `ConfigureConventions` directly.
 
 ```csharp
 /// <summary>The application database context.</summary>
@@ -52,15 +56,20 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : AppDb
 
 ### Registration
 
-- Register via `AddEntityFrameworkCore<TContext>` (`EntityFrameworkCoreServiceCollectionExtensions`) — never raw `AddDbContext` /
-  `AddDbContextPool`. The helper applies pooling (default on) and auto-enables `EnableSensitiveDataLogging` / `EnableDetailedErrors` in Development;
-  override via the
-  `Action<EntityFrameworkCoreOptions>` overload (`UsePooling`, `PoolSize`, `NoTrackingByDefault`, …).
-- Provider setup goes inside the `configureProvider` callback via `UseNpgsqlConventional` (or `UseSqlServerConventional`), which presets
-  `EnableRetryOnFailure(maxRetryCount: 6)` + `CommandTimeout(30)`.
-- Connection string comes from `DatabaseOptions.ConnectionString`, bound via `AddDatabaseOptions` (`Database` config section by default).
-- A shared `NpgsqlDataSource` is registered once via `AddNpgsqlDataSource` (`PostgresServiceCollectionExtensions`) — built from
-  `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper, and the place enums attach (`MapEnums` — see [enums](../../../../components/enums.md)).
+- must register via `AddEntityFrameworkCore<TContext>` (`EntityFrameworkCoreServiceCollectionExtensions`).
+  - never raw `AddDbContext` / `AddDbContextPool`.
+  - the helper applies pooling, default on.
+  - it auto-enables `EnableSensitiveDataLogging` / `EnableDetailedErrors` in Development.
+  - override via the `Action<EntityFrameworkCoreOptions>` overload.
+    - `UsePooling`, `PoolSize`, `NoTrackingByDefault`, ….
+- must put provider setup inside the `configureProvider` callback.
+  - via `UseNpgsqlConventional` or `UseSqlServerConventional`.
+  - both preset `EnableRetryOnFailure(maxRetryCount: 6)` + `CommandTimeout(30)`.
+- must take the connection string from `DatabaseOptions.ConnectionString`, bound via `AddDatabaseOptions`.
+  - the `Database` config section by default.
+- must register one shared `NpgsqlDataSource` via `AddNpgsqlDataSource` (`PostgresServiceCollectionExtensions`).
+  - built from `DatabaseOptions.ConnectionString`, consumed by both EF Core and Dapper.
+  - enums attach there — `MapEnums`, see [postgres](../../database/postgres/postgres.md) § *Enum column mapping*.
 
 ```csharp
 services.AddDatabaseOptions(configuration);
@@ -78,9 +87,12 @@ services.AddEntityFrameworkCore<AppDbContext>((sp, builder) =>
 ### Location
 
 - `{Repo}.Persistence/Configurations/{Name}Configuration.cs` — one `IEntityTypeConfiguration<T>` per entity.
-- Multiple configs may share a file when entities are tightly coupled (e.g. `ChannelEntityConfiguration` + `ChannelSourceEntityConfiguration`) — but
-  [code-organization.md](../../../../../lla/notation/style/style.md)'s file-per-type rule still says split by default; merge only when very tightly coupled.
-- All configs are picked up by the base's `ApplyConfigurationsFromAssembly`.
+- may share one file across configs when the entities are tightly coupled.
+  - e.g. `ChannelEntityConfiguration` + `ChannelSourceEntityConfiguration`.
+  - the file-per-type rule still says split by default —
+    [code-organization.md](../../../../../lla/notation/style/style.md).
+  - merge only when very tightly coupled.
+- the base's `ApplyConfigurationsFromAssembly` picks up all configs.
 
 ---
 
@@ -102,7 +114,8 @@ services.AddEntityFrameworkCore<AppDbContext>((sp, builder) =>
 
 ### What NOT to configure (migration-only = dead code in schema-first repos)
 
-The schema lives in `Apply.sql`. Anything that only emits or constrains DDL is dead weight — it can't fail (no migrations run), it just rots.
+The schema lives in `Apply.sql`. Anything that only emits or constrains DDL is dead weight —
+it can't fail, no migrations run, and it rots.
 
 | Pattern | Why it's waste |
 |---|---|
@@ -114,25 +127,30 @@ The schema lives in `Apply.sql`. Anything that only emits or constrains DDL is d
 | `.HasDatabaseName()` | Custom index name — migration-only |
 | `.HasPrecision()` | Not needed when numeric columns use integer types |
 
-> Note: if you're NOT schema-first and EF generates migrations, all of these are valid. The waste rule applies only when the schema is SQL-owned (the
-> Sql-strategy default — [bespoke-migrations.md](../../migrations/sql/bespoke-migrations.md)).
+> All of these are valid when you are NOT schema-first and EF generates migrations.
+> The waste rule applies only when the schema is SQL-owned — the Sql-strategy default,
+> [bespoke-migrations.md](../../migrations/sql/bespoke-migrations.md).
 
 ---
 
 ### snake_case naming
 
-Turn on `UseSnakeCaseNamingConvention()` on the `DbContextOptionsBuilder` (SDK naming-conventions package — see `NamingConventionsExtensions`;
-`UseLowerCaseNamingConvention` / `UseCamelCaseNamingConvention` / `UseUpperSnakeCaseNamingConvention` also available). This maps every CLR member to
-its snake_case column globally — do NOT restate it per property with `.HasColumnName()` (reinforces the waste rule above).
+- must turn on `UseSnakeCaseNamingConvention()` on the `DbContextOptionsBuilder`.
+  - SDK naming-conventions package, see `NamingConventionsExtensions`.
+  - `UseLowerCaseNamingConvention` / `UseCamelCaseNamingConvention` /
+    `UseUpperSnakeCaseNamingConvention` also available.
+  - it maps every CLR member to its snake_case column globally.
+- must NOT restate it per property with `.HasColumnName()` — reinforces the waste rule above.
 
 ---
 
 ### JSON columns
 
-- Map a complex CLR property to a JSON column with `.HasJsonConversion<T>()` (`JsonPropertyBuilderExtensions`). It wires both the
-  `JsonValueConverter<T>` (serialize on write / deserialize on read) and the required `JsonValueComparer<T>`.
-- The comparer is mandatory: EF's snapshot/change-tracking misses mutations on JSON reference types without it.
-- Pair with the provider column type: `.HasColumnType("jsonb")` on Postgres (`nvarchar(max)` on SqlServer).
+- must map a complex CLR property to a JSON column with `.HasJsonConversion<T>()` (`JsonPropertyBuilderExtensions`).
+  - it wires `JsonValueConverter<T>` — serialize on write, deserialize on read.
+  - it also wires the required `JsonValueComparer<T>`.
+- the comparer is mandatory — without it EF's snapshot/change-tracking misses mutations on JSON reference types.
+- must pair with the provider column type — `.HasColumnType("jsonb")` on Postgres, `nvarchar(max)` on SqlServer.
 
 ```csharp
 builder
@@ -145,20 +163,22 @@ builder
 
 ### Enum mapping (Postgres)
 
-Do NOT use `.HasConversion()` per property — enums are registered globally at the Npgsql data-source level via `MapEnums` (driver-level C#↔PG enum
-mapping). Full details in [enums](../../../../components/enums.md).
+- must NOT use `.HasConversion()` per property.
+- must register enums globally at the Npgsql data-source level via `MapEnums` — driver-level C#↔PG enum mapping.
+- full details in [postgres](../../database/postgres/postgres.md) § *Enum column mapping*.
 
 ---
 
 ### Audit & soft-delete
 
-Cross-cutting timestamps/actors (`ICreationAuditable`, `IModificationAuditable`) and soft-delete (`ISoftDeletable`) are handled by SDK interceptors,
-not per-config — entity contracts and what each marker stamps live in [entities.md](../../../../constructs/data/entity.md):
+SDK interceptors handle cross-cutting timestamps/actors (`ICreationAuditable`, `IModificationAuditable`) and soft-delete
+(`ISoftDeletable`), never per-config. Entity contracts and what each marker stamps live in
+[entities.md](../../../../constructs/data/entity.md):
 
-- `AuditInterceptor` — register via `AddEfCoreAuditInterceptor()` (use the `<TAccessor>` overload to populate `CreatedBy` / `UpdatedBy` on the
-  `…AuditableBy<TUserId>` variants), wire with `UseAuditInterceptor(sp)`.
-- `SoftDeleteInterceptor` — register via `AddEfCoreSoftDeleteFilter()`, wire with `UseSoftDeleteInterceptor(sp)`; the `IsDeleted` query filter is
-  applied automatically by `ApplyConventions` in `AppDbContextBase`.
+- `AuditInterceptor` — register via `AddEfCoreAuditInterceptor()`, wire with `UseAuditInterceptor(sp)`.
+  - use the `<TAccessor>` overload to populate `CreatedBy` / `UpdatedBy` on the `…AuditableBy<TUserId>` variants.
+- `SoftDeleteInterceptor` — register via `AddEfCoreSoftDeleteFilter()`, wire with `UseSoftDeleteInterceptor(sp)`.
+  - `ApplyConventions` in `AppDbContextBase` applies the `IsDeleted` query filter automatically.
 
 ---
 
@@ -168,18 +188,19 @@ Optimistic-concurrency markers map via provider conventions called from `OnModel
 
 | Marker | Provider | Token | Applied by |
 |---|---|---|---|
-| `IVersioned` | any | `uint Version` (bumped in `SaveChanges`) | `EntityModelConventions.ApplyConventions` (auto via base) |
+| `IVersioned` | any | `uint Version` (bumped in `SaveChanges`) | `EntityModelConventions.ApplyConventions` (via base) |
 | `IHasXmin` | Postgres | system `xmin` column (`xid`) | `ApplyNpgsqlConventions()` |
 | `IRowVersioned` | SqlServer | `byte[] RowVersion` (`rowversion`) | `ApplySqlServerConventions()` |
 
 - `IVersioned` is provider-agnostic and needs no extra call.
-- For native tokens, call `ApplyNpgsqlConventions()` / `ApplySqlServerConventions()` once in `OnModelCreating`.
+- must call `ApplyNpgsqlConventions()` / `ApplySqlServerConventions()` once in `OnModelCreating` for a native token.
 
 ---
 
 ### Section order inside a configuration
 
-Organize in this order, separated by lightweight comment headers (see [code-organization.md](../../../../../lla/notation/style/style.md)):
+- must organize in this order, separated by lightweight comment headers
+  ([code-organization.md](../../../../../lla/notation/style/style.md)):
 
 1. Table + Key — `.ToTable()`, `.HasKey()`.
 2. Column type overrides — `.HasColumnType("jsonb")` etc.
@@ -190,7 +211,7 @@ Organize in this order, separated by lightweight comment headers (see [code-orga
 
 ### Chaining
 
-Always chain on new lines, even for a single method call:
+- must chain on new lines, even for a single method call:
 
 ```csharp
 builder
@@ -217,7 +238,9 @@ builder
 
 ### Documentation
 
-Single `/// <summary>` one-liner starting with "Configures" — per [summary](../../../../../lla/notation/documentation/summary.md) starter table. No `<remarks>`.
+- must carry a single `/// <summary>` one-liner starting with "Configures" — per the
+  [summary](../../../../../lla/notation/documentation/summary.md) starter table.
+- must not add `<remarks>`.
 
 ```csharp
 /// <summary>Configures the listings table mapping and relationships.</summary>

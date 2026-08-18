@@ -62,9 +62,8 @@ public sealed record CodeGetByIdQuery
 ## Dispatch
 
 - must bind exactly one handler to a query and to a command; an event takes 0..N.
-- must send through `ISender`, and publish an event through `IPublisher` → [mediator](../messaging/mediator/mediator.md).
+- must send through `ISender`, and publish an event through `IPublisher` → [mediator](mediator/mediator.md).
 - must not let a handler send another message — a use case that needs a second one is composing, not dispatching.
-
 
 ---
 
@@ -74,6 +73,6 @@ public sealed record CodeGetByIdQuery
 |---|---|---|
 | in-process mediator | a request to its one handler, inside the same process | [mediator](mediator/mediator.md) |
 | event bus | an event to its subscribers, in-process or over a transport | — |
-| outbox | an event staged in the business transaction, dispatched after commit | [outbox](../../constructs/patterns/outbox.md) |
+| outbox | an event staged in the transaction, dispatched after commit | [outbox](../../constructs/patterns/outbox.md) |
 
 - must keep transport choice out of the message — a message that names its transport cannot be re-routed.

@@ -53,4 +53,5 @@ public abstract class EventSagaStep : IEventSagaStep
 
 - [hosted service](../behavior/hosted-service.md) — the most common base we derive from.
 - [strategies](strategies.md) — the composition alternative, and the default when either would work.
-- [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) — the EF hooks the context base applies.
+- [entity configuration](../../domains/persistence/access/ef/entity-configuration.md)
+  — the EF hooks the context base applies.

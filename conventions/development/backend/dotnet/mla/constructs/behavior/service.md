@@ -39,6 +39,7 @@
 ### Type name
 - must suffix with `Service`, prefixed by the work — `ChannelsSeedService`.
 - must reach for the narrower suffix when one fits — a `Service` that only maps is a `Mapper`.
+- must return a `Result` carrying a [model](../data/model.md) — never a `Dto`, never a bare value.
 
 ```csharp
 // ✅

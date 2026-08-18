@@ -18,7 +18,7 @@
 
 ## Broker and client
 
-A broker usually sits on top of a client, and neither owns the other. The seam between them is the model translation.
+A broker usually sits on top of a client, and neither owns the other. The seam between them is model translation.
 
 | | `Broker` | `Client` |
 |---|---|---|

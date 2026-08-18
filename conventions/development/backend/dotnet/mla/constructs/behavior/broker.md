@@ -40,6 +40,7 @@
 - must name the interface for the capability — `IBillingBroker`.
 - must suffix with `Broker`, carrying both the capability and the provider — `StripeBillingBroker`.
 - must keep the provider's name out of the interface; only the implementation names it.
+- must return a `Result` — a seam over something outside the process always has a failure arm.
 
 ```csharp
 // ✅

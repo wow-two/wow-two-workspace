@@ -2,7 +2,7 @@
 
 *Last updated: 2026-08-17*
 
-> What a service sends back — the wire format, the error shape, the outcome contract, and the fixed endpoints.
+> What a service sends back — the wire format, the error shape, the outcome contract, the fixed endpoints.
 > Purpose — a client reads one success shape and one error shape, whichever endpoint it called.
 > Use case — changing what an endpoint returns, or how a failure reaches the caller.
 

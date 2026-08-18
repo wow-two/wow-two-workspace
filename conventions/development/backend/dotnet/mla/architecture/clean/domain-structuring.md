@@ -2,7 +2,8 @@
 
 *Last updated: 2026-08-16*
 
-> How a domain's folders are cut inside a [layer](clean.md) — subdomains, role groups, and where a component folder may appear.
+> How a domain's folders are cut inside a [layer](clean.md) — subdomains, role groups,
+> and where a component folder may appear.
 > Purpose — the layer set says which projects exist; this says how each one is divided.
 
 ## Pattern
@@ -15,13 +16,15 @@
   ...
 ```
 
-`Core/` is always present when a domain has subdomains. It contains the reusable read model — any consumer (CRM, API, reports, pipelines) can reference `Core` without pulling in operation-specific code.
+`Core/` is always present when a domain has subdomains. It holds the reusable read model,
+so any consumer — CRM, API, reports, pipelines — references `Core` without pulling in operation-specific code.
 
 ---
 
 ## Example
 
-A `Listings` domain spans the full lifecycle: scraping → classifying → querying → triaging → publishing. Each phase is a subdomain.
+A `Listings` domain spans the full lifecycle: scraping → classifying → querying → triaging → publishing.
+Each phase is a subdomain.
 
 **Domain layer** (`{Repo}.Domain/Listings/`) — entities and enums:
 
@@ -57,17 +60,24 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 
 - **Domain folder** — PascalCase plural (`Listings/`, `Channels/`, `Locations/`)
 - **Subdomain folder** — PascalCase gerund or noun describing the concern (`Capturing/`, `Processing/`, `Core/`)
-- **Role-group folder** — a **plural role noun**, naming the type-role it holds, never the activity: `Entities/` · `Enums/` · `Models/` · `Services/` · `Validators/` · `Mappers/` · `Commands/` · `Queries/` · `Handlers/`
+- **Role-group folder** — a **plural role noun** naming the type-role it holds, never the activity.
+  - `Entities/` · `Enums/` · `Models/` · `Services/` · `Validators/`
+  - `Mappers/` · `Commands/` · `Queries/` · `Handlers/`
   - ✅ `Validators/` holds validators · `Mappers/` holds mappers
   - ❌ `Validation/` · `Mapping/` — an activity reads as a subdomain, and every sibling names a role
-- **Avoid generic names** — `Helpers/`, `Utils/`, `Misc/` are banned. If it doesn't fit a subdomain, it belongs in `Core/`
-- **Mirror across layers** — if Domain has `Listings/ListingCapturing/`, Infrastructure has `Listings/Capturing/` (drop redundant prefix)
+- **Avoid generic names** — `Helpers/`, `Utils/`, `Misc/` are banned.
+  - what fits no subdomain belongs in `Core/`
+- **Mirror across layers** — Domain `Listings/ListingCapturing/` → Infrastructure `Listings/Capturing/`
+  - drop the redundant prefix
 
 ---
 
 ## Source folder casing
 
-- **Backend source folders are PascalCase**, matching their namespace segment 1:1 (`Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`). Distinct from the top-level **project** dir `{slug}.backend-services/`, which stays kebab — that's the IDE-collision-proof project folder, not a source folder ([repo structure](../../../../../repo/structure/repo-structure.md) §3).
+- **Backend source folders are PascalCase**, matching their namespace segment 1:1.
+  - `Mediator/Cqrs/`, `Application/Channels/Queries/`, `Data/Migrations/`
+  - the top-level **project** dir `{slug}.backend-services/` stays kebab — it is the IDE-collision-proof
+    project folder, not a source folder ([repo structure](../../../../../repo/structure/repo-structure.md) §3).
 
 ---
 
@@ -76,15 +86,19 @@ A `Listings` domain spans the full lifecycle: scraping → classifying → query
 A component states its folder **name** once ([components](../../components/components.md) § *Adding a component*);
 where that folder may appear is this file's rule, and the two together are not duplication.
 
-- must allow a component folder in **any** layer that declares the component — `Enums/` is legal under Domain, Application and Infrastructure alike.
-- must scope the folder to its subdomain rather than to the project root — `Listings/Enums/`, never a single `Enums/` per assembly.
+- must allow a component folder in **any** layer that declares the component.
+  - `Enums/` is legal under Domain, Application and Infrastructure alike.
+- must scope the folder to its subdomain, never to the project root.
+  - `Listings/Enums/`, never a single `Enums/` per assembly.
 - must not read a folder's presence in one layer as a claim on the others; a layer that declares none carries none.
 
 ---
 
 ## Layer alignment
 
-Domain and Infrastructure mirror each other but aren't forced to be 1:1. Infrastructure subdomains can exist without a Domain counterpart (e.g. `Publishing/` has no domain entities — it only formats and sends).
+Domain and Infrastructure mirror each other, but are not forced to be 1:1.
+An Infrastructure subdomain may exist without a Domain counterpart — `Publishing/` has no domain entities,
+it only formats and sends.
 
 ```
 {Repo}.Domain/                          {Repo}.Service/Infrastructure/

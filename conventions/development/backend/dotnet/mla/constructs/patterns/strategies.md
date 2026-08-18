@@ -59,5 +59,6 @@ public interface IOutboxClaimStrategy
 
 - must not suffix the type `Strategy` — swappability is a shape, and a suffix names a responsibility
   ([components](../constructs.md) § *Banned*).
-- must name the type for what it decides or produces — `Policy` for a decision, `Mapper` for a value, `Service` for work.
+- must name the type for what it decides or produces.
+  - `Policy` for a decision, `Mapper` for a value, `Service` for work.
 - the pattern stays in use; only its name as a suffix is refused.

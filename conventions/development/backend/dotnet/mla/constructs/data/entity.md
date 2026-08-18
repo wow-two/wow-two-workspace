@@ -35,7 +35,8 @@
 - must declare a `sealed record`.
 - must reference no ORM type; the domain assembly stays provider-free.
 - must implement the keyed contract → [entity contracts](../../domains/persistence/entities/entity-contracts.md).
-- member shape (`{ get; init; }`, positional) →
+- must declare `{ get; set; }` — a materializer writes after construction, so `init` blocks the tracker.
+- member shape (`required`, non-nullable) →
   [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 
 ```csharp

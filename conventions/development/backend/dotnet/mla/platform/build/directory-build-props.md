@@ -2,13 +2,17 @@
 
 *Last updated: 2026-07-06*
 
-> The shared MSBuild properties for a backend solution — framework, language, nullability — hoisted into one root file so every `.csproj` inherits them.
-> Purpose — a single, uniform build surface: one edit moves the whole solution's `TargetFramework` / `LangVersion`; a `.csproj` never restates a shared setting.
-> Use case — reach for it whenever you'd otherwise write `<TargetFramework>` / `<Nullable>` / `<ImplicitUsings>` / `<LangVersion>` in a `.csproj`, or want a solution-wide analyzer/warning policy.
+> The shared MSBuild properties for a backend solution — framework, language, nullability — hoisted into
+> one root file so every `.csproj` inherits them.
+> Purpose — one uniform build surface: a single edit moves the solution's `TargetFramework` /
+> `LangVersion`, and a `.csproj` never restates a shared setting.
+> Use case — you'd otherwise write `<TargetFramework>` / `<Nullable>` / `<ImplicitUsings>` /
+> `<LangVersion>` in a `.csproj`, or want a solution-wide analyzer/warning policy.
 
 ## Baseline
 
-The proven product-repo set — `wow-two-sdk-beta.product-template` (`create-repo` stamps it), byte-for-byte in `sift` + `arcade`:
+The proven product-repo set — `wow-two-sdk-beta.product-template` (`create-repo` stamps it),
+byte-for-byte in `sift` + `arcade`:
 
 ```xml
 <Project>
@@ -35,13 +39,16 @@ The proven product-repo set — `wow-two-sdk-beta.product-template` (`create-rep
 | `LangVersion` | `latest` | newest C# the SDK offers (collection expressions, primary constructors, …) |
 
 - **must set these four in `Directory.Build.props` only** — never in a `.csproj`.
-- **must not override a baseline property per-project** — if one project genuinely needs a different value, raise it (it usually signals the setting belongs in the SDK-style split, not a local override).
+- **must not override a baseline property per-project** — raise it when one project needs a different
+  value.
+- a needed override usually signals the setting belongs in the SDK-style split, not a local override.
 
 ---
 
 ## csproj stays minimal
 
-A `.csproj` carries only what is unique to it — references + project-specific properties. The `SmartQr.Domain` project entire:
+A `.csproj` carries only what is unique to it — references + project-specific properties.
+The `SmartQr.Domain` project entire:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -57,13 +64,18 @@ A `.csproj` carries only what is unique to it — references + project-specific 
 </Project>
 ```
 
-Legitimately project-specific (stays local): `Sdk="Microsoft.NET.Sdk.Web"` on the `Api`, its `<SpaRoot>` + `BuildSpa` target ([../../../deployment/hosting/single-host-serving.md](../../../../../../deployment/hosting/single-host-serving.md)), a `FrameworkReference` ([central-package-management.md](central-package-management.md)).
+Legitimately project-specific (stays local): `Sdk="Microsoft.NET.Sdk.Web"` on the `Api`, its `<SpaRoot>`
++ `BuildSpa` target
+([../../../deployment/hosting/single-host-serving.md](../../../../../../deployment/hosting/single-host-serving.md)),
+a `FrameworkReference` ([central-package-management.md](central-package-management.md)).
 
 ---
 
 ## Analyzer + warning policy (opt-in, publish-oriented)
 
-The baseline stops at the four properties. A repo that wants a strict build surface adopts the beta SDK's stance (`wow-two-sdk.backend.beta/src/Directory.Build.props`) — codified here so it's applied uniformly when reached for, not reinvented:
+The baseline stops at the four properties. A repo that wants a strict build surface adopts the beta SDK's
+stance (`wow-two-sdk.backend.beta/src/Directory.Build.props`) — codified here so it is applied uniformly
+when reached for, not reinvented:
 
 ```xml
 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -73,13 +85,29 @@ The baseline stops at the four properties. A repo that wants a strict build surf
 <WarningsNotAsErrors>$(WarningsNotAsErrors);CA1848;CA1873;CA1305;CA1000;CA1716;CA1822;CA1720;NU1510;NU1902;NU1903</WarningsNotAsErrors>
 ```
 
-- **`TreatWarningsAsErrors=true`** — correctness warnings **fail the build**; the default is warnings-as-errors, exceptions are carved back individually.
-- **`WarningsNotAsErrors`** — the escape hatch: perf/style/design analyzer IDs (`CA1848` logging-delegate, `CA1822` mark-static, `CA1720` identifier-contains-type-name, `CA1305`/`CA1716`/`CA1000`, …) and **NuGet advisories** stay **visible as warnings but non-blocking**. Correctness analyzers stay errors.
-- **NuGet-audit codes** ride the same list: `NU1510` (framework-provided package not pruned on net10), `NU1902`/`NU1903` (transitive-dependency vulnerability advisories) — surfaced, not fatal, so a beta-forever surface isn't blocked by an advisory on a transitive it can't immediately move.
-- **stance:** warnings-as-errors **on** by default, loosened per-ID with a comment justifying each carve-out; tighten (shrink the `WarningsNotAsErrors` list) as an area matures. A product repo may start from the four-property baseline and adopt this when its build surface is worth hardening.
+- **`TreatWarningsAsErrors=true`** — correctness warnings **fail the build**.
+- the default is warnings-as-errors; exceptions are carved back individually.
+- **`WarningsNotAsErrors`** — the escape hatch: perf/style/design analyzer IDs (`CA1848` logging-delegate,
+  `CA1822` mark-static, `CA1720` identifier-contains-type-name, `CA1305`/`CA1716`/`CA1000`, …) and
+  **NuGet advisories** stay **visible as warnings but non-blocking**.
+- correctness analyzers stay errors.
+- **NuGet-audit codes** ride the same list: `NU1510` (framework-provided package not pruned on net10),
+  `NU1902`/`NU1903` (transitive-dependency vulnerability advisories).
+- they are surfaced, not fatal, so a beta-forever surface isn't blocked by an advisory on a transitive
+  it can't immediately move.
+- **stance:** warnings-as-errors **on** by default, loosened per-ID with a comment justifying each
+  carve-out; tighten (shrink the `WarningsNotAsErrors` list) as an area matures.
+- a product repo may start from the four-property baseline and adopt this once its build surface is
+  worth hardening.
 
 ---
 
 ## Packaging / versioning props — SDK-only
 
-The beta SDK's `Directory.Build.props` also hoists **package-authoring** props (`IsPackable`, `PackageLicenseExpression`, `Authors`, `GenerateDocumentationFile`, source-link, deterministic-build, and the CI-bumped `Version`/`FileVersion`) because every project there ships a NuGet. A **product / venture** repo ships an **image, not packages** ([../../repo/structure/repo-structure.md](../../../../../repo/structure/repo-structure.md) §13) — so it **must not** copy those props; they belong only to library/SDK repos.
+The beta SDK's `Directory.Build.props` also hoists **package-authoring** props (`IsPackable`,
+`PackageLicenseExpression`, `Authors`, `GenerateDocumentationFile`, source-link, deterministic-build, and
+the CI-bumped `Version`/`FileVersion`) because every project there ships a NuGet.
+
+A **product / venture** repo ships an **image, not packages**
+([../../repo/structure/repo-structure.md](../../../../../repo/structure/repo-structure.md) §13) — so it
+**must not** copy those props; they belong only to library/SDK repos.

@@ -15,13 +15,16 @@
 | [dto](dto.md) | a projection onto the wire |
 | [api request](api-request.md) | the body one controller action binds |
 | [application request](application-request.md) | the message a caller dispatches in-process |
-| [result](result.md) | an operation's outcome — a success or an `AppError` |
+| [result](result.md) | the carrier — a typed success or an `AppError` |
+| [model](model.md) | what an operation produced, carried inside the result |
 | [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) | an EF mapping for one entity |
 
 ---
 
 ## Shared rules
 
-- must declare a `sealed record` with `init`-only properties → [constructs](../../../lla/constructs/constructs.md).
-- must start the type summary with **Represents**, and each member with **Gets**.
+- must declare a `sealed record` → [constructs](../../../lla/constructs/constructs.md) § *Data components*.
+- must state its own accessor pair — `init` where nothing writes after construction, `set` where something does.
+- must start the type summary with **Represents**, and each member with **Gets** →
+  [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 - must state role, location and declaration only; shape and flow belong to the domain that uses the type.

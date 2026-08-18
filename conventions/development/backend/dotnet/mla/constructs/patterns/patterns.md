@@ -145,7 +145,7 @@ The pattern is real and in use; another doc is its authority, and this row only 
 | Idempotency | `mediator.md` § *Pipeline behaviors* | `IIdempotent` + `IdempotencyBehavior<,>` |
 | Registry | `registry.md` § *Members* | a `Registry` that throws on an unbound key |
 | Mapper | `mapper.md` § *Members* | a total `Mapper`, handed every input |
-| Options | `constructs.md` § *`Settings` vs `Options`* | `Settings` from config, `Options` in code |
+| Options | `mla/constructs/constructs.md` § *`Settings` vs `Options`* | `Settings` from config, `Options` in code |
 | Result / Either | `results.md` § *Rules* | `AppResult<TSuccess>` collapsed with `.Match` |
 | Dependency Injection | `constructs.md:243` | constructor injection |
 | Claim Check | `outbox.md` § *Limits* | store the payload, stage the pointer |
@@ -161,8 +161,8 @@ The pattern names a role an existing name already owns. Don't introduce the patt
 |---|---|---|
 | Abstract Factory | a `Factory` per axis, a `Registry` for the family | `factories.md` § *Members* |
 | Bridge | a house contract, adapters behind it | `swappable-modules.md:11` |
-| Facade | `Broker` outward, `Service` inward | `constructs.md` § *Adding a new suffix* |
-| Observer | `Handler`, or `BackgroundService` for a poll | `constructs.md` § *Folds* |
+| Facade | `Broker` outward, `Service` inward | `mla/constructs/constructs.md` § *Adding a new suffix* |
+| Observer | `Handler`, or `BackgroundService` for a poll | `mla/constructs/constructs.md` § *Folds* |
 
 ---
 
@@ -172,12 +172,12 @@ Never declared. The rule that kills each one is written elsewhere; this table na
 
 | Pattern | Killing rule | Reach for |
 |---|---|---|
-| Composite | `constructs.md` § *Folds* — `Node` → `PipelineStep` | a `Pipeline` and its ordered steps |
+| Composite | `mla/constructs/constructs.md` § *Folds* — `Node` → `PipelineStep` | `Pipeline` with ordered steps |
 | Flyweight | `constructs.md:94` — allocation must be measured first | a plain reference type |
 | Visitor | `results.md` § *Carriers* — `.Match` is the consume path | a `switch` over the closed union |
 | Specification | `dapper.md` § *No query abstraction* | SQL that filters, composed in the query |
 | Service Locator | `constructs.md:243` | constructor injection ([service locator](service-locator.md)) |
-| Event Sourcing | `database.md` § *Schema-first rule* | the row as state; an event carries the fact |
+| Event Sourcing | `persistence.md` § *Contract* | the row as state; an event carries the fact |
 
 ---
 

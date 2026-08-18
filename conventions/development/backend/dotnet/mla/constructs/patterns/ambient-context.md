@@ -39,8 +39,9 @@ public interface ITenantContext
 
 - must not use ambient context for **time** — `TimeProvider` is injected, and a static clock is banned
   ([time](../../components/time.md)).
-- must not use it for the **actor** — caller context is sourced at the edge and rides the application request; a
-  handler never reads `ICurrentUser` or `HttpContext` ([api context building](../../domains/api/api-context-building.md)).
+- must not use it for the **actor** — caller context is sourced at the edge and rides the application request.
+  - a handler never reads `ICurrentUser` or `HttpContext`
+    ([api context building](../../domains/api/api-context-building.md)).
 - must not use it to carry a business input; an input a handler needs is a property on the message
   ([handler](../behavior/handler.md)).
 - must not read it from a `BackgroundService` — there is no request, so the value is whatever the last one left.

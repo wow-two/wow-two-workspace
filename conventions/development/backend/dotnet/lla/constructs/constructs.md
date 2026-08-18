@@ -109,7 +109,7 @@ A ban here is about the **construct**, whatever role holds it. A ban that depend
   - the null-invocation race — the last subscriber detaches between check and call, and the call throws.
   - one throwing handler aborts the rest — the first exception stops every later subscriber.
   - an `IEnumerable<IObserver>` set injected by hand is the same shape and folds the same way.
-- **positional records for data carriers** — reach for `{ get; init; }` body properties.
+- **positional records for data carriers** — reach for body properties; the accessor pair is the component's.
 - **`dynamic`** — reach for generics or polymorphism; the compiler stops checking and the failure moves to runtime.
 - **`using static`** — reach for the type name at the call site ([naming](../notation/naming/naming.md) § *Banned*).
 
@@ -122,8 +122,9 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 ### Location
 
 #### Folder
-- must sit in the folder its component doc names — [components](../../mla/components/components.md) states the folder, and
-  [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
+- must sit in the folder its component doc names.
+  - [components](../../mla/components/components.md) states the folder.
+  - [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File
 - must give the type its own file, named for the type: `Channel.cs`, `IEntity.cs`, `ChannelGetAllQuery.cs`.
@@ -165,10 +166,11 @@ A construct carrying **data** answers what a value *is*. The role fixes the star
 ```
 
 ### Members
-- must be `{ get; init; }` body properties, never positional parameters.
-- may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
+- must be body properties, never positional parameters.
 - must be `required` when the value must come from outside the constructor.
 - must be non-nullable unless the absence is a fact the caller reads.
+- must leave the accessor pair to the component's own doc — `init` and `set` answer to what writes the value.
+- may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
 
 ### Constructs
 - must use `sealed record` for anything whose identity is its values.
@@ -184,8 +186,9 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 ### Location
 
 #### Folder
-- must sit in the folder its component doc names — [components](../../mla/components/components.md) states the folder, and
-  [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
+- must sit in the folder its component doc names.
+  - [components](../../mla/components/components.md) states the folder.
+  - [domain structuring](../../mla/architecture/clean/domain-structuring.md) states which layer it may appear in.
 
 #### File
 - must give the type its own file, named for the type: `CodesController.cs`, `StripeBillingBroker.cs`.

@@ -3,7 +3,7 @@
 *Last updated: 2026-08-18*
 
 > How a service stores and reads its own state, cut into the four things that swap independently.
-> Purpose — an entity is not tied to an engine, an engine is not tied to a mapper, and neither is tied to a migrator.
+> Purpose — an entity is not tied to an engine, an engine not to a mapper, neither to a migrator.
 > Use case — adding a table, choosing how code reaches it, or changing the schema.
 
 ## Contract
@@ -18,7 +18,7 @@
 
 | Axis | Answers | Lead |
 |---|---|---|
-| [entities](entities/entity-contracts.md) | what a persisted type must implement | identity, audit, soft-delete, tenancy |
+| [entities](entities/entity-contracts.md) | what a persisted type implements | identity, audit, soft-delete, tenancy |
 | [database](database/database.md) | which engine, and what it fixes | types, enum forms, column conventions |
 | [access](access/access.md) | how code reaches a row | EF tracked, Dapper untracked |
 | [migrations](migrations/migrations.md) | how the schema changes | `sql` · `dbup` · `ef` |

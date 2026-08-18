@@ -38,7 +38,8 @@ public sealed class EventSagaBuilder
 ## Limits
 
 - must not build a value an object initializer already expresses — `new Foo { A = 1, B = 2 }` needs no builder.
-- must not use a builder for config binding — that is `Settings` via `IOptions<T>` ([settings](../../components/settings.md)).
+- must not use a builder for config binding — that is `Settings` via `IOptions<T>`
+  ([settings](../../components/settings.md)).
 - must not let `Build()` reach out-of-process; a builder assembles a value, it does not run work.
 - must not expose a builder as a DI service — it is constructed at the call site and dropped.
 

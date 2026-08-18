@@ -47,5 +47,6 @@ public sealed class TelegramClient { private readonly HttpClient http = new(); }
 - must suffix with `Client`, prefixed by the provider — `TelegramClient`, `LocationApiClient`.
 - must qualify with the domain when one provider needs several — `GoogleMapsClient`, `GooglePlacesClient`.
 - must name a Refit interface `I{Provider}Api` — `IBillingApi`.
+- must return a `Result` — a provider call fails, and the caller reads that from the type.
 
 Registration, resilience and cross-cutting handlers → [http integrations](../../domains/integrations/http/http.md).

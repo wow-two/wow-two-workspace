@@ -3,7 +3,7 @@
 *Last updated: 2026-08-16*
 
 > Which pattern splits a backend service into projects, and how those projects group inside the solution.
-> Purpose — a pattern doc states the split and nothing else, so a layer never inherits a component list it does not own.
+> Purpose — a pattern doc states the split and nothing else, so a layer inherits no component list it does not own.
 
 ## Patterns
 
@@ -28,8 +28,8 @@ One folder per architecture, each with its own lead doc. A service names the one
 
 ## Solution organization
 
-A backend solution (`{slug}.backend-services.slnx`) groups its projects into **solution folders** — virtual nodes, not
-on-disk paths. Projects are named `{Brand}.{Domain}[.{SubDomain}]`, PascalCase.
+A backend solution (`{slug}.backend-services.slnx`) groups its projects into **solution folders** — virtual nodes,
+not on-disk paths. Projects are named `{Brand}.{Domain}[.{SubDomain}]`, PascalCase.
 
 | Folder | Holds | Examples (SmartQr) |
 |---|---|---|

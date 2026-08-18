@@ -2,19 +2,20 @@
 
 *Last updated: 2026-08-18*
 
-> Identity and system endpoints whose controller, route, action name and path are fixed across every app —
+> Identity and system endpoints whose controller, route, action and path are fixed across every app —
 > `api/identity/*`, `api/system/status`.
-> Purpose — one identity surface per product, so a frontend targets the same paths everywhere; no `auth/login`
-> here and `admin/session` there.
-> Use case — adding or renaming a sign-in, sign-out, current-user, guest or status endpoint, or aligning a
-> controller that predates the convention.
+> Purpose — one identity surface per product; a frontend targets the same paths everywhere, not
+> `auth/login` here and `admin/session` there.
+> Use case — adding or renaming a sign-in, sign-out, current-user, guest or status endpoint, or aligning
+> a controller that predates the convention.
 
 ## Identity — `IdentityController` @ `api/identity`
 
 - must declare `sealed IdentityController` with `[Route("api/identity")]`.
 - must summarize it `Exposes identity over HTTP.`
 - must implement only the capabilities the app has.
-- must take the exact action name and path below for each one implemented; the verb may vary by mechanism.
+- must take the exact action name and path below for each capability.
+- the verb may vary by mechanism.
 
 | Capability | Action | Path | Verb | Summary |
 |---|---|---|---|---|
@@ -29,11 +30,11 @@
 - must `POST` a credential or token sign-in — it carries a body.
 - must `GET` an external-IdP challenge that only redirects — `sign-in` → 302 to the provider.
 - must keep the path `sign-in` either way.
-- must keep the mechanism out of the summary — OAuth, password and guest are *how*: `Begins sign-in.`, never
-  `Challenges the GitHub scheme.` ([controller](../../constructs/behavior/controller.md) § *Type doc*).
+- must keep the mechanism out of the summary — OAuth, password and guest are *how*: `Begins sign-in.`,
+  never `Challenges the GitHub scheme.` ([controller](../../constructs/behavior/controller.md) § *Type doc*).
 - must expose `callback` as an action only when the controller handles it.
-- must leave `CallbackPath` with the auth middleware when the middleware owns it, and keep that path in sync
-  rather than adding a dead action.
+- must leave `CallbackPath` with the auth middleware when the middleware owns it.
+- must keep that path in sync rather than add a dead action.
 
 ---
 
@@ -41,8 +42,8 @@
 
 - must declare `sealed SystemController` with `[Route("api/system")]`.
 - must summarize it `Exposes system status over HTTP.` — the `Exposes` starter every controller takes.
-- must expose `Status` at `GET api/system/status` — liveness, service identity, and any app-specific health
-  fact such as the vault's seal state.
+- must expose `Status` at `GET api/system/status` — liveness, service identity, any app-specific
+  health fact such as the vault's seal state.
 - must mark `Status` `[AllowAnonymous]` — the sign-in screen hits it pre-auth.
 - must keep the `Status` action summary abstract, never the payload shape — `Reports service liveness.`,
   `Reports the vault's seal state.`
@@ -53,8 +54,9 @@
 
 - must rename `AuthController` → `IdentityController`, and `api/auth` or `api/admin/session` → `api/identity`.
 - must rename `Login` → `SignIn` and `Logout` → `SignOut`; `me` stays `Me`.
-- must grep the whole backend, not only the controller — `CallbackPath`, `returnUrl`, cookie paths and
-  reverse-proxy or path-prefix auth rules may hard-code the old path. Update every reference.
-- must flag a load-bearing path-prefix policy — everything under `api/admin` being `[Authorize]`, say — before
-  moving a route out of that prefix.
+- must grep the whole backend, not only the controller — `CallbackPath`, `returnUrl`, cookie paths,
+  reverse-proxy and path-prefix auth rules may hard-code the old path.
+- must update every reference.
+- must flag a load-bearing path-prefix policy — everything under `api/admin` being `[Authorize]` —
+  before moving a route out of that prefix.
 - must update the frontend caller's paths in the same pass.

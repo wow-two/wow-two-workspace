@@ -4,7 +4,8 @@
 
 > One type's persisted JSON seam — the options it stores with, and the pair that reads and writes it.
 > Purpose — a stored representation outlives the model, so its serializer settings belong beside it, not at the host.
-> Use case — a column, a file or a cache entry holding one type as JSON; the API wire contract is the [api domain's](../domains/api/api-messages.md).
+> Use case — a column, a file or a cache entry holding one type as JSON;
+> the API wire contract is the [api domain's](../domains/api/api-messages.md).
 
 ## Location
 

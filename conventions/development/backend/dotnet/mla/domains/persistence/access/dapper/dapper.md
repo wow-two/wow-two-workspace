@@ -1,6 +1,6 @@
 # Dapper
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-18*
 
 > Reaching the database through a connection and hand-written SQL.
 > Purpose — a query the author wrote is a query the author can read; no expression tree stands between the two.
@@ -26,21 +26,27 @@ public sealed record OrderLineItemEntity : IKeyedEntity<Guid>, IHasTableName
 
 ## Connections
 
-> **Inject `IDbConnectionFactory` — never a raw `DbConnection` or connection string.** It is the single connection-factory abstraction across the repo and
-> isolates the connection-string lookup to one place (`IDbConnectionFactory`, `src/Data/Abstractions/IDbConnectionFactory.cs`).
+> **Inject `IDbConnectionFactory` — never a raw `DbConnection` or connection string.**
+> It is the repo's single connection-factory abstraction, and isolates the connection-string lookup to one place
+> (`IDbConnectionFactory`, `src/Data/Abstractions/IDbConnectionFactory.cs`).
 
-- **Open one fresh connection per operation** — `await using var conn = await connectionFactory.CreateOpenAsync(ct);` at the start of each method.
-- The factory hands back an already-opened `DbConnection` (`ValueTask<DbConnection> CreateOpenAsync(CancellationToken)`); never cache, reuse, or share one across operations.
-- `Create()` returns a *closed* connection (caller opens + disposes); prefer `CreateOpenAsync(ct)` in app code.
+- **Open one fresh connection per operation**, at the start of each method.
+  - `await using var conn = await connectionFactory.CreateOpenAsync(ct);`
+- the factory hands back an already-opened `DbConnection`.
+  - `ValueTask<DbConnection> CreateOpenAsync(CancellationToken)`.
+- must never cache, reuse, or share one across operations.
+- `Create()` returns a *closed* connection, caller opens + disposes; prefer `CreateOpenAsync(ct)` in app code.
 
 ### Registration
 
-Register the factory **once** at startup (`ConnectionFactoryServiceCollectionExtensions`, `src/Data/Abstractions/`). Pick one:
+Register the factory **once** at startup (`ConnectionFactoryServiceCollectionExtensions`, `src/Data/Abstractions/`).
+Pick one:
 
-- `AddDataSourceConnectionFactory()` — backed by a registered `DbDataSource` (e.g. `NpgsqlDataSource`) → `DataSourceConnectionFactory` (singleton).
-  **Default.** Pooling, enum mapping, etc. configured on the data source.
-- `AddDbConnectionFactory<TFactory>()` — backed by a custom `IDbConnectionFactory` you supply (singleton). Use for a provider without a `DbDataSource`,
-  or bespoke connection construction.
+- `AddDataSourceConnectionFactory()` — **default**; backed by a registered `DbDataSource`, e.g. `NpgsqlDataSource`.
+  - resolves to `DataSourceConnectionFactory` (singleton).
+  - pooling, enum mapping etc. are configured on the data source.
+- `AddDbConnectionFactory<TFactory>()` — backed by a custom `IDbConnectionFactory` you supply (singleton).
+  - use for a provider without a `DbDataSource`, or bespoke connection construction.
 
 ```csharp
 services.AddNpgsqlDataSource(connectionString); // registers a DbDataSource
@@ -52,37 +58,41 @@ services.AddDapperConventions();                 // global mappings + handlers (
 
 ## Conventions (global, once)
 
-`AddDapperConventions()` (`DapperServiceCollectionExtensions`, `src/Data/Dapper/`) is **idempotent** (guarded by `Interlocked.Exchange`) and wires the
-process-wide Dapper conventions:
+`AddDapperConventions()` (`DapperServiceCollectionExtensions`, `src/Data/Dapper/`) is **idempotent**, guarded by
+`Interlocked.Exchange`, and wires the process-wide Dapper conventions:
 
 - snake_case column → PascalCase property mapping (`DefaultTypeMap.MatchNamesWithUnderscores = true`)
 - `DateOnlyTypeHandler` — `DATE` ↔ `DateOnly`
 - `ListTypeHandler<string>` — `TEXT[]` ↔ `List<string>`
 
-Call it once at startup (or rely on the `AddDapperRepository<…>` / `AddDataSourceConnectionFactory` paths that call it for you). Register additional list
-handlers at startup via `SqlMapper.AddTypeHandler`:
+Call it once at startup, or rely on the `AddDapperRepository<…>` / `AddDataSourceConnectionFactory` paths that call it
+for you. Register additional list handlers at startup via `SqlMapper.AddTypeHandler`:
 
 ```csharp
 SqlMapper.AddTypeHandler(new ListTypeHandler<int>());
 SqlMapper.AddTypeHandler(new ListTypeHandler<Guid>());
 ```
 
-> Enum-as-text columns: use `AddEnumTypeHandler<TEnum>(CaseStyle.Snake)` (registers `EnumTypeHandler<TEnum>`) — see [Enum-as-text columns](#enum-as-text-columns)
-> and [enums](../../../../components/enums.md).
+> Enum-as-text columns: use `AddEnumTypeHandler<TEnum>(CaseStyle.Snake)`, which registers `EnumTypeHandler<TEnum>` —
+> see [Enum-as-text columns](#enum-as-text-columns) and [postgres](../../database/postgres/postgres.md) § *Enum column mapping*.
 
 ---
 
 ## Generic CRUD — `DapperRepository<TEntity, TId>`
 
-- For straightforward single-table read/CRUD, depend on `IRepository<TEntity, TId>` (read+write) or `IReadRepository<TEntity, TId>` (read-only).
-- Let `DapperRepository<TEntity, TId>` generate the SQL — don't hand-roll `SELECT *` / `INSERT` / `UPDATE` / `DELETE`.
+- must depend on `IRepository<TEntity, TId>` (read+write) or `IReadRepository<TEntity, TId>` (read-only).
+  - for straightforward single-table read/CRUD.
+- must let `DapperRepository<TEntity, TId>` generate the SQL.
+  - never hand-roll `SELECT *` / `INSERT` / `UPDATE` / `DELETE`.
 
 ### Entity requirements
 
-- `TEntity` must declare **both** `IKeyedEntity<TId>` (exposes `Id`) **and** `IHasTableName` (static abstract `TableName`); `TId` must be `notnull, IEquatable<TId>`.
+- `TEntity` must declare **both** `IKeyedEntity<TId>` (exposes `Id`) **and** `IHasTableName`.
+  - `IHasTableName` supplies the static abstract `TableName`.
+- `TId` must be `notnull, IEquatable<TId>`.
 
 ```csharp
-public sealed class OlxListingEntity : IKeyedEntity<Guid>, IHasTableName
+public sealed record OlxListingEntity : IKeyedEntity<Guid>, IHasTableName
 {
     public static string TableName => "olx_listings";   // storage casing (snake_case)
     public Guid Id { get; init; }
@@ -91,12 +101,14 @@ public sealed class OlxListingEntity : IKeyedEntity<Guid>, IHasTableName
 }
 ```
 
-- Column set = **every public instance property with a getter *and* setter**, mapped via `SqlNaming.ColumnCase`. Id column is `nameof(IKeyedEntity<TId>.Id)`.
+- column set = **every public instance property with a getter *and* setter**, mapped via `SqlNaming.ColumnCase`.
+- the Id column is `nameof(IKeyedEntity<TId>.Id)`.
 
 ### Store-generated columns
 
-- Override the protected `ExcludedOnInsert` / `ExcludedOnUpdate` to omit identity / computed / store-generated columns.
-- Defaults: `ExcludedOnInsert` = none; `ExcludedOnUpdate` = `Id`.
+- must override the protected `ExcludedOnInsert` / `ExcludedOnUpdate`.
+  - omits identity / computed / store-generated columns.
+- defaults: `ExcludedOnInsert` = none; `ExcludedOnUpdate` = `Id`.
 
 ```csharp
 public sealed class OlxListingsRepository(IDbConnectionFactory connectionFactory)
@@ -111,12 +123,13 @@ public sealed class OlxListingsRepository(IDbConnectionFactory connectionFactory
 }
 ```
 
-- All members are `virtual` — override `GetByIdAsync`, `CreateAsync`, etc. for bespoke SQL while inheriting the rest.
+- all members are `virtual` — override `GetByIdAsync`, `CreateAsync`, etc. for bespoke SQL while inheriting the rest.
 
 ### Registration
 
-`AddDapperRepository` (`DapperRepositoryServiceCollectionExtensions`, `src/Data/Dapper/Repositories/`) registers the implementation under **both**
-`IRepository<,>` and `IReadRepository<,>` and calls `AddDapperConventions()` for you (Scoped by default):
+`AddDapperRepository` (`DapperRepositoryServiceCollectionExtensions`, `src/Data/Dapper/Repositories/`) registers the
+implementation under **both** `IRepository<,>` and `IReadRepository<,>`, and calls `AddDapperConventions()` for you
+(Scoped by default):
 
 ```csharp
 // generic repo
@@ -132,17 +145,25 @@ services.AddDapperRepository<OlxListingsRepository, OlxListingEntity, Guid>();
 
 For hand-written queries and commands.
 
-- **Table references** — `SqlNaming.Table<TEntity>()` (or `SqlNaming.Table<TEntity>("o")` for an aliased reference; requires `TEntity : IHasTableName`).
-  Define a class-level constant: `private static readonly string Table = SqlNaming.Table<OlxListingEntity>();`.
-- **Column names** — `SqlNaming.Col("EnrichedAt")` → `enriched_at` (default `CaseStyle.Snake`); aliased `SqlNaming.Col("EnrichedAt", "l")` → `l.enriched_at`;
-  strongly-typed `SqlNaming.Col<OlxListingEntity>(x => x.EnrichedAt)`. Hard-coded snake_case is fine for simple single-table queries; use `SqlNaming.Col`
-  for dynamic WHERE clauses or aliased joins.
-- **Parameters** — `SqlNaming.ParRef("Limit")` → `@limit` (placeholder, default `CaseStyle.Camel`); `SqlNaming.Par("Limit")` → bare `limit` (for
-  `DynamicParameters.Add`). Strongly-typed `SqlNaming.ParRef<OlxListingEntity>(x => x.Id)`. Pass values via an anonymous object or `DynamicParameters`.
-- **Casing is global** — defaults columns `Snake`, params `Camel`. Override **once at startup** via `SqlNaming.ColumnCase` / `SqlNaming.ParameterCase`
-  if a schema differs; never per-call.
-- **Raw strings** — follow [code-organization.md](../../../../../lla/notation/style/style.md) raw-string rules (opening `"""` on its own line).
-- **Wrap every call** in `new CommandDefinition(sql, parameters, cancellationToken: ct)` — never `QueryAsync(sql, parameters)` without it (loses the CT).
+- **Table references** — `SqlNaming.Table<TEntity>()`, or `SqlNaming.Table<TEntity>("o")` for an aliased reference.
+  - requires `TEntity : IHasTableName`.
+  - define a class-level constant: `private static readonly string Table = SqlNaming.Table<OlxListingEntity>();`.
+- **Column names** — `SqlNaming.Col("EnrichedAt")` → `enriched_at`, default `CaseStyle.Snake`.
+  - aliased: `SqlNaming.Col("EnrichedAt", "l")` → `l.enriched_at`.
+  - strongly-typed: `SqlNaming.Col<OlxListingEntity>(x => x.EnrichedAt)`.
+  - hard-coded snake_case is fine for simple single-table queries.
+  - use `SqlNaming.Col` for dynamic WHERE clauses or aliased joins.
+- **Parameters** — `SqlNaming.ParRef("Limit")` → `@limit`, a placeholder, default `CaseStyle.Camel`.
+  - `SqlNaming.Par("Limit")` → bare `limit`, for `DynamicParameters.Add`.
+  - strongly-typed: `SqlNaming.ParRef<OlxListingEntity>(x => x.Id)`.
+  - pass values via an anonymous object or `DynamicParameters`.
+- **Casing is global** — defaults columns `Snake`, params `Camel`.
+  - override **once at startup** via `SqlNaming.ColumnCase` / `SqlNaming.ParameterCase` if a schema differs.
+  - never per-call.
+- **Raw strings** — follow the raw-string rules in
+  [code-organization.md](../../../../../lla/notation/style/style.md); opening `"""` on its own line.
+- **Wrap every call** in `new CommandDefinition(sql, parameters, cancellationToken: ct)`.
+  - never `QueryAsync(sql, parameters)` without it — it loses the CT.
 
 ```csharp
 public sealed class UnenrichedListingsRepository(IDbConnectionFactory connectionFactory)
@@ -166,12 +187,14 @@ public sealed class UnenrichedListingsRepository(IDbConnectionFactory connection
 }
 ```
 
-> **Stale-helper fix:** earlier drafts referenced `Tab<T>()` / `Col()`. Those names do not exist — the helpers are static members on `SqlNaming`:
-> `SqlNaming.Table<T>` / `SqlNaming.Col` / `SqlNaming.Col<T>` / `SqlNaming.Par` / `SqlNaming.ParRef`. `Table<T>` requires `IHasTableName`.
+> **Stale-helper fix:** `Tab<T>()` / `Col()` do not exist. The helpers are static members on `SqlNaming` —
+> `SqlNaming.Table<T>` / `SqlNaming.Col` / `SqlNaming.Col<T>` / `SqlNaming.Par` / `SqlNaming.ParRef`.
+> `Table<T>` requires `IHasTableName`.
 
 ### DI registration (query/command classes)
 
-- Scoped lifetime (shares request-scoped connection state). Register in the persistence registration extension.
+- must use a Scoped lifetime — it shares request-scoped connection state.
+- must register it in the persistence registration extension.
 
 ---
 
@@ -199,8 +222,8 @@ public Task<List<T>> GetBatchAsync(CancellationToken ct) =>
      """);
 ```
 
-> **Note:** `const string` cannot use string interpolation — use `static readonly string` when fragments reference `SqlNaming.Table<T>()` /
-> `SqlNaming.Col(...)` helpers.
+> `const string` cannot use string interpolation — use `static readonly string` when a fragment references the
+> `SqlNaming.Table<T>()` / `SqlNaming.Col(...)` helpers.
 
 ---
 
@@ -212,7 +235,8 @@ public Task<List<T>> GetBatchAsync(CancellationToken ct) =>
 - `ListTypeHandler<string>` — `TEXT[]` ↔ `List<string>`
 - snake_case → PascalCase property mapping
 
-Additional list handlers (`List<int>`, `List<Guid>`) → register at startup via `SqlMapper.AddTypeHandler(new ListTypeHandler<int>())`.
+Additional list handlers (`List<int>`, `List<Guid>`) → register at startup via
+`SqlMapper.AddTypeHandler(new ListTypeHandler<int>())`.
 
 ### Enum-as-text columns
 
@@ -223,17 +247,18 @@ services.AddEnumTypeHandler<OrderStatus>();              // default CaseStyle.Sn
 services.AddEnumTypeHandler<OrderStatus>(CaseStyle.Camel);
 ```
 
-- `AddEnumTypeHandler<TEnum>` (constraint `TEnum : struct, Enum`) registers `EnumTypeHandler<TEnum>`: writes emit the chosen `CaseStyle`, reads are
-  case-insensitive.
-- For Postgres **native** enum types, use Npgsql's driver-level `MapEnum` instead — see [enums](../../../../components/enums.md).
+- `AddEnumTypeHandler<TEnum>` (constraint `TEnum : struct, Enum`) registers `EnumTypeHandler<TEnum>`.
+  - writes emit the chosen `CaseStyle`; reads are case-insensitive.
+- must use Npgsql's driver-level `MapEnum` instead for Postgres **native** enum types.
+  - see [postgres](../../database/postgres/postgres.md) § *Enum column mapping*.
 
 ---
 
 ## No query abstraction
 
-- No `IQueryable`, no Specification pattern, no expression-tree query builder.
-- Reads are either generic-CRUD methods on `IReadRepository<,>` (`GetByIdAsync`, `GetAllAsync`, `ExistsAsync`, `CountAsync`) or hand-written SQL in a
-  repository, split into `Queries/` and `Commands/` folders once it grows.
-- Compose filtering in SQL, not in C# query objects.
+- must not use `IQueryable`, the Specification pattern, or an expression-tree query builder.
+- reads are generic-CRUD methods on `IReadRepository<,>` — `GetByIdAsync`, `GetAllAsync`, `ExistsAsync`, `CountAsync`.
+- reads are otherwise hand-written SQL in a repository, split into `Queries/` and `Commands/` folders once it grows.
+- must compose filtering in SQL, never in C# query objects.
 
 ---

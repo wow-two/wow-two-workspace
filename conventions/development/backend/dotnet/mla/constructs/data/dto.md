@@ -34,6 +34,7 @@
 ### Construct
 - must declare a `sealed record` — identity is the values it carries →
   [constructs](../../../lla/constructs/constructs.md) § *Data components*.
+- must declare `{ get; init; }` unless a projection is built in steps; then `set`, and say why.
 
 ### Type name
 - must suffix with `Dto`, entity-first and singular — `CodeDto`, `RuleDto`.

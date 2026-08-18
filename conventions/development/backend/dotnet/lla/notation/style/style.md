@@ -40,7 +40,7 @@ Neither a construct nor a statement — a directive declares no type and runs no
 |---|---|---|
 | `#nullable` | use | only to enable; a per-file disable hides a real warning |
 | `#if` · `#elif` · `#else` · `#endif` | use with care | a build-configuration branch, never a feature switch |
-| `#region` · `#endregion` | use with care | per [constructs](../../constructs/constructs.md) § *Behavior components* |
+| `#region` · `#endregion` | use with care | [constructs](../../constructs/constructs.md) § *Behavior components* |
 | `#pragma warning` | use with care | must name the warning and carry a `//` saying why |
 | `#line` · `#error` · `#warning` | use with care | generator output and build-time assertions only |
 
@@ -154,7 +154,8 @@ screen; the limit keeps two files legible side by side on a 1920 display.
 
 - Applies to every line — code, XML doc comments, string literals in source.
 - **Doc comments break the limit most often, and this limit is the *last* gate they pass.**
-  - run its field's own test first ([documentation](../documentation/documentation.md)) — a block wrapped without that pass hides the defect.
+  - run its field's own test first ([documentation](../documentation/documentation.md)).
+    - a block wrapped without that pass hides the defect.
 - Only a block that survives both earlier gates and still exceeds 120 goes multi-line, tags on their own lines:
 
 ```csharp

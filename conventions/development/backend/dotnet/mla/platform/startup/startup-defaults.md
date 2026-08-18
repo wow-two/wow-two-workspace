@@ -6,7 +6,8 @@
 > Purpose — a new service inherits the whole pipeline instead of re-listing it and missing one.
 > Use case — creating a host, or turning one folded-in concern off.
 
-A production-shaped API host boots through the paired SDK calls `AddApiDefaults()` / `UseApiDefaults()` — never a hand-rolled per-area `Add*` / `Use*` set.
+A production-shaped API host boots through the paired SDK calls `AddApiDefaults()` / `UseApiDefaults()`
+— never a hand-rolled per-area `Add*` / `Use*` set.
 
 ## The two calls
 
@@ -28,16 +29,21 @@ app.UseApiDefaults();
 app.Run();
 ```
 
-- `AddApiDefaults(this WebApplicationBuilder, Action<ApiDefaultsOptions>? configure = null)` — registers the P1 service baseline; returns the builder for chaining.
-- `UseApiDefaults(this WebApplication)` — adds the matching middleware pipeline and maps the OpenAPI + health endpoints; returns the app.
-- Both defined in `src/Meta/ApiDefaultsExtensions.cs` (root namespace `WoW.Two.Sdk.Backend.Beta` — one `using` lights it up).
-- Pristine `Program.cs` still applies (see [host configuration](host-configuration.md)) — when the product wraps these in `HostConfiguration`, the two `Configure` extensions call `AddApiDefaults` / `UseApiDefaults` and nothing per-area.
+- `AddApiDefaults(this WebApplicationBuilder, Action<ApiDefaultsOptions>? configure = null)` — registers
+  the P1 service baseline; returns the builder for chaining.
+- `UseApiDefaults(this WebApplication)` — adds the matching middleware pipeline, maps the OpenAPI + health
+  endpoints, returns the app.
+- both live in `src/Meta/ApiDefaultsExtensions.cs`; root namespace `WoW.Two.Sdk.Backend.Beta`, so one
+  `using` lights it up.
+- pristine `Program.cs` still applies ([host configuration](host-configuration.md)).
+- a product wrapping these in `HostConfiguration` calls `AddApiDefaults` / `UseApiDefaults` from the two
+  `Configure` extensions, and nothing per-area.
 
 ---
 
 ## Folded in
 
-`AddApiDefaults` composes these (each its own per-area extension — do **not** call them yourself):
+`AddApiDefaults` composes these (each its own per-area extension — never call one yourself):
 
 | Concern | Add-side symbol | Use-side symbol |
 |---|---|---|
@@ -62,7 +68,8 @@ app.Run();
 
 ## Tuning — flip flags, don't re-compose
 
-Tune via `ApiDefaultsOptions` (`src/Meta/ApiDefaultsOptions.cs`). Every concern defaults **on** — flip a flag off rather than dropping `AddApiDefaults` and re-listing the per-area extensions by hand.
+Tune via `ApiDefaultsOptions` (`src/Meta/ApiDefaultsOptions.cs`). Every concern defaults **on** — flip a
+flag off rather than drop `AddApiDefaults` and re-list the per-area extensions by hand.
 
 ```csharp
 builder.AddApiDefaults(o =>
@@ -93,22 +100,29 @@ builder.AddApiDefaults(o =>
 
 Auth, mediator, and data are **deliberately excluded** — they need per-app keys, assemblies, and connection strings.
 
-- Register services (auth/mediator/data) between `AddApiDefaults` and `Build()`.
-- Add auth middleware and map endpoints **after** `UseApiDefaults` so the forwarded-headers / secure-headers / CORS pipeline is already in place.
+- must register auth / mediator / data between `AddApiDefaults` and `Build()`.
+- must add auth middleware and map endpoints **after** `UseApiDefaults`, so the forwarded-headers /
+  secure-headers / CORS pipeline is already in place.
 
 ---
 
 ## Rules
 
-- Boot a production-shaped API host with `AddApiDefaults` + `UseApiDefaults` — not a hand-assembled `Add*` / `Use*` list.
-- Change behavior through `ApiDefaultsOptions` flags only; never bypass the bundle to call a folded-in per-area extension directly.
-- Keep auth + mediator + data out of the bundle; add them explicitly, mediator/data before `Build()`, auth middleware after `UseApiDefaults`.
-- Need finer control than the flags expose? Raise it — extend `ApiDefaultsOptions`, don't fork the wiring per product.
+- must boot a production-shaped API host with `AddApiDefaults` + `UseApiDefaults`.
+- must not hand-assemble an `Add*` / `Use*` list instead.
+- must change behavior through `ApiDefaultsOptions` flags only.
+- must not bypass the bundle to call a folded-in per-area extension directly.
+- must keep auth + mediator + data out of the bundle, added explicitly — mediator / data before
+  `Build()`, auth middleware after `UseApiDefaults`.
+- must raise a need for finer control than the flags expose — extend `ApiDefaultsOptions`, never fork
+  the wiring per product.
 
 ---
 
 ## Neighbours
 
-- [host configuration](host-configuration.md) — pristine `Program.cs` + `HostConfiguration` split that wraps these calls
+- [host configuration](host-configuration.md) — pristine `Program.cs` + the `HostConfiguration` split
+  wrapping these calls
 - [clean architecture](../../architecture/clean/clean.md) — the layer set
-- `src/Meta/README.md` (in `wow-two-sdk.backend.beta`) — the boot-floor quickstart + per-area composition escape hatch
+- `src/Meta/Meta.md` (in `wow-two-sdk.backend.beta`) — boot-floor quickstart + per-area composition
+  escape hatch

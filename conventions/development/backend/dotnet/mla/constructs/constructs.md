@@ -2,7 +2,8 @@
 
 *Last updated: 2026-08-18*
 
-> The canonical suffix→role vocabulary for backend types — one name per role, the suffix declaring the responsibility.
+> The canonical suffix→role vocabulary for backend types — one name per role,
+> the suffix declaring the responsibility.
 > Purpose — when `Store`, `Repository` and `Provider` all mean data access, a reader cannot infer role from a name.
 > Use case — naming any backend type; check the keep-list before coining, run the gate before adding.
 
@@ -34,8 +35,8 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 
 | Suffix | Role | Authority |
 |---|---|---|
-| `Service` | business logic, orchestration, compute — the default when no narrower role fits | [service](behavior/service.md) |
-| `BackgroundService` | long-running work off the request path, polling or draining on a timer | [hosted service](behavior/hosted-service.md) |
+| `Service` | business logic, orchestration, compute — the default role | [service](behavior/service.md) |
+| `BackgroundService` | long-running work off the request path | [hosted service](behavior/hosted-service.md) |
 | `HostedService` | one-shot work at host start or stop | [hosted service](behavior/hosted-service.md) |
 | `Client` | one external provider's call surface, out-of-proc | [client](behavior/client.md) |
 | `Broker` | the app-side seam over an external dependency | [broker](behavior/broker.md) |
@@ -43,7 +44,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Factory` | runtime instance creation, per key or per request | [factories](patterns/factories.md) |
 | `Registry` | key → type or capability bindings, registered at composition | [registry](behavior/registry.md) |
 | `Tracker` | live status many producers push into, persisted nowhere | — |
-| `Extensions` | the static-logic tier over a domain — no injection, no state | [extensions](../components/extensions.md) |
+| `Extensions` | static logic over a domain — no injection, no state | [extensions](../components/extensions.md) |
 | `Handler` | the receiver of one dispatched message | [handler](behavior/handler.md) |
 | `Command` · `Query` · `Event` | a dispatched use case — write, read, fan-out | [application request](data/application-request.md) |
 | `Validator` | input validation for one request | [validator](behavior/validator.md) |
@@ -53,7 +54,8 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Dto` | a projection onto the wire — data, never behavior | [dto](data/dto.md) |
 | `Entity` | a table-mapped row, owning its identity | [entity](data/entity.md) |
 | `ValueObject` | values stored inside a row; identity is the values | [value object](data/value-object.md) |
-| `Result` | an operation's outcome — a typed success or an `AppError` | [result](data/result.md) |
+| `Result` | the carrier — a typed success or an `AppError` | [result](data/result.md) |
+| `Model` | the application's own shape of a thing, inside the carrier | [model](data/model.md) |
 | `Adapter` | a third-party type fitted to an interface we declared | [adapter](behavior/adapter.md) |
 | `Builder` | stepwise construction, ending in `Build()` | [builder](behavior/builder.md) |
 | `Policy` | decides whether, when, or how often another operation runs | [policy](behavior/policy.md) |
@@ -70,11 +72,12 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Generator` | derives a value from its inputs — an id, a code, a matrix | — |
 | `Rasterizer` | vector → pixels | — |
 | `Spec` | a declarative input shape a renderer consumes — not a wire `Dto` | — |
-| `Json` | one type's persisted JSON seam — its `Options` plus `Serialize` / `Deserialize` | [json](../components/json.md) |
+| `Json` | one type's persisted JSON seam — `Options`, `Serialize`, `Deserialize` | [json](../components/json.md) |
 | `Enum` | a closed set of named options | [enums](../components/enums.md) |
 
-**Scope.** Every suffix here names a type inside a .NET service. A browser-side type is a wire projection of one, so it
-carries none of them; what the frontend calls its own types is [the frontend's](../../../../frontend/frontend-conventions.md).
+**Scope.** Every suffix here names a type inside a .NET service.
+A browser-side type is a wire projection of one, so it carries none of them.
+What the frontend calls its own types is [the frontend's](../../../../frontend/frontend-conventions.md).
 
 ---
 
@@ -117,7 +120,8 @@ Both reach an external system. The line is whose vocabulary the type exposes.
 
 ## Folds
 
-Each left-hand suffix names a role an existing suffix already owns. Rename to the canonical; never introduce the synonym.
+Each left-hand suffix names a role an existing suffix already owns.
+Rename to the canonical; never introduce the synonym.
 
 | Synonym | Canonical | Why |
 |---|---|---|
@@ -179,13 +183,16 @@ Rapid scaffolding raises this bar rather than lowering it — scaffolding replic
 
 ## Adding a component [REQUIRED]
 
-A confirmed suffix earns a keep-list row and a doc in the same pass. The doc states the **baseline** — what the type is,
-wherever it is used. Whatever varies by technology or by flow belongs to the domain that uses it.
+A confirmed suffix earns a keep-list row and a doc in the same pass.
+The doc states the **baseline** — what the type is, wherever it is used.
+Whatever varies by technology or by flow belongs to the domain that uses it.
 
 - must give each component one file, named for the suffix it defines — `mapper.md` for `Mapper`.
-- must carry the `##` sections in order — `Location` · `Declaration` · `Content`; omit a section rather than rename it.
+- must carry the `##` sections in order — `Location` · `Declaration` · `Content`.
+  - omit a section rather than rename it.
 - must name the folder as the **plural of the suffix** — `Mapper` → `Mappers/`, `Entity` → `Entities/`.
-- must state only the folder **name**, never its layer ([domain structuring](../architecture/clean/domain-structuring.md)).
+- must state only the folder **name**, never its layer
+  ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must not state a technology, a registration, or an end-to-end flow — a [domain](../domains/) owns those.
 - must cite [notation](../../lla/notation/notation.md) rather than restate a default it does not override.
 - must land before the first implementation — an unwritten baseline is what lets `Normalizer` ship beside `Mapper`.

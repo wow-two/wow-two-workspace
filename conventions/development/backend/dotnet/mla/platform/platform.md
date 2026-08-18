@@ -11,13 +11,14 @@
 | Folder | Answers | Lead |
 |---|---|---|
 | [build](build/build.md) | how the solution and its packages are declared | the two solution-root files |
-| [startup](startup/startup.md) | how a host is composed and what runs before a request | the boot floor |
-| [responses](responses/responses.md) | what the service sends back, success or failure | one success shape, one error shape |
+| [startup](startup/startup.md) | how a host is composed, what runs before a request | the boot floor |
+| [responses](responses/responses.md) | what the service sends back, success or failure | one success, one error shape |
 
 ---
 
 ## The boundary
 
-- must hold a rule that is true before any feature exists — a feature-shaped rule belongs to its [domain](../domains/domains.md).
+- must hold a rule that is true before any feature exists.
+- a feature-shaped rule belongs to its [domain](../domains/domains.md).
 - must bind configuration here and nowhere else; no other layer reads `IConfiguration`.
 - must keep a technology choice out — how we talk to a broker or a database is that domain's.

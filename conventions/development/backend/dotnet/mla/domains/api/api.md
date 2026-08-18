@@ -12,6 +12,11 @@
 - must wrap a success in the envelope, and send an error as ProblemDetails → [api messages](api-messages.md).
 - must keep caller context off the body — the edge merges it into the application message.
 - must point the dependency api → application; an application message never references an api one.
+- must map inbound `ApiRequest → Command` and outbound `Model → Dto`, both in the controller.
+- must cut the Api layer into domain folders like every other layer — `Api/{Domain}/`.
+- must give each domain folder its own `Requests/` and `Models/` — the bodies it binds, the payloads it returns.
+- must keep `Controllers/` at the domain folder, never one flat folder per project
+  ([domain structuring](../../architecture/clean/domain-structuring.md)).
 - must hold no logic in the delivery type → [controller](../../constructs/behavior/controller.md).
 
 ---

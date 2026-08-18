@@ -4,7 +4,8 @@
 
 > The type that reads and persists rows — data in, data out, and nothing else.
 > Purpose — one named seam per entity's storage, so a query has a home and a caller has one thing to inject.
-> Use case — any read or write against the database; how it reaches the store is the [provider's](../../domains/persistence/persistence.md).
+> Use case — any read or write against the database; how it reaches the store is
+> the [provider's](../../domains/persistence/persistence.md).
 
 ## Location
 
@@ -41,6 +42,7 @@
 ### Type name
 - must suffix with `Repository`, prefixed by the rows it reaches — `OlxListingsRepository`.
 - must not suffix a class `Query` / `Command` — those name a [dispatched message](../data/application-request.md).
+- must return a `Result` — a read can miss and a write can conflict.
 
 ```csharp
 // ✅

@@ -59,5 +59,5 @@ flowchart LR
 
 - may inline the layers as folders in one project for a throwaway spike — ≲2 KLOC, no extraction, no second consumer
 - must not default to layers-as-folders for a service that ships, grows, or feeds the SDK
-- must skip the Application / Infrastructure / Persistence split in an SDK package — a package is a library, not a service
+- must skip the Application / Infrastructure / Persistence split in an SDK package — it is a library, not a service
 - must give a CLI tool Application and Domain only, adding Persistence when it reads or writes files

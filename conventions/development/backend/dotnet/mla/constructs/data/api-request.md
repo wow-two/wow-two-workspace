@@ -34,6 +34,7 @@
 
 ### Construct
 - must declare a `public sealed record` → [constructs](../../../lla/constructs/constructs.md) § *Data components*.
+- must declare `{ get; init; }` — the model binder sets init-only members, so nothing needs `set`.
 
 ### Type name
 - must be named `{Verb}{Noun}ApiRequest`, verb-first — it exists for one controller action.

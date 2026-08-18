@@ -36,18 +36,22 @@ A body sub-block nested inside a request carries no verb of its own.
 ## Response
 
 - must wrap a success in `ApiResponse<T>`, so the client always reads `.data`.
-- must send an error as RFC-7807 ProblemDetails, never wrapped → [problem details](../../platform/responses/problem-details.md).
+- must send an error as RFC-7807 ProblemDetails, never wrapped →
+  [problem details](../../platform/responses/problem-details.md).
 - must leave `204 No Content` and file streams unwrapped — there is no payload for `.data`.
 - must build the success body through `ApiResponse<T>.Ok(data)` alone, in the success arm of `.Match`.
 - must keep the envelope to its payload — no `message`, no `meta`; anything more belongs in the payload.
 
 The envelope ships in the SDK; its shape is not restated here. The payload is a [dto](../../constructs/data/dto.md).
 
+- must map the handler's [model](../../constructs/data/model.md) to a `Dto` in the controller, never below it.
+- must keep `Dto` out of every layer under the edge — a service returns a model, and the edge projects it.
+
 ---
 
 ## Edge mapping
 
-The application message is built at the edge by an extension method co-located with the api request, in the same file.
+The application message is built at the edge by an extension method co-located with the api request, same file.
 
 - must declare one `static` class per request, in the request's own file — `{Request}Extensions`.
 - must name the method for the target's role — `ToCommand(...)`, `ToQuery(...)`.
@@ -77,6 +81,6 @@ public sealed class RequestMapper(ICurrentUser user)
 
 ## Open
 
-- **the nested sub-block suffix.** `{Noun}ApiRequest` and `{Noun}Dto` are both written down today, one sentence apart in
-  intent. A sub-block that a client only ever sends reads as a request; one shared with a response reads as a `Dto`.
-  Undecided — both spellings ship, and the frontend copied both.
+- **the nested sub-block suffix.** `{Noun}ApiRequest` and `{Noun}Dto` are both written down today, one sentence
+  apart in intent. A sub-block a client only ever sends reads as a request; one shared with a response reads as
+  a `Dto`. Undecided — both spellings ship, and the frontend copied both.

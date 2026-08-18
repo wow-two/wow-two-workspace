@@ -4,7 +4,8 @@
 
 > The record a configuration section binds into.
 > Purpose — configuration reaches code as a typed, immutable shape, validated once at startup.
-> Use case — any value that differs per environment; behavior knobs passed in code are [`Options`](../constructs/constructs.md).
+> Use case — any value that differs per environment; behavior knobs passed in code are
+> [`Options`](../constructs/constructs.md).
 
 ## Location
 
@@ -34,7 +35,8 @@
 ### Construct
 - must declare a `sealed record` — the binder writes once, and value equality is the correct claim.
 - must carry no default value on any member — a missing setting fails the boot rather than running wrong.
-- member shape (`{ get; init; }`, `required`) → [constructs](../../lla/constructs/constructs.md) § *Data components*.
+- must declare `{ get; init; }` — the binder writes once, at startup.
+- member shape (`required`, non-nullable) → [constructs](../../lla/constructs/constructs.md) § *Data components*.
 
 ### Type name
 - must suffix with `Settings`, named for the section it binds — `ClassificationSettings`.

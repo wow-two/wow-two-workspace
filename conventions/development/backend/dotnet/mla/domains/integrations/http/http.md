@@ -26,7 +26,7 @@ builder.Services.AddHttpClient<TelegramClient>(c => c.BaseAddress = new Uri("htt
 
 ## Resilience
 
-`AddSdkResilience` wraps the client in retry → circuit breaker → per-attempt timeout, inside a total-request timeout.
+`AddSdkResilience` wraps a client in retry → circuit breaker → per-attempt timeout, inside a total-request timeout.
 It tunes `IHttpClientBuilder.AddStandardResilienceHandler(...)` through `HttpResilienceOptions`.
 
 - must tune through `HttpResilienceOptions`, never a custom `DelegatingHandler` or a Polly policy.
@@ -41,7 +41,7 @@ It tunes `IHttpClientBuilder.AddStandardResilienceHandler(...)` through `HttpRes
 | `CircuitBreakerSamplingDuration` | `30s` | failure-rate window |
 | `CircuitBreakerFailureRatio` | `0.1` | trip threshold |
 
-Tracing is wired by the observability package — every call through the pipeline is instrumented, with no per-client setup.
+Tracing is wired by the observability package — every call through the pipeline is instrumented, no per-client setup.
 
 ---
 

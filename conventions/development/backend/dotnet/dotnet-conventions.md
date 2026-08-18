@@ -21,9 +21,10 @@ Where a type lives → `mla/architecture/`. How the service builds and starts �
 technology or use case → `mla/domains/{domain}/`. A rule spanning services we both own → `hla/`.
 
 **The test between `mla/` and `hla/`:** do we own both ends? A third party is adapted in `mla/`, never contracted in `hla/`.
-**The three levels, and where each lands.** A C# construct is [constructs](lla/constructs/constructs.md). A role's shape and its
-documentation land wherever the rule reaches: **does it need a service around it?** No → `lla/` (`Constants`, `Extensions`).
-Yes → `mla/constructs/` (`Entity`, `Controller`, `Broker`). A ban follows its rule — construct bans in `lla/`, role bans with the role.
+**The three levels, and where each lands.** A C# construct is [constructs](lla/constructs/constructs.md). Everything we
+define lands in `mla/`: a **role** that needs something else present → `mla/constructs/` (`Entity`, `Controller`, `Broker`);
+a **thing complete alone** → `mla/components/` (`Constants`, `Enums`, `Settings`). A ban follows its rule — construct bans
+in `lla/`, role bans with the role.
 
 **The test between baseline and a domain:** would the rule survive if the feature were deleted? Yes → baseline. No → the domain that owns it.
 
@@ -93,8 +94,8 @@ Three levels, and they never share a folder ([conventions](../../../conventions.
 | Level | Answers | Lives in |
 |---|---|---|
 | **construct** | what C# offers, and which of it we use or forbid — `record` · `class` · `interface` · `enum` · `struct` · `delegate` | [constructs/](lla/constructs/constructs.md) |
-| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split, and [components](mla/components/components.md) |
-| **definition** | the whole component — folder, file, type doc, type name, member doc, content | each component's own file, via the six-section template |
+| **role** | what a construct may stand for — data or behavior, and the starter that follows | the `data/` · `behavior/` split under [constructs](mla/constructs/constructs.md) |
+| **definition** | the whole thing — folder, file, type doc, construct, type name, members | each doc's own file, via the template |
 
 **The role level fixes the starters.** A data model — `record`, `struct` — takes **Represents**. An interface over a data
 model takes **Defines**. A behavior type takes its role's verb. A data model may carry behavior, but never complex
@@ -103,7 +104,7 @@ behavior: the moment a flow appears, the type has stopped being a model.
 | Level | Folder | Holds |
 |---|---|---|
 | the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/constructs.md) · [records](lla/constructs/constructs.md) |
-| the service-free role | [components/](mla/components/components.md) | [constants](mla/components/constants.md) · [extensions](mla/components/extensions.md) — the only two that pass the gate |
+| the self-sufficient thing | [components/](mla/components/components.md) | [constants](mla/components/constants.md) · [enums](mla/components/enums.md) · [extensions](mla/components/extensions.md) · [indexers](mla/components/indexers.md) · [json](mla/components/json.md) · [settings](mla/components/settings.md) · [time](mla/components/time.md) |
 | how it is written down | [notation/](lla/notation/notation.md) | [naming](lla/notation/naming/naming.md) · [documentation](lla/notation/documentation/documentation.md) · [style](lla/notation/style/style.md) |
 
 The leaves those folders hold:
@@ -120,10 +121,10 @@ The leaves those folders hold:
 | [inline](lla/notation/documentation/inline.md) | `//` inside a body — the maintainer's doc, never shipped |
 | [exceptions](lla/notation/documentation/exceptions.md) | `<exception>` — only what a method throws itself |
 
-**Membership in `components/`** — a role passes only when it owns **both its shape and its role with no service around it**.
-The gate is a demonstration: show it declared *and used* in a program that has no services. An `Entity` fails, because an entity
-is a model and a model needs a store and a domain. An `enum` fails, because any role an enum plays gathers logic around it.
-A role that fails belongs in [`mla/constructs/`](mla/constructs/constructs.md).
+**Membership in `components/`** — a thing passes only when it is **complete with nothing else present**.
+The gate is a demonstration: declare it in a program with nothing around it, and use it. An `Entity` fails, because it stays
+inert until a store exists; a `Handler` fails without a dispatcher.
+A thing that fails belongs in [`mla/constructs/`](mla/constructs/constructs.md), which names roles rather than whole things.
 
 **Notation is a default set** — every rule there applies to every symbol, and a component may override it in its own file.
 A component that does not override cites `notation/` rather than restating it.
@@ -144,7 +145,7 @@ The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list,
 | [mapper.md](mla/constructs/behavior/mapper.md) | The transform — total, stateless, both shapes named |
 | [entity-configuration.md](mla/domains/persistence/access/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, `<inheritdoc />` on `Configure`, call order |
 | [entity.md](mla/constructs/data/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
-| [enum.md](mla/components/enums.md) | Enum naming, native PG enum mapping (`MapEnums`), string-conversion fallback |
+| [enums](mla/components/enums.md) | Enum naming, member ordering, `[Flags]` — the mapping is [postgres](mla/domains/persistence/database/postgres/postgres.md) |
 | [hosted-service.md](mla/constructs/behavior/hosted-service.md) | Host-lifetime work — `Runs` / `Schedules` starters, `BackgroundService` vs one-shot `IHostedService` |
 | [application request](mla/constructs/data/application-request.md) | The dispatched `Query` / `Command` / `Event` — folder, starters, `{Domain}{Action}{Kind}` |
 | [handler](mla/constructs/behavior/handler.md) | The receiver bound to one message — `Handles` starter, collaborators via the constructor |

@@ -38,7 +38,8 @@
 ### Construct
 - must declare a `sealed record` — a message is its inputs.
 - must not reference an [api request](api-request.md) — the dependency points one way.
-- member shape (`{ get; init; }`, `required`) →
+- must declare `{ get; init; }` — a message is built once and never written again.
+- member shape (`required`, non-nullable) →
   [constructs](../../../lla/constructs/constructs.md) § *Data components*.
 
 ### Type name

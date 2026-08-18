@@ -9,9 +9,10 @@
 ## The gate [REQUIRED]
 
 - must be **self-sufficient** — declared, and doing its whole job with nothing else present.
-- must run the test by demonstration: declare it in a program with nothing else, and use it.
-- must fail the gate when it stays inert until a collaborator exists — an `Entity` needs a store, a `Handler` a dispatcher.
-- must not read simplicity as self-sufficiency; the test is whether it delivers its contract alone.
+- must run the test by demonstration — declare it in a program with nothing else, and use it.
+- must fail the gate when it stays inert until a collaborator exists.
+  - an `Entity` needs a store, a `Handler` a dispatcher.
+- must not read simplicity as self-sufficiency — the test is whether it delivers its contract alone.
 - must move to [constructs](../constructs/constructs.md) when it names a role rather than a whole thing.
 
 | Component | Self-sufficient because |
@@ -30,10 +31,12 @@
 
 - must give each component one file, named for the role — `constants.md`, `enums.md`.
 - must carry the three `##` sections in order: `Location` · `Declaration` · `Content`.
-- must give `Declaration` the sub-heads `### Type doc` · `### Construct` · `### Type name`, skipping any it has no rule for.
-- must state the folder **name** only, never its layer ([domain structuring](../architecture/clean/domain-structuring.md)).
+- must give `Declaration` the sub-heads `### Type doc` · `### Construct` · `### Type name`.
+  - skip any it has no rule for.
+- must state the folder **name** only, never its layer
+  ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must cite [notation](../../lla/notation/notation.md) rather than restate a default it does not override.
 - may close with `## Neighbours` — links out, one line each, carrying no rules.
 
-A component keeps `## Content` because its members **are** its contract; a [construct](../constructs/constructs.md) drops
-it, since the shape of a role belongs to the domain that uses it.
+A component keeps `## Content` because its members **are** its contract.
+A [construct](../constructs/constructs.md) drops it — the shape of a role belongs to the domain using it.
