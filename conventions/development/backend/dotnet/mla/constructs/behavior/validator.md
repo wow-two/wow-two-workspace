@@ -10,7 +10,7 @@
 ## Location
 
 ### Folder
-- must sit beside the type it validates, in that type's own folder.
+- must sit in a `Validators/` folder under the subdomain whose type it checks.
 
 ### File
 - must give it its own file, named for the type →

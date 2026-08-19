@@ -54,6 +54,22 @@ public sealed record HttpResilienceSettings
 
 ---
 
+---
+
+## Content
+
+### Members
+- must name each member for the value it steers, never for its config key — the binder matches by name,
+  so the two stay identical without the summary repeating it.
+- must carry a `<summary>` on every member stating **what the value changes**, plus its unit where one
+  exists — `seconds`, `attempts`, `bytes`.
+- must state the range or the allowed set when the value is bounded, so a wrong value fails review rather
+  than production.
+- must not carry a member no environment ever differs on — a constant belongs in
+  [constants](constants.md).
+
+---
+
 ## Registration
 
 - must bind through `AddOptions<T>().Bind(section)` in `AddSettings()`, never by reading `IConfiguration` elsewhere.

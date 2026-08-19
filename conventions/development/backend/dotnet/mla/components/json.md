@@ -51,3 +51,15 @@ public static class CodeContentJson
 // ❌ names the operation, so a second method has nowhere to go
 public static class CodeContentSerializer
 ```
+
+---
+
+## Content
+
+### Members
+- must expose exactly three members — `Options`, `Serialize`, `Deserialize`. A fourth means the seam is
+  carrying logic that belongs to a [mapper](../constructs/behavior/mapper.md).
+- must declare `Options` as `public static readonly`, built once at type load.
+- must accept a nullable string on `Deserialize` and return `null` for a null or blank column — a missing
+  document is absence, not a parse failure.
+- must not expose the raw `JsonSerializer` call to callers; the seam is the only door to those bytes.

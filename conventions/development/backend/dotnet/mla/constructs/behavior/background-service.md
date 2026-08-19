@@ -1,4 +1,4 @@
-# Hosted services
+# Background services
 
 *Last updated: 2026-08-19*
 
@@ -9,7 +9,8 @@
 ## Location
 
 ### Folder
-- must sit in a `Services/` folder in the layer that owns the work it runs.
+- must sit in a `BackgroundServices/` folder in the layer that owns the work it runs — never among the
+  request-path `Services/`.
 
 ### File
 - must give it its own file, named for the type →
@@ -36,8 +37,10 @@
 ```
 
 ### Type name
-- must suffix with `BackgroundService` for a loop that lives as long as the host.
-- must suffix with `HostedService` for work that finishes during startup.
+- must suffix with `BackgroundService`, whatever the work's shape — a loop and a one-shot boot task are
+  the same role, registered the same way and stopped the same way.
+- must not suffix with `HostedService` — every service the host runs is hosted, and a singleton is pinned
+  too, so the word discriminates nothing.
 - must prefix the suffix with what it watches — `ChannelObserveBackgroundService`.
 
 ---

@@ -90,6 +90,20 @@ public static readonly string PayloadShape = WifiFormats.BuildShape();
 
 ---
 
+---
+
+## When a literal earns a constant
+
+A literal with fixed structural parts is a **contract shape**, not an implementation detail.
+
+- must lift a payload, URI or template literal into a named `const` built with `string.Format` once it
+  carries any constant segment beyond a single prefix.
+- must keep a bare prefix inline — `$"tel:{phone}"` has no shape to see.
+- must give a conditionally appearing segment its own constant, so the parent shape stays readable.
+- the constant shows the whole shape in one place, which interpolation scatters across the expression.
+
+---
+
 ## Neighbours
 
 - [summary](../../lla/notation/documentation/summary.md) — the starter table

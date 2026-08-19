@@ -42,7 +42,7 @@ await context.SaveChangesAsync(ct);
 
 - must not publish directly from a handler that also writes rows — that is the dual write the pattern removes.
 - must not treat the outbox as a queue for in-process work; a background job is a `BackgroundService`
-  ([hosted service](../behavior/hosted-service.md)).
+  ([background service](../behavior/background-service.md)).
 - must not stage a large payload — store it and stage the pointer (claim check).
 - must not assume ordering across rows; a consumer that needs a sequence carries it on the message.
 - must not use an outbox for a mediator notification inside one process — `IPublisher` already runs in the same scope

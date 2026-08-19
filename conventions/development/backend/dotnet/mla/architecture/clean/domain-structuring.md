@@ -62,7 +62,7 @@ Each phase is a subdomain.
 - **Subdomain folder** — PascalCase gerund or noun describing the concern (`Capturing/`, `Processing/`, `Core/`)
 - **Role-group folder** — a **plural role noun** naming the type-role it holds, never the activity.
   - `Entities/` · `Enums/` · `Models/` · `Services/` · `Validators/`
-  - `Mappers/` · `Commands/` · `Queries/` · `Handlers/`
+  - `Mappers/` · `Commands/` · `Queries/` · `Events/` · `CommandHandlers/` · `QueryHandlers/` · `EventHandlers/`
   - ✅ `Validators/` holds validators · `Mappers/` holds mappers
   - ❌ `Validation/` · `Mapping/` — an activity reads as a subdomain, and every sibling names a role
 - **Avoid generic names** — `Helpers/`, `Utils/`, `Misc/` are banned.

@@ -9,7 +9,8 @@
 ## Location
 
 ### Folder
-- must sit in a `CommandHandlers/`, `QueryHandlers/` or `EventHandlers/` folder beside its messages.
+- must sit in a `CommandHandlers/`, `QueryHandlers/` or `EventHandlers/` folder, one per message kind,
+  beside the matching `Commands/` · `Queries/` · `Events/` folder.
 
 ### File
 - must give it its own file, named for the type →

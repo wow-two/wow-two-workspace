@@ -79,8 +79,20 @@ public sealed class RequestMapper(ICurrentUser user)
 
 ---
 
+---
+
+## Nested sub-blocks
+
+A body one action binds is an `ApiRequest`. A block nested inside it is not.
+
+- must name a nested sub-block `{Noun}Dto`, whether it appears in a request, a response, or both.
+- must keep `{Verb}{Noun}ApiRequest` for the top-level body alone — the suffix is verb-first, a sub-block
+  has no verb of its own, and `StyleApiRequest` already fails that rule.
+- must not read `Dto` here as a response-only word — `Dto` is the wire shape, and the wire runs both ways.
+- must map a sub-block at the same edge as its parent: controller in, controller out.
+
+---
+
 ## Open
 
-- **the nested sub-block suffix.** `{Noun}ApiRequest` and `{Noun}Dto` are both written down today, one sentence
-  apart in intent. A sub-block a client only ever sends reads as a request; one shared with a response reads as
-  a `Dto`. Undecided — both spellings ship, and the frontend copied both.
+- *(settled 2026-08-19 — a nested sub-block is a `Dto`; see § Nested sub-blocks.)*

@@ -118,27 +118,3 @@ The **role it plays** decides whether a field earns a summary, never the access 
 
 The test: **does the declaration leave a "why this?" unanswered?**
 A value and a state field do; a collaborator's type name is the whole answer.
-
----
-
-## Extract a format string when the literal has structure
-
-A literal with fixed structural parts is a **contract shape**, not an implementation detail.
-
-- must lift a payload / URI / template literal into a named `const` built with `string.Format` once it carries
-  any constant segment beyond a single prefix
-- the constant shows the whole shape in one place, which interpolation scatters across the expression
-- a bare prefix (`$"tel:{phone}"`) stays inline — there is no shape to see
-- must keep a conditionally appearing segment as its own constant, so the parent shape stays readable
-
----
-
-## Expression body vs block
-
-- **block body by default** — an expression body is for one trivial delegation or a direct member return.
-  - only on a component that permits one ([style](../style/style.md) § *The body*)
-- ✅ `public override string Encode() => this.ToPayload();` — a value object, permitted
-- ✅ `public string Slug => _slug;`
-- ❌ the same delegation on a `Service` or `Repository` — block body from the start
-- ❌ an expression body that wraps across lines, takes several parameters, or contains a conditional
-- the tell: if the `=>` expression needs line breaks to read, it is a method body pretending to be an expression

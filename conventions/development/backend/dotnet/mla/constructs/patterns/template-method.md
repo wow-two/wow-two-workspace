@@ -31,7 +31,7 @@ public abstract class EventSagaStep : IEventSagaStep
 ## Use
 
 - must reach for it where a framework base already imposes the shape — `BackgroundService.ExecuteAsync`
-  ([hosted service](../behavior/hosted-service.md)), a `DbContext`, a test fixture.
+  ([background service](../behavior/background-service.md)), a `DbContext`, a test fixture.
 - must reach for it when a step's default is *do nothing* and most subclasses will keep it.
 - must reach for it in a testing harness, where the setup and teardown order is the contract
   ([testing](../../architecture/clean/testing.md)).
@@ -51,7 +51,7 @@ public abstract class EventSagaStep : IEventSagaStep
 
 ## Components
 
-- [hosted service](../behavior/hosted-service.md) — the most common base we derive from.
+- [background service](../behavior/background-service.md) — the most common base we derive from.
 - [strategies](strategies.md) — the composition alternative, and the default when either would work.
 - [entity configuration](../../domains/persistence/access/ef/entity-configuration.md)
   — the EF hooks the context base applies.

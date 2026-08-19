@@ -67,7 +67,7 @@ A thing occupies one home per layer it has. Two tests, applied in order:
 | `Json` | — | the `{Type}Json` storage seam | `mla/components/json.md` |
 | `Entity` | — | a type that owns a row | `mla/domains/persistence/` |
 | `Repository` | — | rows in, rows out | `mla/domains/persistence/access/` |
-| `HostedService` | `BackgroundService` | one-shot work at host start | `mla/platform/startup/` |
+| `BackgroundService` | `BackgroundService` | work the host runs off the request path | `mla/platform/startup/` |
 
 - must give every `mla/components` doc an `mla/constructs` doc — a component is layer 3 **of** something,
   and the thing it applies has to be defined somewhere.
@@ -77,6 +77,30 @@ A thing occupies one home per layer it has. Two tests, applied in order:
   the domain that supplies them.
 - must keep a variation out of `mla/constructs` — one-to-many is an application of `Entity`, so it lives
   wherever that entity's layer 3 lives.
+
+---
+
+## Building the SDK itself [REQUIRED]
+
+These conventions feed **both** the products and the backend-beta SDK — naming, documentation, constructs and
+components hold identically in either repo. What differs is the shape a repo takes, and only that.
+
+| Question | A product answers | The SDK answers |
+|---|---|---|
+| architecture | Clean layers per service → [architecture](mla/architecture/architecture.md) | a library, no Application / Infrastructure / Persistence split |
+| host | one `HostConfiguration` per service → [host configuration](mla/platform/startup/host-configuration.md) | none; it ships `Add*` extensions a host calls |
+| what earns a doc | its own business logic | its own surface, plus the seams a product wires |
+
+- must apply every naming, documentation and construct rule in the SDK repo unchanged — the SDK is ours,
+  so a convention change reaches it as a row in that repo's sweep file, never as an exemption.
+- must keep an SDK type's public surface documented as a product type would be — a consumer reads only the
+  XML doc.
+- must decide what belongs there through [extract / keep / remove](../../sdk-extraction.md), never here.
+- must leave the SDK's own package layout and registry to its `docs/` — that is repo shape, not a convention.
+
+> **Queued.** A `use-case/` · `core/` cut of this tree — `core/` for what holds everywhere, `use-case/` for the
+> shapes that differ (service, contained library, monolith, microservices, SDK) — is the direction, not yet the
+> layout. Today the difference is small enough for the table above.
 
 ---
 
@@ -178,7 +202,7 @@ The lead is [constructs](mla/constructs/constructs.md) — the suffix keep-list,
 | [entity-configuration.md](mla/domains/persistence/access/ef/entity-configuration.md) | EF `IEntityTypeConfiguration<T>` mapping — `Configures` starter, `<inheritdoc />` on `Configure`, call order |
 | [entity.md](mla/constructs/data/entity.md) | Entity records, `IKeyedEntity<TId>` PK contract, audit/soft-delete/tenant traits |
 | [enums](mla/components/enums.md) | Enum naming, member ordering, `[Flags]` — the mapping is [postgres](mla/domains/persistence/database/postgres/postgres.md) |
-| [hosted-service.md](mla/constructs/behavior/hosted-service.md) | Host-lifetime work — `Runs` / `Schedules` starters, `BackgroundService` vs one-shot `IHostedService` |
+| [background-service.md](mla/constructs/behavior/background-service.md) | Host-run work — `Runs` / `Schedules` starters, the loop and the one-shot shape |
 | [application request](mla/constructs/data/application-request.md) | The dispatched `Query` / `Command` / `Event` — folder, starters, `{Domain}{Action}{Kind}` |
 | [handler](mla/constructs/behavior/handler.md) | The receiver bound to one message — `Handles` starter, collaborators via the constructor |
 | [policy](mla/constructs/behavior/policy.md) | The decision that governs another operation — `Decides` starter, `Policy` suffix |

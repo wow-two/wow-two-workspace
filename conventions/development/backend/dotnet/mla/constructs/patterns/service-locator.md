@@ -32,7 +32,7 @@ Three exceptions, and nothing else:
 - must allow it at the **composition root** — `HostConfiguration.Extensions.cs` builds the graph, so it holds the provider
   ([host configuration](../../platform/startup/host-configuration.md)).
 - must allow `IServiceScopeFactory` where the consumer outlives a scope — a `BackgroundService` creating one scope
-  per iteration ([hosted service](../behavior/hosted-service.md)).
+  per iteration ([background service](../behavior/background-service.md)).
 - must allow resolution inside a `Factory` that dispatches on a runtime key — that dispatch is the factory's whole
   reason to exist ([factories](factories.md)).
 
@@ -51,6 +51,6 @@ Three exceptions, and nothing else:
 ## Components
 
 - [factories](factories.md) — the sanctioned per-key resolution, and its shape.
-- [hosted service](../behavior/hosted-service.md) — the scope-per-iteration rule.
+- [background service](../behavior/background-service.md) — the scope-per-iteration rule.
 - [host configuration](../../platform/startup/host-configuration.md) — the only layer holding the provider by design.
 - [ambient context](ambient-context.md) — the sibling: a hidden value rather than a hidden dependency.

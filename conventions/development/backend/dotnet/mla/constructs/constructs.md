@@ -36,8 +36,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | Suffix | Role | Authority |
 |---|---|---|
 | `Service` | business logic, orchestration, compute — the default role | [service](behavior/service.md) |
-| `BackgroundService` | long-running work off the request path | [hosted service](behavior/hosted-service.md) |
-| `HostedService` | one-shot work at host start or stop | [hosted service](behavior/hosted-service.md) |
+| `BackgroundService` | work the host runs off the request path, for as long as it lives | [background service](behavior/background-service.md) |
 | `Client` | one external provider's call surface, out-of-proc | [client](behavior/client.md) |
 | `Broker` | the app-side seam over an external dependency | [broker](behavior/broker.md) |
 | `Repository` | data access — rows in, rows out | [repository](behavior/repository.md) |
@@ -137,9 +136,12 @@ Rename to the canonical; never introduce the synonym.
 | `Source` | `Generator` | a type that derives a value generates it |
 | `Observer` | `Handler` · `BackgroundService` | reacting is a handler's verb; polling on a timer is a hosted service |
 | `Scheduler` | `BackgroundService` | a poller schedules nothing, it runs |
+| `HostedService` | `BackgroundService` | both are host-run work; the name should say how it executes, not that it is hosted |
 | `Keeper` | `Service` | a synonym for a stateful service |
 
-- must keep a framework's own name as it ships — a fold governs only names we choose.
+- must keep a **third-party** name as it ships — a fold governs only names we choose.
+- must fold a name in our own SDK like any other — the SDK is ours, so a convention change reaches it as a
+  row in that repo's sweep file, never as an exemption.
 - must name a pure `static class` as one of three — `Constants` for values, `Extensions` for logic over a domain,
   `Mapper` for a transform. There is no fourth static form, and a bare noun (`SqlNaming`, `Geohash`) is none of them.
 - must keep `Source` where it names a content origin read from, not a value derived — `IMigrationSource`.
@@ -189,7 +191,10 @@ Whatever varies by technology or by flow belongs to the domain that uses it.
 - must give each component one file, named for the suffix it defines — `mapper.md` for `Mapper`.
 - must carry the `##` sections in order — `Location` · `Declaration` · `Content`.
   - omit a section rather than rename it.
-- must name the folder as the **plural of the suffix** — `Mapper` → `Mappers/`, `Entity` → `Entities/`.
+- must name a **role folder** as the plural of the suffix — `Mapper` → `Mappers/`, `Entity` → `Entities/`.
+- must name a **subject folder** for the domain or capability it holds, never for a role — `Integrations/`,
+  `Integrations/{Provider}/`, `Codes/`. The plural rule governs role folders only, and a subject folder's
+  children answer to their own roles.
 - must state only the folder **name**, never its layer
   ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must not state a technology, a registration, or an end-to-end flow — a [domain](../domains/) owns those.

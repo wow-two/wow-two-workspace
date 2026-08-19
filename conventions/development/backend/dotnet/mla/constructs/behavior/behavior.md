@@ -22,7 +22,7 @@
 | [registry](registry.md) | owns key → type bindings registered at composition |
 | [policy](policy.md) | decides whether, when or how often another operation runs |
 | [builder](builder.md) | accumulates one value, ending in `Build()` |
-| [hosted service](hosted-service.md) | runs work off the request path |
+| [background service](background-service.md) | runs work off the request path |
 | [extensions](extensions.md) | static logic over a domain — no injection, no state |
 | [time](time.md) | our seam over the clock |
 | [json](json.md) | one type's storage seam |

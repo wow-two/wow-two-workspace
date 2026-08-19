@@ -84,7 +84,6 @@ Rules:
 - **A line reference is `{file}:{line}`** — `style.md:75`, never "line 75" or "the line about bodies". The form is clickable in an IDE, greppable in a diff, and unambiguous when two files carry the same rule.
 - **A link's display text names the thing, never the path** — the label says what the target is, and the path stays inside the parentheses. A path in the text is unreadable inline and goes stale on every move.
 - **A layer references one layer down for doc rules, never restates them** — a component doc's `### Type doc` cites the layer below it and stops there; the reader crawls down for the merged set. Restating a lower layer's rule creates a second copy that drifts.
-- **One whole-shape example per component, placed last and marked illustrative** — after `## Content`, a single fence shows the finished file top to bottom so a reader sees how the sections compose. It is not normative: the sections remain the authority, and a rule stated only in the shape example does not exist.
 - **One example per doc-comment section, placed last** — it sits after the final field sub-heading so it covers every field the section declared, not only the first.
 - **A table degrades to bullets** — if any row would exceed 120 characters, the table becomes bullet points. A wrapped cell is unreadable, and the wrap is the signal that the rows carry sentences rather than fields.
 - **No files beside folders** — once a folder holds a sub-folder, every other doc in it gets its own folder too. The folder's own lead doc (`{folder}.md`) is the single exception.
@@ -172,7 +171,7 @@ build and start → `mla/platform/` · a technology or use case → `mla/domains
 |---|---|
 | `code-style/` | `naming` · `documentation` · `imports` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
 | `architecture/` | `architecture` · `state-and-data` |
-| `presentation/` | `components` · `component-catalog` (the 15 kinds) · `suffixes` · one doc per kind · `forms` · `hooks` · `styling` |
+| `presentation/` | `components` · `visual` (the 15 kinds) · `suffixes` · `forms` · `hooks` · `styling` |
 
 ---
 

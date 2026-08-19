@@ -11,7 +11,30 @@ the clock.
 
 > Defined at [time — the construct](../constructs/behavior/time.md); this doc carries every condition for using one.
 
-## Rule
+## Location
+
+### Folder
+- must sit in the project that owns the abstraction, never beside a single consumer.
+
+### File
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
+
+---
+
+## Declaration
+
+### Construct
+- must inject the seam like any collaborator →
+  [background service](../constructs/behavior/background-service.md) and every other behavior role.
+- must not wrap `TimeProvider` in a type of our own where the BCL abstraction already fits — a wrapper
+  earns its place only when it adds a reading the BCL has no name for.
+
+---
+
+## Content
+
+### Members
 
 - must **never** call `DateTime.Now`, `DateTime.UtcNow`, `DateTimeOffset.Now`, `DateTimeOffset.UtcNow`
   in production code.
