@@ -1,6 +1,6 @@
 # Conventions — wow-two
 
-*Last updated: 2026-07-10*
+*Last updated: 2026-08-19*
 
 > **The single index to every convention.** When a task touches *how we build* — code, repo structure,
 > naming, versioning — search HERE first, then open only the file(s) you need. Lookup table,
@@ -51,6 +51,9 @@ Rules:
   doc is carrying something that is not a rule — split it or move it (→ *Rationale lives elsewhere*). Check with
   `wc -l` and `expr $(wc -w < f) / $(wc -l < f)`; a words-per-line above ~8 means the bullets have become sentences. `controllers.md` sits at ~4.6.
   Exempt: this file and the `{area}-conventions.md` indexes — an index is a lookup table, and its length tracks the tree, not its own verbosity.
+- **One owner per rule.** A rule is stated in exactly **one** doc — the one whose scope owns it — and every other doc links to it (`→ [x](y) § Section`). Two docs stating the same obligation drift into a contradiction, so the restatement is the defect even while the two still agree. Before adding a rule, grep its identifier across the tree; if it is already stated, link instead of restating. A sweep checks for restated rules, not only for conflicting ones.
+- **The unit is the rule, not the topic.** Two docs covering naming is fine; two docs stating the same obligation is the defect. `service.md` saying `*Service` and `hosted-service.md` saying `*HostedService` are two rules, each owned where it belongs — both saying "suffix with `Service`" is one rule duplicated, and it extracts. Ask whether the sentences could ever disagree; if they could not, they are one rule.
+- **Vectors do not share owners.** The same obligation stated once in the backend conventions and once in the frontend's is not a duplicate — each vector owns its own. Only a repeat *inside* one vector is the defect.
 - **Rationale lives elsewhere.** A convention states **what to do**; *why* belongs in a co-located `{name}-rationale.md` or an `ideas/` analysis,
   linked once from the section. Evidence, RFC citations, counter-arguments, and measured findings are analysis — a reader looking up a rule pays
   for them on every read. Keep at most a one-clause because when it changes what the reader does.
@@ -72,6 +75,8 @@ Rules:
 - **Citation** — concrete symbols (`IKeyedEntity<TId>`, `AddDatabaseBespokeMigrations`) + file paths, **never namespaces** (they go stale — grep the
   symbol). Verify a symbol exists in source before citing; examples come from real code.
 - **No duplication** — reference another convention inline; don't restate it. Supersede a stale note in place rather than stacking.
+- **Link section to section, never bullet to bullet** — a doc that inherits a rule cites the owning section once, as a heading or one bullet, and states only what it overrides or extends. A reader who opens the child doc alone still sees the chain: base → construct → component.
+- **A restatement is allowed only when the rule cannot be lifted** — two docs may carry the same sentence when the things they govern share no parent that could hold it. `Constants` and `Extensions` are different roles that happen to both declare a `public static class`; nothing above them is only-those-two, so each states it. Lift instead the moment a shared parent exists.
 - **Location** — `{sub-domain}/{name}.md`; a folder's lead doc is `{folder}.md`, `README.md` only at a repo root.
 - **One level per folder** — docs describing different levels never sit at the same folder level. A doc about *what you declare* and a doc about *how you write it* are two levels; separate them by folder or by nesting, never by filename alone.
 - **A constraint earns a rule only when no positive rule already excludes it** — a starter rule fixes the starter, so a wrong starter is only a ❌ example; nothing about a correct starter forbids a type from bridging two services, so that needs its own rule.
@@ -86,6 +91,35 @@ Rules:
 - **A folder earns a lead doc at two docs** — `{folder}.md` says what the folder covers and indexes its contents. A folder holding exactly one doc needs none: that doc is its own lead, and a second file announcing the first is padding.
 - **Bullet case** — a bullet is a **lowercase fragment**, not a sentence (capitalize only an identifier / proper noun that opens it). Terse `key - detail` fragments; `controllers.md` is the reference.
 - **Order is normative** — list sections and their bullets in the **order they're applied**; readers + adopters follow that order unless a special case is called out (e.g. the attribute order, the doc-block order in `controllers.md`).
+
+---
+
+## Three axes, three words
+
+A rule is filed by three independent questions. Each has its own word, and the words never substitute.
+
+| Axis | Values | Answers |
+|---|---|---|
+| **layer** | `lla` · `mla` · `hla` | how far does the rule carry — a symbol, one app, between our apps |
+| **bucket** | `constructs` · `components` · `domains` · `architecture` · `platform` · `frameworks` | what question does it answer |
+| **register** | definition · judgement · surface | how deep does the statement go |
+
+- must say **layer** only of `lla` / `mla` / `hla` — the word is taken, and a second use collides on the reader.
+- **definition** states what a role is, its suffix, its contract shape → the `constructs` bucket.
+- **judgement** states which one to reach for and with what values → the `components` bucket.
+- **surface** enumerates one instance's props, slots and states → it lives with the code, never in a convention.
+- must keep the surface register out of this tree — a convention that lists an instance's props goes stale the
+  release after it is written, and the instance already documents itself beside its own source.
+
+---
+
+## Product principles
+
+Rules every product obeys, whatever the stack. A convention that touches one links here rather than restating it.
+
+- **GWDNBM — Get The Work Done & Never Bother Me.**
+- must register, subscribe and wire nothing automatically — every wire is an explicit opt-in the caller states.
+- must ship no ad, engagement prompt, nag, or unrequested email; a capability with nothing wired is a no-op.
 
 ---
 
@@ -138,7 +172,7 @@ build and start → `mla/platform/` · a technology or use case → `mla/domains
 |---|---|
 | `code-style/` | `naming` · `documentation` · `imports` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
 | `architecture/` | `architecture` · `state-and-data` |
-| `presentation/` | `components` · `component-catalog` (SDK component inventory + app instances) · `forms` · `hooks` · `styling` |
+| `presentation/` | `components` · `component-catalog` (the 15 kinds) · `suffixes` · one doc per kind · `forms` · `hooks` · `styling` |
 
 ---
 

@@ -1,31 +1,29 @@
 # Documentation
 
-*Last updated: 2026-07-06*
+*Last updated: 2026-08-19*
 
-JSDoc on every public export. Mirrors the backend XML-doc starter table ([documentation](../../../../backend/dotnet/lla/notation/documentation/documentation.md)) so a type reads the same in C# and TS.
+> What a JSDoc block says and how long it may run — every public export takes one.
+> Purpose — a fixed starter vocabulary, so every type's doc opens the same way.
 
-## Format
+## Format [REQUIRED]
 
-- must write a doc as a **one-liner** — `/** ... */` on a single line.
-- may exceed one line **only** when every condition below holds; failing any one, collapse it.
+- must write a doc as a one-liner — `/** … */` on a single line.
+- may exceed one line only when every condition below holds; failing any one, collapse it.
 
 ### The multi-line exception
 
 1. the entity is **exported** — an `@internal` never earns more than one line.
-2. every extra line states a fact the **caller must act on**: a precondition, a failure mode, an ordering constraint, a disposal duty.
-3. that fact is not derivable from the signature.
-4. no line compares to another implementation, justifies the pattern, or explains *why this shape*.
-5. **≤5 lines**; past that it is a doc page, not a comment.
-6. no usage example — a snippet in a doc restates the obvious and goes stale with nothing to catch it. Put it in a test or a story, which the build runs.
+2. every extra line states a caller obligation absent from the signature — precondition, failure, ordering, disposal.
+3. no line compares to another implementation, justifies the pattern, or explains *why this shape*.
+4. **≤5 lines**; past that it is a doc page, not a comment.
+5. no usage example — a snippet goes stale with nothing to catch it; it belongs in a test or a story.
 
-**The test:** strike every line whose removal costs the caller nothing. One line surviving earns the block; none surviving collapses it.
-
-Length is not the test. A 200-character comment restating what the code does fails on condition 2 while looking substantial.
+**The test:** strike every line whose removal costs the caller nothing — one survivor earns the block, none
+collapses it. Length is not the test; a 200-character restatement fails condition 2 while looking substantial.
 
 ```typescript
-// ❌ long, and every line is what the code already says or how it used to be
-/* Chained after the consumer's own click (attribute fallthrough puts theirs first) and skipped
-   when they called `preventDefault()` — the original's `onClick?.(e); if (e.defaultPrevented) return`. */
+// ❌ what the code already says, and how it used to say it
+/* Chained after the consumer's own click and skipped when they called `preventDefault()`. */
 
 // ✅ one line, the role
 /* Runs after the consumer's handler; a prevented default skips it. */
@@ -38,91 +36,82 @@ Length is not the test. A 200-character comment restating what the code does fai
  */
 ```
 
-```typescript
-// ✅ Correct — compact one-liner
-/** Defines the editable fields for the listing edit form. */
-export interface EditableFields { }
+---
 
-// ✅ OK — multi-line for genuinely complex docs
-/**
- * Maps a raw ListingDto from the API to a domain Listing.
- * Resolves enum string fields to TS enum values; returns `{ listing, error }` —
- * on failure, listing is null.
- */
-export function mapListingDto(dto: ListingDto): MapListingResult { }
-
-// ❌ Wrong — multi-line for a simple doc
-/**
- * Defines the editable fields for the listing edit form.
- */
-export interface EditableFields { }
-```
-
-## Verb starters (the table)
+## Verb starters
 
 | Target | Verb | Example |
 |---|---|---|
 | Enum | `Defines` | `/** Defines the QR data-module body shape. */` |
-| Enum member | `Refers to` | `/** Refers to a plain square module. */` — a member is a label, not its referent; `Represents` claims the entity *carries* what it names |
+| Enum member | `Refers to` | `/** Refers to a plain square module. */` |
 | Displays Record (`{Enum}Displays`) | `Maps` | `/** Maps each barcode format to its display. */` |
-| Interface — shape/contract | `Defines` | `/** Defines the editable fields for the listing edit form. */` |
-| Interface — data holder | `Represents` | `/** Represents a domain listing with resolved enum values. */` |
+| Interface — shape / contract | `Defines` | `/** Defines the editable fields for the edit form. */` |
+| Interface — data holder | `Represents` | `/** Represents a domain listing with resolved enums. */` |
 | Props interface | `Defines` | `/** Defines props for the author contact strip. */` |
-| Prop member — value / input | `The …` | `/** The current foreground gradient, or null for a solid fill. */` |
-| Prop member — callback / event | `Emits …` | `/** Emits the next gradient. */` (pure event → `Fires when …`) |
+| Prop member — value / input | `The …` | `/** The current foreground gradient, or null. */` |
+| Prop member — callback | `Emits …` | `/** Emits the next gradient. */` (pure event → `Fires when …`) |
 | Component fn | `Renders` | `/** Renders the author contact strip. */` |
 | Utility fn | 3rd-person verb | `/** Resolves a raw API string to a TS enum value. */` |
-| Hook | `Manages` | `/** Manages the supply listings fetch lifecycle. */` — leads with the state / behavior it owns |
+| Hook | `Manages` | `/** Manages the supply listings fetch lifecycle. */` |
 | Context-accessor hook | `Provides access to` | `/** Provides access to auth state from AuthContext. */` |
-| Extension object | `Extends` | `/** Extends `Person` for display formatting. */` — it bolts methods onto a type it does not own, so `Provides` overstates |
+| Extension object | `Extends` | `/** Extends `Person` for display formatting. */` |
 | Extension method | 3rd-person verb | `/** Extracts up to 2 uppercase initials. */` |
 | Internal constant | `@internal {desc}` | `/** @internal Whitespace splitter. */` |
 
-> **"Provides"** is reserved for implementation objects that supply behaviour of their own (services). An extension object supplies none — it bolts methods onto a type it does not own — so it takes **`Extends`**, matching the backend. Interfaces use **"Defines"** (shape) or **"Represents"** (data). A hook leads with **`Manages …`** — the state / behavior it owns — alongside the other keywords (`Renders` · `Emits` · `Defines` · `Maps` · `Defines props for`); `Manages` ≈ 90% of hooks, with `Provides access to` only for thin context unwrappers.
->
-> **Prop members carry a direction-appropriate verb, not `Gets or sets`** — a React prop is unidirectional, and the get/set pair is split across a `value` prop and its `onChange` callback. Doc the inbound `value` as a noun phrase led by `The …`; doc the outbound callback with `Emits …` (or `Fires when …` for a pure event). Not `Gets or sets` (C#-property framing — a prop is neither), `Holds`/`Provides` (implies mutable storage the component doesn't own). The keyword scheme lives in [components](../../../mla/components/components.md) § Members.
-
-## Member-level docs
-
-- **Props interfaces (backend-mirrored):** type-level JSDoc required; **member-level omitted** — the backend declares field semantics, so the FE doesn't restate them.
-- **Props interfaces (pure UI — no backend counterpart):** member-level JSDoc **encouraged** — a one-liner per prop; there's no backend contract to lean on. (`Renders` on the component, `Defines props for …` on the interface.)
-- **Domain interfaces / DTOs:** member docs optional; add `// ── Section ──` field groups instead (see [code-organization.md](../style/style.md)).
-
-## Scope — what a doc is allowed to be about
-
-A doc says **what the entity is**, and — when the name doesn't carry it — **what it is for**. Nothing else.
-
-- must not say **why this shape rather than another** — pattern choice is a convention's job, not an entity's.
-- **The test:** would this line read identically on every entity that follows the same rule? Then it belongs in the rule, not here.
-- must not restate a rule from `conventions/` at a use site — a convention justified per use site puts the rulebook in every file, and the two drift the moment the rule changes.
-- must not point at the convention either (`// see vue-sfc.md § …`) — a reader who needs it looks it up once; a pointer per site is the same noise, shorter.
-- may keep a **one-clause** because when it changes what the reader does at that spot (`// second pass — the first leaves the ref unset`).
-
-```typescript
-// ❌ restates a convention (Pick-over-Omit is a rule; it reads the same on every such alias)
-/** A `ButtonProps` member this replaces. Written through `Pick` rather than a bare key union:
- *  `Omit` accepts a key the type does not have, `Pick` does not. */
-type ReplacedButtonProp = keyof Pick<ButtonProps, 'onError'>;
-
-// ✅ says what it is; the rule lives in vue-sfc.md § Magic strings
-/** @internal The `ButtonProps` handler this component replaces with its own emit. */
-type ReplacedButtonProp = keyof Pick<ButtonProps, HandlerProp<typeof DomEvent.Error>>;
-```
-
-Why this gap stayed open: the rule below forbids *rationale*, and its examples are all **history** (migration notes, version drift). Explaining a convention-mandated pattern doesn't feel like history while writing it — it feels like helping a reader with a non-obvious API. The test above is what separates the two.
+- must reserve `Provides` for an object with behaviour of its own — `Provides access to` unwraps a context.
+- must not write `Gets or sets` on a prop member — a prop is unidirectional, split across `value` and `onChange`.
+- must not write `Holds` / `Provides` on one either — they imply storage the component does not own.
 
 ---
 
-## Comments (non-JSDoc)
+## Member docs
 
-A `//` block / inline comment states a **role** in one line — never the rationale, history, or a design essay.
+- must document a **pure-UI** props interface member by member — no backend contract exists to lean on.
+- must omit member docs on a **backend-mirrored** props interface — the backend declares the semantics.
+- may leave member docs off a domain interface or DTO, grouping fields with `// ── Section ──` bands.
 
-- must keep a file-top / block comment to **one line** naming what the code is or does — not why it came to be
-- must not narrate migrations, drift-risks, version notes, or trade-offs in source (`// v0.7 — … the drift risk this rewire removes`) — that goes in the commit / PR / a doc
-- must keep an inline / JSX comment a **short role label** (`{/* type picker */}`), not a sentence explaining the binding
-- rationale / history / "why" → commit message or a doc, never the code file
+---
 
-## See also
+## Name the referent
 
-- [documentation](../../../../backend/dotnet/lla/notation/documentation/documentation.md) — the C# starter table this mirrors
-- [components](../../../mla/components/components.md) · [enums](../../components/enums.md) · [extensions](../../components/extensions.md)
+A doc says *what* a value is, never *whose* — the referent appears only when it is not the type's own subject.
+
+- must name the referent when the value belongs elsewhere — a related entity, author, owner or target.
+- must omit it when the value is the type's own — `Channel.slug` takes `/** The kebab-case slug. */`.
+- must not add *of the channel* there — the absence of a domain noun is itself the signal.
+- must read the **subject**, not the type name — a `CodeDto` *is* the code, a `CodeCreateCommand` is about one.
+- must hold in a `@param` and a `@returns` alike.
+
+---
+
+## Scope
+
+A doc says **what the entity is**, and — when the name does not carry it — **what it is for**. Nothing else.
+
+- must run [the falsifiability test](falsifiability.md) on every doc written or touched.
+- must not say why this shape rather than another; pattern choice is a convention's job, not an entity's.
+- must not restate a rule from `conventions/` at a use site — the copy drifts the moment the rule changes.
+- must not point at the convention either (`// see vue-sfc.md § …`) — a reader looks it up once.
+- may keep a one-clause because when it changes what the reader does (`// second pass — the ref is unset`).
+- **The test:** a line reading identically on every entity following the rule belongs in the rule, not here.
+
+---
+
+## Comments
+
+A `//` block or inline comment states a **role** in one line — never rationale, history, or a design essay.
+
+- must keep a file-top or block comment to one line naming what the code is or does.
+- must not narrate migrations, drift risks, version notes or trade-offs in source — those go in the commit.
+- must keep an inline comment a short role label (`{/* type picker */}`), not a sentence.
+- must check a written doc against [the anti-pattern catalogue](anti-patterns.md) — the eight names are the
+  review vocabulary.
+
+---
+
+## Neighbours
+
+- [the C# starter table](../../../../backend/dotnet/lla/notation/documentation/documentation.md) — what this mirrors
+- [constructs](../../../mla/constructs/constructs.md) — the component-level additions to these verbs
+- [enums](../../components/enums.md) · [extensions](../../components/extensions.md) — own verbs
+- [style](../style/style.md) — the `// ── Section ──` field bands

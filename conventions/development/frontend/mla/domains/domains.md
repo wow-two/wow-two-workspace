@@ -1,6 +1,6 @@
 # Domains
 
-*Last updated: 2026-08-17*
+*Last updated: 2026-08-19*
 
 > One folder per capability an app consumes — the contract it guarantees, and each provider that implements it.
 > Purpose — a route model is not tied to a router, a `beforeEnter` is; the split keeps them apart.
@@ -30,36 +30,26 @@
 
 | Domain | Contract | Providers |
 |---|---|---|
-| [data](data/state-and-data.md) | the `/api` client, the error body, server-state vs UI-state | `fetch` client · TanStack Query |
-| [forms](forms/forms.md) | `useAppForm` — values, schema, submit, field errors | `house/` · `tanstack/` |
-| [routing](routing/routing.md) | `RouteConfig` — places, guards, route metadata | `react-router` · `vue-router` |
+| [analytics](analytics/analytics.md) | the product-event sink | console · memory |
 | [api](api/type-mapping.md) | the .NET ↔ wire ↔ TS scalar contract | none — contract only |
-
----
-
-## Recognized
-
-Named so a design in progress has somewhere to land; no folder until a rule needs writing.
-Each names a capability the SDK already ships behind one contract.
-
-| Domain | Contract | Providers shipped |
-|---|---|---|
-| `auth` | the session state machine and its sign-in shapes | cookie · bearer · redirect · oauth |
-| `storage` | the synchronous client-side persistence seam | local-storage · memory · zustand |
-| `analytics` | the product-event sink | console · memory |
-| `flags` | flag evaluation, total and never-throwing | static |
-| `validation` | the Standard Schema seam every layer may reach | built-in · zod · valibot |
-| `observability` | what the app logs, and where a record lands | console · memory |
-| `uploads` | admission, scheduling and progress over a transport seam | xhr |
-| `config` | a typed, fail-fast read of app configuration | `import.meta.env` · runtime `window` · static |
-| `icons` | the icon component contract an app satisfies | any `IconAdapter` |
-| `i18n` | the locale a subtree reads and the formatters it drives | `Intl` |
-| `feedback` | the notice bus and what renders a notice | toasts · the query-error seam |
+| [auth](auth/auth.md) | the session state machine and its sign-in shapes | cookie · bearer · redirect · oauth |
+| [config](config/config.md) | a typed, fail-fast read of app configuration | `import.meta.env` · window · static |
+| [data](data/state-and-data.md) | the `/api` client, the error body, server- vs UI-state | fetch · TanStack Query |
+| [feedback](feedback/feedback.md) | the notice bus and what renders a notice | toasts · the query-error seam |
+| [flags](flags/flags.md) | flag evaluation, total and never-throwing | static |
+| [forms](forms/forms.md) | `useAppForm` — values, schema, submit, field errors | house · tanstack |
+| [i18n](i18n/i18n.md) | the locale a subtree reads and the formatters it drives | `Intl` |
+| [icons](icons/icons.md) | the icon component contract an app satisfies | any `IconAdapter` |
+| [observability](observability/observability.md) | what the app logs, and where it lands | console · memory |
+| [routing](routing/routing.md) | `RouteConfig` — places, guards, route metadata | react-router · vue-router |
+| [storage](storage/storage.md) | the synchronous client-side persistence seam | local-storage · memory · zustand |
+| [uploads](uploads/uploads.md) | admission, scheduling and progress over a transport | xhr |
+| [validation](validation/validation.md) | the Standard Schema seam every layer may reach | built-in · zod · valibot |
 
 ---
 
 ## Neighbours
 
-- [components](../components/components.md) — the kinds a domain's providers are built from
+- [constructs](../constructs/constructs.md) — the kinds a domain's providers are built from
 - [architecture](../architecture/architecture.md) — the layer a domain's contract and providers live in
 - [swappable modules](../../../swappable-modules.md) — how a provider's vendor stays an optional peer

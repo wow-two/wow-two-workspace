@@ -1,199 +1,120 @@
 # Frontend Architecture
 
-*Last updated: 2026-08-15*
+*Last updated: 2026-08-19*
 
-A React/TS app is a Clean-Arch stack — layers at `src/` root, each sliced by domain, one inward dependency direction. Drill down: **layer → domain → sub-domain → file**.
+> The slice tree a React/TS app is built on — five Clean-Arch layers at `src/`, each sliced by domain.
+> Purpose — one inward dependency direction, so a layer reads without its callers.
+> Use case — placing a new file, or splitting a domain that has outgrown one folder.
 
-## Layers — the top-level split
+## Layers [REQUIRED]
 
-Five layers at `src/` root (no `layers/` wrapper). Dependency runs **inward**: `presentation → application → domain` · `integration → domain` · `bootstrap` wires all.
+Dependency runs inward: `presentation → application → domain`, `integration → domain`.
+`bootstrap` wires all.
 
-- **`bootstrap/`** — the composition root. `App.tsx` · `main.tsx` · `index.css` · providers · `routes.tsx` · layouts. Wiring only, no feature logic. *(backend peer: Host)*
-- **`presentation/`** — pure UI: components + screens. Renders; never fetches. e.g. `ShapeControls` · `CreateCodeScreen`. *(Presentation)*
-- **`application/`** — stateful use-cases: orchestration hooks (`useCodes`), view-model mappers (`toCodeRow`), validation + submit orchestration, client-state logic. *(Application)*
-- **`domain/`** — the model: types, enums, extensions, and the model's pure ops (`build` / `parse` / `validate` / `encode`). Depends on nothing. *(Domain)*
-- **`integration/`** — stateless adapters: HTTP client, endpoint fns (`createCode()`), interceptors, auth. Returns wire DTOs; no React. *(Infrastructure)*
+| Layer | Holds | Backend peer |
+|---|---|---|
+| `bootstrap/` | the composition root — `App.tsx` · `main.tsx` · providers · `routes.tsx` · layouts | Host |
+| `presentation/` | components and screens; renders, never fetches | Presentation |
+| `application/` | orchestration hooks, view-model mappers, submit orchestration, client state | Application |
+| `domain/` | types, enums, extensions, pure ops (`build` · `parse` · `validate`); depends on nothing | Domain |
+| `integration/` | HTTP client, endpoint fns, interceptors, auth; returns wire DTOs, no React | Infrastructure |
 
-- must not import **sideways** — `domain/codes` ↛ `domain/identity`; share via `common/` or lift a layer.
-- `common/` + `bootstrap/` are import-exempt; should lint the rule (ESLint `no-restricted-paths` / import-linter) — unlinted layering rots.
+- must not import sideways — share via `common/` or lift a layer; `common/` and `bootstrap/` are exempt.
+- should lint the direction (ESLint `no-restricted-paths`) — unlinted layering rots.
 
-## Domains — each layer sliced
+---
+
+## Domains
 
 - must slice every layer by domain — `codes` · `identity` · `billing` · `marketing`.
-- must give each layer a **`common/`** slice for cross-domain items (a type / hook / api used by ≥ 2 domains).
-- a domain appears once per layer it touches — `presentation/codes/` · `application/codes/` · `domain/codes/` · `integration/codes/`.
+- must give each layer a `common/` slice for anything two or more domains use.
+- must repeat a domain in every layer it touches — `presentation/codes/` · `domain/codes/`.
 
-## Sub-domains — a domain splits as it grows
+---
 
-- a domain divides into cohesive **sub-domains** — `codes` → `core` (the QR builder) + `content` (per content-type).
-- must fold a concern into a sub-domain once it owns ≥ 3 components — otherwise keep it flat.
-- e.g. `domain/codes/core/` (module · finder · preview · rule) · `domain/codes/content/` (one module per content type).
-- a sub-domain may itself **divide by concern** as it grows — `presentation/codes/core` → `design` · `shape` · `routing` · `preview` (a noun per concern).
-- a component sub-domain may hold its components **directly** (`core/design/FillControls.tsx`); the `components/` wrapper is optional — use it only to separate non-component files (hooks, helpers). Keep one style within a domain.
-- **two kinds of folder** inside a domain: a **sub-domain** (a model noun — `core` · `content` · `design`) and a **role-group** (a plural role noun naming what it holds, never the activity — `models/` · `enums/` · `screens/` · `components/` · `hooks/` · `validators/` · `mappers/`; never `validation/` / `mapping/`). A role-group is never a sub-domain. Model files live in a `models/` role-group and enum files in an `enums/` role-group (mirrors the backend), symmetric with `components/` / `hooks/`.
-- **domain-level `common/`** — the home for whatever belongs to no single sub-domain: cross-sub-domain **shared** components/hooks (e.g. a `PresetIconButton` used by `design` + `shape`) **and** the domain's **composition** role-groups. Symmetric with the layer-level `common/` (cross-domain).
-- **routed screens** compose sub-domains, so they belong to none — they live under domain-`common/`: `presentation/{domain}/common/screens/`, never as a peer to the sub-domains.
+## Sub-domains
 
-## Files — where general naming applies
+- must divide a domain into cohesive sub-domains — `codes` → `core` (the builder) · `content` (per type).
+- must fold a concern into a sub-domain once it owns three or more components; keep it flat below that.
+- may divide a sub-domain again by concern — `presentation/codes/core` → `design` · `shape` · `preview`.
+- may hold components directly; a `components/` wrapper separates non-component files only, one style per domain.
+- must name a folder either a sub-domain (a model noun — `core` · `design`) or a role-group (a plural role
+  noun — `models/` · `enums/` · `pages/` · `hooks/` · `mappers/`), never the activity (`validation/`).
+- must not treat a role-group as a sub-domain.
+- must put in domain-`common/` whatever belongs to no sub-domain — shared components, composition role-groups.
+- must place a routed page in domain-`common/pages/` — it composes sub-domains, so it belongs to none.
 
-- files `PascalCase`, folders `camelCase`, one lowercase `index.ts` **barrel** per slice (its only public surface) — per [naming](../../lla/notation/naming/naming.md).
-- one component per its own folder ([components](../components/components.md)); hooks `use{Noun}` ([hooks.md](../components/hooks.md)); types — `*Dto` (entity · form · sub-model) / `*Content` / `*Request` ([models.md](../components/data/models.md)).
-- **role-specific naming** (component-role suffixes, type/api/const markers) → the [Naming](#naming--role--suffix) section below.
+---
 
-## Naming — role → suffix
+## Files
 
-*(SDK-grounded role vocabulary. A few forks still open — see the end of this section.)*
+- must name files, folders and slice barrels per [naming](../../lla/notation/naming/naming.md).
+- must give each component its own folder ([constructs](../constructs/constructs.md)).
+- must suffix a component by its [kind](../constructs/component-catalog.md), a seam by a
+  [headless role](../constructs/headless-suffixes.md).
+- must name a hook `use{Noun}` ([hooks](../constructs/hooks.md)); data `use{Entity}` returns `{Entity}State`,
+  and a data model is marked `*Dto`, a write contract `*Request`, a variant `*Content`.
+- must export `{domain}Api` from `integration/{domain}`, its fns `{verb}{Noun}`.
+- must name an extension object `{Noun}Extensions` (`as const`); constant casing is
+  [naming](../../lla/notation/naming/naming.md)'s.
 
-Name a **component** by its role (SDK-grounded categories):
+---
 
-**Composition / horizons**
+## Compound components
 
-| Role | Suffix |
-|---|---|
-| shell (navbar + chrome) | `*Layout` |
-| routed content | `*Page` |
-| sub-view (display mode) | `*View` |
-| tab content | `*Tab` |
-| collapsible section | `*Section` |
-| overlay (blocking) | `*Modal` |
-| bordered container | `*Card` |
-| conditional-render guard | `*Gate` |
-
-**Forms & control sets** — *submit-ownership decides `*Form` vs `*Controls`*
-
-| Role | Suffix |
-|---|---|
-| submittable form | `*Form` |
-| submittable editor (edit content with a format) | `*EditorForm` |
-| subject control set (embedded, no submit) | `*Controls` |
-| homogeneous group of one control | `{Control}Group` |
-
-**Atomic controls**
-
-| Kind | Suffix |
-|---|---|
-| raw typeable | `*Input` |
-| labeled control (clickable / selectable) | `*Field` |
-| panel selector (large / continuous space) | `*Picker` |
-| action (no value) | `*Button` |
-| generic labeled wrapper | `Field` |
-
-- `Field` = the generic wrapper · `*Field` = a specific labeled control (`SelectField`) · a raw unlabeled widget keeps its bare name (`Select` · `Switch`). No `Form` prefix outside the submittable `*Form`.
-
-**Display & feedback**
-
-| Role | Suffix |
-|---|---|
-| asset / media render | `*Preview` · `*Carousel` · `*Gallery` |
-| tabular | `*Table` · `*Grid` · `*Row` · `*Cell` |
-| status chip | `*Badge` · `*Tag` · `*Status` |
-| inline note | `*Callout` |
-| hover popup | `*Tooltip` |
-| transient note | `*Toast` |
-| section note | `*Alert` · `*Banner` |
-| dynamic renderer | `*Renderer` |
-| context | `*Provider` (+ `*Context`) |
-
-- modifiers: `Overlay*` prefix (positioned variant) · `*Compact` suffix (condensed).
-- **hooks** — `use{Noun}`; data `use{Entity}` returns a `{Entity}State` object, UI `use{Feature}`.
-- **types** — `*Dto` marks every data model (entity `CodeDto` · form `CreateEdit*Dto` · sub-model · `*RowDto` · `*QueryDto`), placed by role in `domain` / `application` / `integration` · `*Request` (write contract, `integration`) · `*Content` (variant) · `*Props` · `*State` (hook) · enum bare + `{Enum}Labels`. Full scheme → [models.md](../components/data/models.md).
-- **api** — `integration/{domain}` exports `{domain}Api`; fns `{verb}{Noun}`; `ApiError`; private `request<T>`.
-- **constants** — PascalCase; **extensions** — `{Noun}Extensions` (`as const`).
-- **unresolved forks:** hook file casing (`useX.ts` vs `UseX.ts`) · enum labels (`{Enum}Labels` vs `{ENUM}_LABEL`) · api object (`{domain}Api` vs `api`).
-
-### Compound (namespaced) components
-
-A distinct **structural** category (orthogonal to the role suffix): a **root + tightly-coupled subparts** consumed as `Root.Sub` — `Modal.Content` · `Drawer.Body` · `Table.Row` · `Tabs.Panel` · `Menu.Item` · `Toolbar.Button` · `Collapsible.Trigger` · `List.Item`. The root keeps its role name (`*Modal` overlay · `*Table`/`List`/`Tree` display · `Menu`/`Toolbar` action-set); the subparts are the pieces that only exist inside it.
-
-- use it when a component owns **≥ 2 subparts that only make sense inside it**. A lone add-on stays a flat sibling.
-- name each subpart `Root{Part}` and export it **flat** (`ModalContent`, `TableRow`) **and** attach it as a `Root.Sub` static — flat form is tree-shakeable, namespace form is ergonomic. Ship both.
-- **type the NAMED export** via `Object.assign`, so `import { Modal }` + `<Modal.Content>` type-checks (barrels re-export the *named* binding via `export *`; the `default` export is not re-exported):
+- must reach for a compound root only when it owns 2+ subparts that exist nowhere else — `Modal.Content` ·
+  `Table.Row` · `Tabs.Panel`; a lone add-on stays a flat sibling.
+- must keep the root's own role suffix, and name each subpart `Root{Part}`.
+- must export each subpart both flat and attached, so `Root.Sub` and the flat name both resolve.
+- must type the named export through `Object.assign`, so `import { Modal }` plus `<Modal.Content>` type-checks.
+- must not attach the statics by casting the default export — the barrel re-exports the named binding, untyped.
 
 ```ts
-function ModalRoot(props: ModalProps) { … }          // private root — forwardRef roots: `const ModalRoot = forwardRef(function Modal…)`
-ModalRoot.displayName = 'Modal';                     // preserve the DevTools name for plain-fn roots
-export const ModalContent = …;                       // flat subparts stay exported
+ModalRoot.displayName = 'Modal';   // plain-fn roots keep the DevTools name; forwardRef roots name the inner fn
+export const ModalContent = …;     // flat subparts stay exported
 export const Modal = Object.assign(ModalRoot, { Content: ModalContent, Header: ModalHeader, … });
-export default Modal;                                // optional back-compat; not what barrels use
 ```
 
-- **anti-pattern (banned):** `type XComponent = typeof X & {…}; (X as XComponent).Sub = …; export default X as XComponent;` — the statics' type lands only on `default`, so the barrel-exported *named* `X` is untyped and `<X.Sub>` fails to type-check for consumers **and** stories.
+---
 
-## Routing & responsive surfaces
+## Routing and responsive surfaces
 
-A **place** is a URL; a **route renders the same place at every breakpoint** — never fork routes or redirect by device width.
+A place is a URL, and a route renders the same place at every breakpoint.
 
-- **places → pages** (`*Page`, one route) — a record, a detail view, `new-*`, settings. Deep-linkable, refreshable, shareable (a permalink relies on this).
-- **actions → modals** (`*Modal` / sheet, **no route**) — format pickers, confirms, quick-filters. Ephemeral, no URL → no cross-size mismatch.
-- must **not** render the same place as a modal on desktop and a page on mobile — that mismatch is what breaks copy-paste / refresh / back.
-- a direct hit / refresh / new tab on any place-route must resolve to a **standalone page**. A desktop "modal-over-context" for a place is allowed **only** via intercepting-routes carrying that standalone-page fallback — otherwise default to a page.
-- responsiveness lives in the **component, not the route**: a `*Modal` presents as `Modal` (desktop) ↔ `BottomSheet` / full-height sheet (mobile); a `*Page` reflows. Same route, adaptive render.
+- must give a place one route and a `*Page` — deep-linkable, refreshable, shareable.
+- must give an action a routeless `*Modal` — ephemeral, so no URL and no cross-size mismatch.
+- must not render one place as a modal on desktop and a page on mobile — that breaks copy-paste, refresh, back.
+- must resolve a direct hit, refresh or new tab on a place-route to a standalone page; a desktop
+  modal-over-context is allowed only through intercepting routes that keep that fallback.
+- must put responsiveness in the component, not the route — a `*Modal` presents as `Modal` or `BottomSheet`.
 
-## Discriminated dispatch
+---
 
-- must model a variant set (e.g. content types) as a **discriminated union** on a `type` field.
-- must dispatch via a `Record<{Id}, Spec>` registry — exhaustive by construction (a missing variant is a compile error: the TS analog of a C# exhaustive `switch`).
-- static vs dynamic is a `mode` field on the spec — one switch in the screen gates the rules / fallback UI; no `if (static)` scattered *(baseline — refine later)*.
+---
 
-## Restraint
-
-- must start at the screen; extract a shared component / hook **within the app** only when a second consumer is real — no speculative widgets / features (the FSD 2.x lesson).
-- scoped to in-app extraction; the SDK boundary uses the opposite trigger → [SDK extraction](#sdk-extraction).
-
-## SDK extraction
-
-The trigger is **genericness, not consumer count** — the inverse of *Restraint*, because the SDK is shared across the whole portfolio and the second consumer is a matter of time, not of chance.
-
-- must extract a surface to `@wow-two-beta/ui` (or `ui-vue`) as soon as it is **generic** — one consumer is enough.
-- must not wait for a second app to need it; "no other app uses it yet" is not a reason to keep it in the product.
-- must extract at the **earliest** point it is generic — a later extraction pays migration cost in every app that copied it meanwhile.
-- must keep in the app only what encodes what the **product is** — its business logic, its brand surface.
-- may build inline first when speed matters, and must extract in the pairing Adoption version — never leave it behind.
-- must fix the SDK rather than work around a gap in a product — beta-forever: publish, then repin.
-- landing / pricing / FAQ / blog chrome is generic; a product-specific hero or demo is not.
-
-## Future
-
-- **application ports** — once frontend testing is established, `application` may declare a port interface that `integration` implements, for test doubles (the backend abstraction↔adapter seam). Idea-logged, not adopted yet.
-
-## Template — the slice tree (`codes`)
+## Slice tree
 
 ```
 src/
-  bootstrap/     App.tsx · main.tsx · index.css · AppLayout · MarketingLayout · routes.tsx · providers
-  integration/   client.ts · interceptors.ts · auth.ts · common/
-                 codes/ identity/ billing/                       ← endpoint fns, one module per domain
-  domain/        common/
-                 codes/ core/      (module · finder · preview · rule types + pure ops)
-                        content/   (url · wifi · vcard … = { def, Content, Values, build, parse, validate }) · registry.ts
-                 identity/ billing/
-  application/   common/
-                 codes/ (useCodes · useCodeBuilder · toCodeRow mapper)  identity/ (useAuth)  billing/
-  presentation/  common/
-                 codes/ core/ design/ (FillControls · EmojiControls · ContrastHint) · shape/ (ShapeControls)
-                              routing/ (RuleBuilder) · preview/ (QrPreview)
-                        content/components/ (UrlForm · WifiForm …) · ContentTypeForm
-                        screens/ (CreateCodeScreen · CodesListScreen)
-                 identity/ billing/ marketing/
+  bootstrap/     App.tsx · main.tsx · index.css · AppLayout · routes.tsx · providers
+  integration/   client.ts · interceptors.ts · auth.ts · common/ · codes/ identity/ billing/
+  domain/        common/ · identity/ billing/
+                 codes/ core/    (module · finder · preview · rule types + pure ops)
+                        content/ (url · wifi · vcard = { def, Content, build, parse }) · registry.ts
+  application/   common/ · identity/ (useAuth) · billing/
+                 codes/  (useCodes · useCodeBuilder · toCodeRow mapper)
+  presentation/  common/ · identity/ billing/ marketing/
+                 codes/ core/     design/ (FillControls) · shape/ (ShapeControls) · preview/ (QrPreview)
+                        content/  components/ (UrlForm · WifiForm) · ContentTypeForm
+                        common/pages/   (CreateCodePage · CodesListPage)
 ```
-Each slice folder carries a lowercase `index.ts` barrel — the slice's only public surface.
 
-## Packaging
+---
 
-Two shapes, by app count — both under `engineering/codebase/{slug}.frontend-services/` (`@{brand}` = the repo's package scope).
+## Neighbours
 
-- **single app (default)** — one Vite app with the layered `src/` above; no workspace. Use until a 2nd app or genuine cross-app reuse appears — don't pre-build a workspace.
-- **pnpm workspace (multi-app)** — `packages/{common,ui,domain}` (`@{brand}/*`) + lowercase app folders, each with the same layered `src/`. `"workspace:*"` ≈ .NET `<ProjectReference>` · `pnpm-workspace.yaml` ≈ `.sln` · `packages/common/` ≈ a `Common/` project.
-- **package boundaries** — `@{brand}/ui` = dumb components (no data/context/localStorage) · `@{brand}/common` = shared hooks/utils/identity (side effects OK) · `@{brand}/domain` = pure types/enums (no React). Extract to a **repo-local** package only when **≥ 2 apps in that repo** need it — the ecosystem SDK uses the other trigger → [SDK extraction](#sdk-extraction).
-- `@wow-two-beta/ui` = the ecosystem library every product consumes; a repo's `@{brand}/ui` holds only **product-specific** components — generic ones go upstream immediately, not "eventually".
-
-## Dev server
-
-- must run HTTPS via `vite-plugin-mkcert`; bind an **even** port (track in [ports.md](../../../../deployment/hosting/ports.md)).
-- must proxy `/api` → the backend's HTTPS (even) port (`secure: false`, `changeOrigin: false`) — see [state-and-data.md](../domains/data/state-and-data.md).
-- gate mkcert behind `VITE_HTTPS=false` for a headless HTTP fallback (+ a matching `*-http` launch config); normal dev stays HTTPS.
-
-## Preview (agent)
-
-- mocks / design → render inline (`show_widget`), no server. Full app → drive the headless preview via the `*-http` config, screenshot at desktop width, then **stop it** (the human reviews in their own browser).
-- app / builder routes sit behind the auth gate → the backend + its DB must be running.
+- [boundaries](boundaries.md) — what stays in the app, what extracts to the SDK, how the app is packaged
+- [constructs](../constructs/constructs.md) — the kinds each slice holds
+- [models](../constructs/data/models.md) — the model types a slice declares, and variant-set dispatch
+- [routing](../domains/routing/routing.md) — how a place becomes a route, and the router wrapper that owns it
+- [domains](../domains/domains.md) — the capabilities an app consumes

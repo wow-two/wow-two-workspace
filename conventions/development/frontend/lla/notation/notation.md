@@ -1,6 +1,6 @@
 # Notation
 
-*Last updated: 2026-08-17*
+*Last updated: 2026-08-19*
 
 > How a settled concept gets written down — its name, its documentation, its layout, its imports.
 > Purpose — sit between the abstraction and the first keystroke, so no component doc re-argues spelling.
@@ -21,13 +21,14 @@
 
 - must apply to **every** symbol, whatever it is — a rule that needs a role is not notation.
 - may be **overridden by a component**, which states the override in its own file.
-- must not be restated by a component that does not override it — cite this folder instead.
+- must be cited rather than restated ([one owner per rule](../../../../conventions.md)).
 - must hold for both frameworks — a rule true only of an SFC or only of JSX belongs with that framework.
 
 ---
 
 ## Neighbours
 
-- [constructs](../constructs/constructs.md) — the constructs being notated
-- [components](../components/components.md) — the roles that override
-- [Vue SFC](../../mla/components/vue/vue-sfc.md) — the framework delta, which overrides rather than restates
+- [lla constructs](../constructs/constructs.md) — the constructs being notated
+- [constructs](../../mla/constructs/constructs.md) — the app roles that override these defaults
+- [components](../components/components.md) — constants, enums and extensions, which override their own
+- [Vue SFC](../../mla/frameworks/vue/vue-sfc.md) — the framework delta, which overrides rather than restates

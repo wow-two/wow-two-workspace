@@ -8,11 +8,13 @@
 
 ## The boundary
 
-- **`hla/` when we own both ends** — a micro-frontend host/remote contract, a shared runtime, cross-app route ownership.
-- **`mla/` when we own one end** — a third-party widget is *adapted*, never contracted. Its client and its limits live in `mla/domains/`.
+- **`hla/` when we own both ends** — a micro-frontend host/remote contract, a shared runtime, cross-app route
+  ownership.
+- **`mla/` when we own one end** — a third-party widget is *adapted*, never contracted. Its client and its limits
+  live in `mla/domains/`.
 
-A monorepo `@{brand}/*` package is **not** `hla/`: it is compiled into one app, so its boundary rules are
-[architecture](../mla/architecture/architecture.md) § *Packaging*.
+A monorepo `@{brand}/*` package is **not** `hla/`: it is compiled into one app, so its rules are
+[boundaries](../mla/architecture/boundaries.md).
 
 **The SDK targets every scope, and the scope follows the component, not the package.** `@wow-two-beta/ui`'s primitives
 and layers are `mla/`; a module-federation host, a shared session across separately deployed apps, or a cross-app

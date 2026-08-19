@@ -1,148 +1,127 @@
 # Components
 
-> React-shaped. The Vue SFC counterpart — blocks, macro order, emit / slot / watch verbs, `useAttrs` — is [vue-sfc.md](vue/vue-sfc.md).
+*Last updated: 2026-08-19*
 
-*Last updated: 2026-07-09*
+> Which thing to reach for, and with what values — the judgement register over the roles `constructs/` defines
+> and the surfaces the SDK specs.
+> Purpose — the SDK receives a value and applies it; this is where the workspace chooses the value.
+> Use case — picking between two shapes that both work, or fixing the value a parameter should carry here.
 
-> How to shape a component and its props — one component per folder, a `readonly` props `interface`, and the doc keywords that name each part. A prop is **not** a C# property, so it never reads `Gets or sets`.
+## The three registers [REQUIRED]
 
-**Flow:** `kind → folder → doc → props interface → prop members → styling → JSX → use`
-
----
-
-## 1. Kind
-
-The term fixes what the component owns and where it sits.
-
-| Term | Owns | Example |
+| Register | Owns | Lives in |
 |---|---|---|
-| **Page** | the whole viewport — outermost shell; decides sidebar / topbar / none | `SignInPage` · `MainLayout` |
-| **View** | the content area inside a page — swaps on nav, layout persists | `InboxView` · `OutreachView` |
-| **Modal** | an overlay above the current page+view — backdrop, floats | confirm dialog · detail preview |
-| **Form** | a reusable input component — pluggable into any page / view / modal | `SignInForm` · `FilterForm` |
+| definition | what the role is, its suffix, its contract shape | [`mla/constructs/`](../constructs/constructs.md) |
+| judgement | which one to reach for, and with what values | `mla/components/` — here |
+| surface | every prop, slot, emit and state one component exposes | `{Component}.spec.md`, in the SDK repo |
 
-- must classify by **what it owns**, not by where it happens to render.
+The discriminating pair: the spec says a prop **takes** a timeout; this register says the preferred timeout for
+that operation **is** `N`. The SDK receives and applies; the convention chooses.
 
----
-
-## 2. Folder
-
-- **SDK library (`@wow-two-beta/ui`) — must** give every component its **own folder**: `camelCase` folder, `PascalCase` main file, an `index.ts` barrel, co-located `*.stories.tsx` (+ `*.variants.ts` when needed). Never flatten a `.tsx` next to sibling folders.
-- **App (product frontend) — may** keep components as **flat files grouped by concern** (`core/design/FillControls.tsx` · `core/shape/ShapeControls.tsx`). No per-component folder or barrel; the **concern** folder's `index.ts` is the public API.
-- must keep sub-components **internal** either way — a non-exported sibling (`GradientControls.tsx`) or a nested fn; only the barrel's re-exports are public.
-- applies to **components only** — not views, pages, hooks, or lib files.
-
-```
-components/
-  phoneChip/
-    PhoneChip.tsx
-    index.ts                 // export { PhoneChip } from "./PhoneChip.js"
-  listingDetailModal/
-    ListingDetailModal.tsx
-    ListingDetailHeader.tsx  // internal sub-component
-    index.ts                 // only exports ListingDetailModal
-```
-
-- must order the component file: imports → types / interfaces → constants → helpers (pure, no hooks) → component fn → sub-components (only if small + tightly coupled). Import order per [code-organization.md](../../lla/notation/style/style.md).
+`lla` / `mla` / `hla` name the **layers** — how far a rule reaches. A register is a different cut: which half of
+one role a doc owns.
 
 ---
 
-## 3. Doc
+## The gate [REQUIRED]
 
-- must JSDoc the component with a **one-line** `/** … */` starting **`Renders …`** ([documentation](../../lla/notation/documentation/documentation.md)) — never a multi-line block on a component.
-- must JSDoc the props interface with a one-liner starting **`Defines props for …`**.
+- must place a doc here only when it says **which thing to reach for, and with what values**.
+- must place it in [`mla/constructs/`](../constructs/constructs.md) when it says **what the thing is** — the role,
+  the suffix it takes, the shape of its contract.
+- must place it in [`lla/components/`](../../lla/components/components.md) when the thing is a **language form**
+  used end to end — a `const` binding, a `const` object value set, a static-helper object.
+- must leave one component's props, slots, emits and states to its `{Component}.spec.md` in the SDK repo.
+- must not enumerate a parameter here, and must not fix a preferred value in a spec — one half each.
+- must not read self-sufficiency or simplicity as the test — every component has a caller, and that sorts nothing.
 
-```tsx
-/** Renders the author contact strip. */
-export function AuthorContact(props: AuthorContactProps) { … }
-```
-
----
-
-## 4. Props interface
-
-- must declare props as an **`interface`** (`type` only for a union), one file, named `{Component}Props`.
-- must mark **every member `readonly`**; an array prop is **`ReadonlyArray<T>`** (blocks `.push()` / `.splice()`). `readonly` is the mutation guard — and it **flows through a destructured binding**, so it holds regardless of access style.
-- must **destructure** in the parameter (`{ foreground, size = 16 }`) — inline defaults stay clean, `readonly` carries through, and a destructured `const` **keeps type-narrowing across closures** (a `props.x` member read re-widens inside a nested callback → forces `!` / captures).
-  - *Evaluated & reverted (2026-07): no-`props`-destructure (`props.x` + `withDefaults` / `splitProps`) for discriminated-union narrowing + co-located defaults — the closure re-widening cost above outweighed the gain. Revisit if TS ships control-flow narrowing for immutable member access.*
-
-```tsx
-/** Defines props for the author contact strip. */
-interface AuthorContactProps {
-  readonly authorName: string;
-  readonly phones: ReadonlyArray<string>;
-}
-
-export function AuthorContact({ authorName, phones }: AuthorContactProps) {
-  phones[0];        // read + index
-  phones.push("x"); // ❌ ReadonlyArray — readonly flows through the destructure
-}
-```
+A kind doc fails the gate — [page](../constructs/page.md) says what a page **is**, so it defines. One component's
+prop table fails too — that is its spec's surface. `constants`, `enums` and `extensions` fail on the third bullet:
+TypeScript supplies all three, so they are [lla components](../../lla/components/components.md).
 
 ---
 
-## 5. Prop members
+## Adding a component [REQUIRED]
 
-Each member gets a one-line JSDoc whose verb matches the prop's **direction** — a prop is unidirectional, and the get/set is split across a `value` prop and its `onChange` callback, so one direction-appropriate verb per member is right ([documentation](../../lla/notation/documentation/documentation.md) verb table).
+- must give each component **one file**, named for the role in the plural — the shape
+  [`lla/components/`](../../lla/components/components.md) uses for `constants.md` and `enums.md`.
+- must carry the three `##` sections below, in order; a component with nothing to say in one omits it, never renames it.
+- must state only the folder **name**, never where it sits ([architecture](../architecture/architecture.md)).
+- may override any [`lla/notation/`](../../lla/notation/notation.md) rule, stating the override in its own file.
 
-- must doc a **value / input** prop as a noun phrase led by **`The …`**.
-- must doc a **callback / event** prop with **`Emits …`** — the value it hands back; a *pure* event with no payload uses **`Fires when …`**.
-- must **not** write `Gets or sets` (a prop is not a C# property), nor `Holds` / `Provides` (both imply mutable storage the component doesn't own).
-- must leave **one blank line between members** — a props interface is a model, so its documented members are blank-line-separated per [models.md](data/models.md); the docs read as separate units, not a wall.
-
-| Prop shape | Keyword | Example |
+| Section | Sub-headings | States |
 |---|---|---|
-| value / input | `The …` | `/** The current foreground gradient, or null for a solid fill. */` |
-| callback (payload) | `Emits …` | `/** Emits the next gradient. */` |
-| event (no payload) | `Fires when …` | `/** Fires when the user dismisses the sheet. */` |
+| Location | Folder · File | the folder name that wraps it, and the file's name |
+| Declaration | Type doc · Type name | the type's doc fields, and the type's own name |
+| Content | Member docs · Members | each member's doc fields, and the members themselves |
 
-**Required vs. optional per prop origin:**
+- must give each doc field its own `####` sub-heading, linked to the doc that owns that field.
+- must not sub-head a field the component does not declare.
+- must write each rule as what the code **must have** — a banned shape goes in the ❌ example, not a rule.
+- must close every doc sub-heading and `Members` with one ✅ / ❌ pair; the ❌ must fail a rule stated above.
+- must state a constraint as its own rule only when no positive rule already excludes it.
+- must state a member **order** rule in `Members` — a reader cannot predict an order the doc never fixes.
 
-- **pure-UI prop** (no backend counterpart) → member doc **required**; there's no backend contract to lean on.
-- **backend-mirrored DTO prop** → member doc **omitted** — the backend declares the field semantics; the FE must not restate them ([documentation](../../lla/notation/documentation/documentation.md) § Member-level docs).
+````markdown
+# {Components}
 
-```tsx
-/** Defines props for the fill controls. */
-interface FillControlsProps {
-  /** The current foreground gradient, or null for a solid fill. */
-  readonly gradient: Gradient | null;
+*Last updated: {YYYY-MM-DD}*
 
-  /** Emits the next gradient, or null to fall back to the solid fill. */
-  readonly onGradientChange: (gradient: Gradient | null) => void;
-}
+> {One line saying what the role is.}
+> Purpose — {what having it buys}.
+> Use case — {when to reach for it}.
 
-/** Renders the foreground fill controls. */
-export function FillControls(props: FillControlsProps) { … }
+## Location
+
+### Folder
+- {rule}
+
+### File
+- {rule}
+
+## Declaration
+
+### Type doc
+
+#### [Format](../../lla/notation/documentation/documentation.md)
+- must {rule}
+
+```typescript
+// ✅
+{good}
+// ❌ {why it fails}
+{bad}
 ```
 
----
+### Type name
+- must {rule}
 
-## 6. Styling
+## Content
 
-- must use Tailwind utilities only; conditional classes via `cn()` ([styling.md](../platform/styling.md)).
-- must define a multi-variant component's class map with **`tailwind-variants`** in a co-located `*.variants.ts` / `*Styles.ts` — never inline a large conditional class string.
-- should reach for a **`@wow-two-beta/ui`** component (`Button`, `Card`, `Badge`, `Heading`, `Text`, `Alert`, `Spinner`, `EmptyState`, `TextInput`, …) before hand-rolling; missing one → build locally, then migrate upstream **only if it clears the [SDK-extraction threshold](../../../sdk-extraction.md)** (carries logic + ecosystem-worth). A pure DRY / layout wrapper stays inline (duplicate it); an **atom that carries logic is never product-local**.
+### Member docs
 
----
+#### [Format](../../lla/notation/documentation/documentation.md)
+- must {rule}
 
-## 7. JSX attributes
+### Members
+- must {rule}
 
-- must put **one attribute per line** once an element has **3+ attributes** *and* the single-line form passes the **120-char** wrap; else keep it inline. Peer siblings share one shape — don't mix inline + wrapped.
-- set Prettier `printWidth: 120` so the width trigger is automatic; the "3+ attrs" floor is the review convention.
-
-```tsx
-<Spinner size="sm" />                                    // ≤2 attrs → inline
-<ColorPicker
-  triggerVariant="swatch"
-  value={fromColor}
-  onValueChange={(hex) => setStop(0, hex)}
-  aria-label="Gradient start color"
-/>                                                       // 3+ attrs & wide → one per line
+```typescript
+// ✅
+{good}
+// ❌ {why it fails}
+{bad}
 ```
 
+## Neighbours
+
+- {link} — {what it owns}
+````
+
 ---
 
-## 8. Use
+## Neighbours
 
-- a value that is one of an enum's members is modeled as the **enum**, compared `x === Enum.Member` — never fanned into `isSolid` / `isGradient` booleans ([enums](../../lla/components/enums.md) § No parallel `isMember` flags).
-- where a component lives (the `presentation/` layer) → [architecture.md](../architecture/architecture.md); forms + hooks → [forms.md](../domains/forms/forms.md) · [hooks.md](hooks.md).
+- [mla constructs](../constructs/constructs.md) — what each role is, before this register chooses between them
+- [lla components](../../lla/components/components.md) — the language forms used end to end, constants onward
+- [lla constructs](../../lla/constructs/constructs.md) — the language constructs these kinds are built from
+- [notation](../../lla/notation/notation.md) — the defaults a component may override

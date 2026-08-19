@@ -1,8 +1,8 @@
 # Extensions
 
-*Last updated: 2026-06-09*
+*Last updated: 2026-08-19*
 
-Static helper functions grouped by **domain noun**. Mirrors the C# static-class pattern using `const` objects — the FE counterpart of a `*Extensions` static class.
+Static helper functions grouped by **domain noun**, declared as `const` objects.
 
 ## Naming & shape
 
@@ -32,6 +32,8 @@ export const PersonExtensions = {
 } as const;
 ```
 
+---
+
 ## Rules
 
 - **`as const`** — prevents mutation, signals static intent.
@@ -44,11 +46,15 @@ export const PersonExtensions = {
 - **Extract regex / magic values** as named `UPPER_CASE` fields inside the object — co-located, self-documenting.
 - **Blank lines between logical groups** in a method body (guard → logic → return).
 
+---
+
 ## JSDoc
 
 - Object: `/** Provides extensions for {domain} (concerns). */`
 - Method: 3rd-person verb — `/** Extracts … */`, `/** Formats … */`, `/** Resolves … */`.
 - Internal field: `/** @internal {desc}. */`.
+
+---
 
 ## Location
 
@@ -56,7 +62,9 @@ export const PersonExtensions = {
 - **App-specific:** `{app}/src/common/lib/{Noun}Extensions.ts` → import via `@/common/lib/...`.
 - **Single app:** `src/lib/{Noun}Extensions.ts`.
 
-## See also
+---
+
+## Neighbours
 
 - [naming](../notation/naming/naming.md) — helper-file suffixes
-- [../backend/services.md](../../../backend/dotnet/mla/constructs/behavior/service.md) — the C# static-helper conventions this echoes
+- [service](../../../backend/dotnet/mla/constructs/behavior/service.md) — the C# static-helper conventions this echoes
