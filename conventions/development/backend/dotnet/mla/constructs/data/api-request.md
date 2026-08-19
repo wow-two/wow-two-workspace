@@ -12,7 +12,8 @@
 - must sit in the `Requests/` folder of the API project, never in `Application/`.
 
 ### File
-- must give each request its own file, holding its edge-mapping extensions class beside it.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

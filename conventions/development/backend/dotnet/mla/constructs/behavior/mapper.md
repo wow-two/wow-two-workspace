@@ -12,7 +12,8 @@
 - must sit in a `Mappers/` folder in the layer that owns the target shape.
 
 ### File
-- must give each mapper its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

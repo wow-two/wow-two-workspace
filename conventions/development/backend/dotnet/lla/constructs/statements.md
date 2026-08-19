@@ -17,7 +17,7 @@ sit in this folder — the split is only declaration versus effect.
 
 Exhaustive through C# 13 / .NET 10. A form we have never written is still listed, with a verdict.
 
-- must read `use` as the default form for its job, and `use with care` as allowed but argued in review.
+- must read the verdict column as [constructs](constructs.md) § *The constructs* defines it.
 - must treat `banned` as never written — `What it does` carries the replacement.
 - a declaration form (`operator checked`, `partial`, a local function) is ruled on in [constructs](constructs.md).
 

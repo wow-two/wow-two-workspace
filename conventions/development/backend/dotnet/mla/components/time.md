@@ -9,6 +9,8 @@
 Time is injected, never read from `static` ambient clocks — handlers stay deterministic, tests control
 the clock.
 
+> Defined at [time — the construct](../constructs/behavior/time.md); this doc carries every condition for using one.
+
 ## Rule
 
 - must **never** call `DateTime.Now`, `DateTime.UtcNow`, `DateTimeOffset.Now`, `DateTimeOffset.UtcNow`

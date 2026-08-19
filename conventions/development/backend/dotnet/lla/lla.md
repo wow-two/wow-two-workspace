@@ -11,6 +11,7 @@
 | Bucket | Answers | Lead |
 |---|---|---|
 | [constructs](constructs/constructs.md) | which C# form may I write | the construct and statement catalogues |
+| [components](components/indexers.md) | how do I use one form completely | a language form's own conventions, end to end |
 | [notation](notation/notation.md) | how is it written down | naming, documentation, style |
 
 ---

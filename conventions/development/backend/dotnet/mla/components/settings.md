@@ -7,13 +7,16 @@
 > Use case — any value that differs per environment; behavior knobs passed in code are
 > [`Options`](../constructs/constructs.md).
 
+> Defined at [settings — the construct](../constructs/data/settings.md); this doc carries every condition for using one.
+
 ## Location
 
 ### Folder
 - must sit in a `Settings/` folder, one file per settings record.
 
 ### File
-- must give each settings record its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
 
 ---
 

@@ -1,6 +1,6 @@
 # Null object
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > An implementation that satisfies a contract by doing nothing, registered where the real one is absent.
 > Purpose — keep the null check out of every caller, so an unconfigured capability is a registration, not a branch.
@@ -16,7 +16,7 @@
   never throw.
 - must state in `<remarks>` what replaces it, because a no-op is a placeholder and the reader must know the swap
   — *"Swap in MaxMind GeoLite2 to make country rules match."*
-- must register it like any implementation, in `HostConfigurationExtensions`, so the swap is one line.
+- must register it like any implementation, in `HostConfiguration.Extensions.cs`, so the swap is one line.
 - must stay behaviourless: no logging beyond a single startup line, no counters, no config.
 
 ```csharp

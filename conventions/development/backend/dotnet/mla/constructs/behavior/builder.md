@@ -12,7 +12,8 @@
 - must sit beside the type it builds, in the same folder.
 
 ### File
-- must give each builder its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

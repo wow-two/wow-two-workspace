@@ -12,7 +12,8 @@
 - must sit in a `Policies/` folder beside the operation it governs.
 
 ### File
-- must give each policy its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

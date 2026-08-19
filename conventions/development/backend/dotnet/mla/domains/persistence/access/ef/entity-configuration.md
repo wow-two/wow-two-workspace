@@ -12,7 +12,6 @@
 - must sit in a `Configurations/` folder in the Persistence layer.
 
 ### File
-- must give each configuration its own file, named for the type.
 - may share one file with a sibling configuration when the two entities are tightly coupled.
 
 ---

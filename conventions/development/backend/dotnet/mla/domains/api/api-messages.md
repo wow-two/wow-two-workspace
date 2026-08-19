@@ -1,6 +1,6 @@
 # Api messages
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > The HTTP edge set — the body a client sends, the envelope it reads back, and the payload inside it.
 > Purpose — the wire shape is a contract with a client, so it changes on the client's schedule, not the domain's.
@@ -36,7 +36,7 @@ A body sub-block nested inside a request carries no verb of its own.
 ## Response
 
 - must wrap a success in `ApiResponse<T>`, so the client always reads `.data`.
-- must send an error as RFC-7807 ProblemDetails, never wrapped →
+- must send an error as RFC 9457 ProblemDetails, never wrapped →
   [problem details](../../platform/responses/problem-details.md).
 - must leave `204 No Content` and file streams unwrapped — there is no payload for `.data`.
 - must build the success body through `ApiResponse<T>.Ok(data)` alone, in the success arm of `.Match`.

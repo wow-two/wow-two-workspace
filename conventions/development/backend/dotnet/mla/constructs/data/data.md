@@ -17,6 +17,9 @@
 | [application request](application-request.md) | the message a caller dispatches in-process |
 | [result](result.md) | the carrier — a typed success or an `AppError` |
 | [model](model.md) | what an operation produced, carried inside the result |
+| [constants](constants.md) | the class that owns a value's authority |
+| [enums](enums.md) | a closed set of named options we own |
+| [settings](settings.md) | the record a configuration section binds into |
 | [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) | an EF mapping for one entity |
 
 ---

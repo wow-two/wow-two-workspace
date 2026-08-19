@@ -12,7 +12,8 @@
 - must sit in the `Models/` folder of the feature that produces it.
 
 ### File
-- must give each model its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

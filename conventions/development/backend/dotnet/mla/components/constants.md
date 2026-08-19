@@ -6,13 +6,16 @@
 > Purpose — one home for a value's authority, so a literal never has to be explained twice.
 > Use case — reach here when a value is fixed by a spec, a wire format, or a third-party contract.
 
+> Defined at [constants — the construct](../constructs/data/constants.md); this doc carries every condition for using one.
+
 ## Location
 
 ### Folder
 - must sit in a `Constants/` folder beside the code that owns the values.
 
 ### File
-- must give each constants class its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
 
 ---
 

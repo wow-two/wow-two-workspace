@@ -1,10 +1,12 @@
 # Extensions
 
-*Last updated: 2026-08-18*
+*Last updated: 2026-08-19*
 
 > The static-logic tier over a domain's types.
 > Purpose — keep dependency-free behaviour off the type it extends, without inventing a service for it.
 > Use case — reach here for encoding, projection or registration logic that needs no collaborators.
+
+> Defined at [extensions — the construct](../constructs/behavior/extensions.md); this doc carries every condition for using one.
 
 ## Location
 
@@ -12,7 +14,8 @@
 - must sit in an `Extensions/` folder beside the domain it extends.
 
 ### File
-- must give each extensions class its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
 
 ---
 
@@ -60,8 +63,6 @@ public static class WifiSsidEncodingExtensions
 #### [Summary](../../lla/notation/documentation/summary.md)
 - must start the `<summary>` with the method's own verb — `Adds`, `Maps`, `Encodes`.
 - must carry a `<param>` for every parameter, the receiver included.
-- must carry `<returns>` unless the method returns `void`, `Task` or `ValueTask`.
-- must carry `<remarks>` only for a directive, a spec reference, or a constraint the signature hides.
 
 ```csharp
 // ✅
@@ -143,7 +144,7 @@ logic over a model, with nowhere to live on it and nothing injected.
 - **it extends a domain, a vector of the application** — identity, codes, billing, users
   - never the `Domain` project; the word names the subject, never the folder
   - `ContentEncodingExtensions` extends the *codes* domain and lives in `Domain`
-  - `HostConfigurationExtensions` extends *hosting* and lives in `Api`
+  - `CreateCodeApiRequestExtensions` extends the *codes* domain and lives in `Api`
 - **it does not have to extend one type**
   - a coherent body of logic over a domain is one `Extensions` class, touching several models or none
 - **the receiver may be a `this` parameter or a plain argument**

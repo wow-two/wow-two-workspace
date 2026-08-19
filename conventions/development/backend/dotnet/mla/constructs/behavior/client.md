@@ -12,7 +12,8 @@
 - must sit in an `Integrations/{Provider}/` folder, one folder per provider.
 
 ### File
-- must give each client its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 
@@ -22,7 +23,6 @@
 
 #### [Summary](../../../lla/notation/documentation/summary.md)
 - must start with **Connects**, name the provider's API, and name what it reaches there.
-- must carry `<remarks>` only for a directive, a spec reference, or a constraint the signature hides.
 
 ```csharp
 // ✅ the provider and the surface, both named

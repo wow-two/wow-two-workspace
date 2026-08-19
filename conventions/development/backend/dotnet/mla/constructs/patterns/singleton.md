@@ -1,6 +1,6 @@
 # Singleton
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > One instance per process, owned by the container rather than by the type.
 > Purpose — keep the single-instance decision at the composition root, where it can be changed and tested.
@@ -8,7 +8,7 @@
 
 ## Shape
 
-- must express a singleton as a **DI lifetime**, registered in `HostConfigurationExtensions`
+- must express a singleton as a **DI lifetime**, registered in `HostConfiguration.Extensions.cs`
   ([host configuration](../../platform/startup/host-configuration.md)).
 - must not declare a static `Instance` property, a private constructor, or a `Lazy<T>` self-holder.
 - must be thread-safe when registered singleton — a singleton is entered concurrently by every request.

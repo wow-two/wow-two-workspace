@@ -23,6 +23,9 @@
 | [policy](policy.md) | decides whether, when or how often another operation runs |
 | [builder](builder.md) | accumulates one value, ending in `Build()` |
 | [hosted service](hosted-service.md) | runs work off the request path |
+| [extensions](extensions.md) | static logic over a domain — no injection, no state |
+| [time](time.md) | our seam over the clock |
+| [json](json.md) | one type's storage seam |
 
 ---
 
@@ -32,5 +35,15 @@
   [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
 - must take collaborators through the constructor, never a service locator →
   [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
+- must take them through a **primary constructor** — the parameter list is the dependency list, and a
+  hand-written constructor that only assigns fields repeats it.
+- must never assign to a primary-constructor parameter — the capture field the compiler synthesizes is not
+  `readonly`, so the type's graph is fixed by this rule rather than by the compiler.
+- must declare a `private readonly` field when an explicit constructor is written instead — the case is a
+  constructor doing real work, never a plain assignment.
+- must expose a collaborator to a derived type as a `protected readonly` field, never `internal` and never
+  writable — a base class hands down what it holds, and nothing else may rebind it.
+- must not reach for inheritance to share a collaborator — a derived type that only needs the dependency
+  takes it through its own primary constructor and passes it up.
 - must start the type summary with the role's own verb, and an interface over it with **Defines** →
   [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.

@@ -12,7 +12,8 @@
 - must sit in a `Services/` folder under the domain that owns the work.
 
 ### File
-- must give each service its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 
@@ -22,7 +23,6 @@
 
 #### [Summary](../../../lla/notation/documentation/summary.md)
 - must start with **Provides**, and name the work it does for its caller.
-- must carry `<remarks>` only for a directive, a spec reference, or a constraint the signature hides.
 
 ```csharp
 // ✅ names the work, not the type

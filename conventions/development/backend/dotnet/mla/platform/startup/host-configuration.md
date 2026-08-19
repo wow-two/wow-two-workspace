@@ -1,6 +1,6 @@
 # Host configuration
 
-*Last updated: 2026-06-22*
+*Last updated: 2026-08-19*
 
 > All host wiring — DI registration, config binding, middleware, startup — lives in the host's
 > `Api/Configurations/` composition root, sourced only from the SDK or the host itself.
@@ -37,7 +37,7 @@
 
 ## Program.cs
 
-**Fixed shape** — four statements and a test marker, identical in every service. Not pristine in the sense
+**Fixed shape** — three statement groups and a test marker, identical in every service. Not pristine in the sense
 of calling nothing: it calls the two `Configure` entry points, and everything else lives behind them.
 
 ```csharp
@@ -57,8 +57,8 @@ app.Run();
 public partial class Program;
 ```
 
-- must carry exactly these **three comments**, one per statement group — the file is a fixed shape, so
-  the comments never drift.
+- must carry exactly these **three comments**, one per group — the comment is what marks the group, so a
+  group without a comment is not a group, and the comments never drift.
 - must leave `public partial class Program;` undocumented — it exists so `WebApplicationFactory<Program>`
   resolves the host in integration tests, and an XML doc on it says nothing.
 - must keep every **detail** out — DI registration, middleware order, migrations, seeding, warm-up,
@@ -66,8 +66,9 @@ public partial class Program;
 - must go **async all the way** when any startup work is async — `Configure(WebApplication)` becomes
   `ConfigureAsync`, and `Program.cs` awaits it ([§ Async startup](#async-startup)).
 - must never block with `.GetAwaiter().GetResult()`.
-- must not grow a fourth statement — a new startup concern is a new call inside `Configure`, never a new
-  line here.
+- must not grow a fourth group — a new startup concern is a new call inside `Configure`, never a new
+  line here. Statements are counted by group, never one by one: the build-and-configure pairs are two
+  statements each, and only `app.Run()` stands alone.
 
 ---
 
@@ -89,8 +90,8 @@ public static partial class HostConfiguration
 
         builder
             .AddSettings()
-            .AddPersistence()
-            .AddApplicationServices();   // product seams — no trailing comments; method names self-document
+            .AddPostgresDatabase()
+            .AddCodes();   // product seams — no trailing comments; method names self-document
 
         return builder;
     }
@@ -107,24 +108,43 @@ public static partial class HostConfiguration
 
 ---
 
-## HostConfigurationExtensions
+## The partial split
 
-Static class with extension methods on `WebApplicationBuilder`. Each registers a logical group of
-services. `HostConfiguration.Configure()` calls them in order.
+`HostConfiguration` is `partial` across two files in `Configurations/`. The split is by **shape**, not by
+subject — one file carries the order, the other carries what each step does.
 
-| Method | Purpose |
+| File | Carries |
 |---|---|
-| `AddEnvironmentOverrides()` | Maps env vars to config keys (overrides appsettings) |
-| `AddSettings()` | Binds `IOptions<T>` for all settings classes + DB setup |
-| `AddIntegrations()` | Registers typed `HttpClient`s for external APIs |
-| `AddApplicationServices()` | Registers application-layer services (interfaces → implementations) |
-| `AddPipelines()` | Registers pipeline nodes, orchestrators, registry, executor, schedulers |
-| `AddSchedulers()` | Registers `IHostedService` background schedulers |
-| `AddObservers()` | Registers pipeline event observers (e.g. SignalR notifier) |
-| `AddMediator()` | Registers mediator + scans assembly for query/command handlers |
-| `AddControllers()` | Configures MVC controllers + JSON serialization |
-| `AddSignalR()` | Adds SignalR hub services |
-| `AddCors()` | Configures CORS from settings |
+| `HostConfiguration.cs` | the two `Configure` overloads — the chain in order, no DI logic |
+| `HostConfiguration.Extensions.cs` | every private `Add*` extension the chain calls |
+
+- must declare both files `public static partial class HostConfiguration` — one class, two files.
+- must keep every `Add*` extension `private` — the chain is its only caller.
+- must not ship a separate `HostConfigurationExtensions` class; the partial replaces it.
+- must let `HostConfiguration.cs` read alone — a reader who never opens the second file still learns
+  what the host wires, and in what order.
+
+---
+
+## Naming a registration method
+
+The call site names a **subject**, never a layer. A layer name at the call site invites the layer-wise
+registration [§ Domain registration](#domain-registration) forbids.
+
+| Shape | Use for | Examples |
+|---|---|---|
+| `Add{Domain}()` | a domain's whole vertical | `AddCodes()` · `AddBilling()` · `AddIdentity()` |
+| `Add{Resource}()` | one shared resource no single domain owns | `AddPostgresDatabase()` · `AddRedisCache()` |
+| `Add{Surface}()` | a delivery surface | `AddControllers()` · `AddSignalR()` |
+
+- must not name a method for a layer — `AddApplicationServices()`, `AddInfrastructure()`,
+  `AddPersistence()` and `AddDomain()` are banned outright.
+- must not spend the word *persistence* on one method: persistence spans the database, file storage and
+  caching, so no single call can carry it. Name the resource actually registered —
+  `AddPostgresDatabase()`, `AddBlobStorage()`, `AddRedisCache()`.
+- must not carry a `Services` suffix — `AddCodeServices()` says nothing `AddCodes()` doesn't.
+- must document only methods the host declares — a documented method with no body is a phantom, and a
+  reader cannot tell a mandate from a menu.
 
 ---
 
@@ -162,22 +182,23 @@ Layers (`Application`, `Infrastructure`, `Persistence`) ship **no** `DependencyI
 `Add*(this IServiceCollection)` — the host owns the registrations, grouped by domain, not by layer.
 
 **One registration method per domain.** Not per layer — a domain owns its whole vertical: its services,
-its settings, its EF configuration, its options. `Persistence` gets one method because storage *is* a
-domain, the same way `Identity` is; it splits only once it grows sub-domains of its own.
+its settings, its EF configuration, its options. Shared storage is the one exception — no domain owns
+the `DbContext`, so it wires once, named for the resource
+([§ Naming](#naming-a-registration-method)).
 
 ```csharp
 builder
     .AddSettings()
-    .AddPersistence()
-    .AddCodeServices()
-    .AddApplicationServices()
+    .AddPostgresDatabase()
+    .AddCodes()
     .AddIdentity()
     .AddAuth()
     .AddBilling()
     .AddControllers();
 ```
 
-- must name the method for the **domain** — `AddBilling()`, `AddIdentity()`, never `AddApplicationLayer()`.
+- must name the method for the **domain** — `AddBilling()`, `AddIdentity()`, never `AddApplicationLayer()`
+  ([§ Naming](#naming-a-registration-method)).
 - must register a domain's every concern in its own method — splitting services from settings puts one
   subject in two places.
 - must keep the chain in dependency order, settings first, delivery surface last.
@@ -195,8 +216,8 @@ Two consequences to handle when collapsing a layer's registrations into the host
   Don't widen them to `public` to wire them.
 
 Startup tasks (DB init, seeding, warm-up) move host-side too — into `Configure(WebApplication)` or an
-extension it calls, never into `Program.cs` ([§ Program.cs](#programcs) — the entry point holds four
-statements and never grows a fifth). An async task makes the whole chain async
+extension it calls, never into `Program.cs` ([§ Program.cs](#programcs) — the entry point holds three
+statement groups and never grows a fourth). An async task makes the whole chain async
 ([§ Async startup](#async-startup)).
 
 ---
@@ -220,19 +241,19 @@ statements and never grows a fifth). An async task makes the whole chain async
 - a multi-host app duplicates the few glue lines per host — the accepted cost of host-owned wiring.
 - all configuration is wired **only** in the host, sourced from the SDK or the host itself — never a
   layer/service/model (see Configuration source).
-- `Program.cs` holds a **fixed four-statement shape** with its three comments
+- `Program.cs` holds a **fixed three-group shape**, one comment per group
   ([§ Program.cs](#programcs)).
 - every detail — DI, middleware, migrations, logs — lives behind `builder.Configure()` /
   `app.Configure()`.
 - `HostConfiguration.Configure()` chains extension methods — no inline DI logic
-- Each extension method in `HostConfigurationExtensions` groups related registrations
+- each private `Add*` extension in `HostConfiguration.Extensions.cs` groups one subject's registrations
 - Return `WebApplicationBuilder` for chaining
 
 ---
 
 ## Settings binding
 
-Every [settings](../../components/settings.md) record binds in `HostConfigurationExtensions.AddSettings()`.
+Every [settings](../../components/settings.md) record binds in `HostConfiguration.AddSettings()`.
 The binding and validation rules are the component's own.
 
 ---
@@ -538,4 +559,4 @@ The binding and validation rules are the component's own.
 
 ## Documentation
 
-- must leave `Program.cs` undocumented — its four statements are the shape.
+- must leave `Program.cs` undocumented — its three groups are the shape.

@@ -20,7 +20,6 @@
 | [constants](constants.md) | the value is readable the moment the class exists |
 | [enums](enums.md) | the member names an option, and naming it is the whole contract |
 | [extensions](extensions.md) | the method runs on the receiver, with no collaborator to inject |
-| [indexers](indexers.md) | the lookup answers from the type's own state |
 | [json](json.md) | the seam holds its options and serializes with nothing else present |
 | [settings](settings.md) | the record binds and validates without another type existing |
 | [time](time.md) | the seam answers the clock question on its own |
@@ -36,6 +35,7 @@
 - must state the folder **name** only, never its layer
   ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must cite [notation](../../lla/notation/notation.md) rather than restate a default it does not override.
+- must cite [one type, one file](../mla.md) rather than restate it — state a deviation only.
 - may close with `## Neighbours` — links out, one line each, carrying no rules.
 
 A component keeps `## Content` because its members **are** its contract.

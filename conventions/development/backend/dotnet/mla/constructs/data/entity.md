@@ -12,7 +12,8 @@
 - must sit in an `Entities/` folder under the subdomain that owns it.
 
 ### File
-- must give each entity its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

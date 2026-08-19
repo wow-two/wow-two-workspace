@@ -1,6 +1,6 @@
 # Clean Architecture
 
-*Last updated: 2026-08-18*
+*Last updated: 2026-08-19*
 
 > The six layers a backend service splits into, and the direction its references run.
 > Use case — every backend service; a throwaway spike deviates under § *Deviation*.
@@ -48,7 +48,7 @@ flowchart LR
 
 ## Host
 
-- must keep `Program.cs` at three lines — `builder.Configure()` → `app.Configure()` → `app.Run()`
+- must keep `Program.cs` at three statement groups — build + `builder.Configure()` → build + `app.Configure()` → `app.Run()`
 - must declare `Configure(builder)` and `Configure(app)` on the partial `HostConfiguration` class
 - must put every DI registration in `Api/Configurations/HostConfiguration.Extensions.cs` as extension methods
 - must bind configuration in Api alone → [host configuration](../../platform/startup/host-configuration.md)
@@ -59,5 +59,5 @@ flowchart LR
 
 - may inline the layers as folders in one project for a throwaway spike — ≲2 KLOC, no extraction, no second consumer
 - must not default to layers-as-folders for a service that ships, grows, or feeds the SDK
-- must skip the Application / Infrastructure / Persistence split in an SDK package — it is a library, not a service
+- must skip the split in an SDK package — this doc governs a service, and a library is not one
 - must give a CLI tool Application and Domain only, adding Persistence when it reads or writes files

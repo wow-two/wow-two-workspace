@@ -41,7 +41,8 @@ not on-disk paths. Projects are named `{Brand}.{Domain}[.{SubDomain}]`, PascalCa
 
 - must reference `services → platform` and never the reverse — `platform/*` sees the kit and the BCL only
 - must add a folder when a project needs it, and may declare one empty to signal a roadmapped extraction
-- must keep the lift of `platform/*` into the SDK a move plus a namespace rename, never a rewrite
+- must keep the lift of `platform/*` into the SDK a move plus a namespace rename, never a rewrite —
+  what qualifies is [extract / keep / remove](../../../../sdk-extraction.md), not this doc
 
 ---
 

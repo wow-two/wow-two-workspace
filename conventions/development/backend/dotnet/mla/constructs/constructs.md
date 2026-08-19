@@ -44,7 +44,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Factory` | runtime instance creation, per key or per request | [factories](patterns/factories.md) |
 | `Registry` | key → type or capability bindings, registered at composition | [registry](behavior/registry.md) |
 | `Tracker` | live status many producers push into, persisted nowhere | — |
-| `Extensions` | static logic over a domain — no injection, no state | [extensions](../components/extensions.md) |
+| `Extensions` | static logic over a domain — no injection, no state | [extensions](behavior/extensions.md) |
 | `Handler` | the receiver of one dispatched message | [handler](behavior/handler.md) |
 | `Command` · `Query` · `Event` | a dispatched use case — write, read, fan-out | [application request](data/application-request.md) |
 | `Validator` | input validation for one request | [validator](behavior/validator.md) |
@@ -59,11 +59,11 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Adapter` | a third-party type fitted to an interface we declared | [adapter](behavior/adapter.md) |
 | `Builder` | stepwise construction, ending in `Build()` | [builder](behavior/builder.md) |
 | `Policy` | decides whether, when, or how often another operation runs | [policy](behavior/policy.md) |
-| `Settings` | a config section bound through `IOptions<T>` | [settings](../components/settings.md) |
+| `Settings` | a config section bound through `IOptions<T>` | [settings](data/settings.md) |
 | `Options` | behavior knobs passed in code, bound from nothing | § *`Settings` vs `Options`* |
 | `DbContext` | the EF unit of work | [database](../domains/persistence/database/database.md) |
 | `Configuration` | an EF `IEntityTypeConfiguration<T>` | [entity configuration](../domains/persistence/access/ef/entity-configuration.md) |
-| `Constants` | a holder of `const` and `static readonly` values | [constants](../components/constants.md) |
+| `Constants` | a holder of `const` and `static readonly` values | [constants](data/constants.md) |
 | `Mapper` | any deterministic in→out transform, owning no data | [mapper](behavior/mapper.md) |
 | `Pipeline` · `PipelineStep` | an ordered multi-step flow, and one step of it | [pipelines](patterns/pipelines.md) |
 | `Middleware` · `Filter` · `Interceptor` | a framework hook — exempt from the gate | — |
@@ -72,8 +72,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Generator` | derives a value from its inputs — an id, a code, a matrix | — |
 | `Rasterizer` | vector → pixels | — |
 | `Spec` | a declarative input shape a renderer consumes — not a wire `Dto` | — |
-| `Json` | one type's persisted JSON seam — `Options`, `Serialize`, `Deserialize` | [json](../components/json.md) |
-| `Enum` | a closed set of named options | [enums](../components/enums.md) |
+| `Json` | one type's persisted JSON seam — `Options`, `Serialize`, `Deserialize` | [json](behavior/json.md) |
 
 **Scope.** Every suffix here names a type inside a .NET service.
 A browser-side type is a wire projection of one, so it carries none of them.
@@ -195,6 +194,7 @@ Whatever varies by technology or by flow belongs to the domain that uses it.
   ([domain structuring](../architecture/clean/domain-structuring.md)).
 - must not state a technology, a registration, or an end-to-end flow — a [domain](../domains/) owns those.
 - must cite [notation](../../lla/notation/notation.md) rather than restate a default it does not override.
+- must cite [one type, one file](../mla.md) rather than restate it — state a deviation only.
 - must land before the first implementation — an unwritten baseline is what lets `Normalizer` ship beside `Mapper`.
 - may close with `## Neighbours` — links out, one line each, carrying no rules.
 
@@ -219,6 +219,8 @@ Whatever varies by technology or by flow belongs to the domain that uses it.
 > {One line saying what the role is.}
 > Purpose — {what having it buys}.
 > Use case — {when to reach for it}.
+
+---
 
 ## Location
 

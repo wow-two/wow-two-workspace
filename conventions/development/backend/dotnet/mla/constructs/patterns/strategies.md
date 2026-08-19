@@ -1,6 +1,6 @@
 # Strategies
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > One interface with interchangeable implementations, the one in force chosen at composition rather than at the call.
 > Purpose — keep a swappable decision out of a `switch` that every caller would have to repeat.
@@ -12,7 +12,7 @@
   (`src/Messaging/Reliability/Ef/OutboxDispatcher.cs`), implemented by `PostgresSkipLockedOutboxClaimStrategy` and
   `PollingOutboxClaimStrategy`.
 - must name each implementation for **how** it decides, never for the caller that happens to use it.
-- must bind exactly one implementation per host, in `HostConfigurationExtensions` — composition picks, not runtime.
+- must bind exactly one implementation per host, in `HostConfiguration.Extensions.cs` — composition picks, not runtime.
 - must resolve a per-key choice through a `Registry` or a `Factory`, never a `switch` inside the consumer
   ([registry](../behavior/registry.md) · [factories](factories.md)).
 - must ship a second implementation with the first — a one-implementation interface is not a strategy, it is a seam.

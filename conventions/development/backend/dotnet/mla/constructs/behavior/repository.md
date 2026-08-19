@@ -14,7 +14,8 @@
 - must split reads from writes by **folder** when a repository grows — `Queries/`, `Commands/`.
 
 ### File
-- must give each repository, query or command class its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

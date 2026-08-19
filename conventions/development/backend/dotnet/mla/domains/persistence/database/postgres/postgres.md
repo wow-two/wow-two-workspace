@@ -1,6 +1,6 @@
 # Postgres
 
-*Last updated: 2026-08-18*
+*Last updated: 2026-08-19*
 
 > What the Postgres engine fixes — its types, its enum forms, and the column conventions a schema follows.
 > Purpose — the applied SQL owns the schema, so engine facts belong to the engine, not to whatever maps over it.
@@ -36,14 +36,10 @@ Valid reasons for `DEFAULT`:
 
 ## Primary keys
 
-- must use `Guid` for `Id` unless there is a valid reason — slug-based PK, composite PK.
 - must not add `DEFAULT gen_random_uuid()` on an ID column — EF Core generates client-side via `Guid.NewGuid()`,
   so the DB default never fires.
-- must implement the empty `IEntity` marker on every persisted type.
-  - the `Guid Id` member comes from `IKeyedEntity<Guid>`.
-- must use `IKeyedEntity<TId>` directly for a keyed / custom-id entity — see
-  [entities.md](../../../../constructs/data/entity.md).
-- both live in the SDK's `Data.Abstractions`.
+- must take the key shape from the entity contract, never restate it here —
+  [entity contracts](../../entities/entity-contracts.md) § *Identity*.
 
 ---
 

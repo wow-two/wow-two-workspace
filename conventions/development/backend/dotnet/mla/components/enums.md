@@ -6,13 +6,16 @@
 > Purpose — replace a magic value with a name the compiler checks, before any store or service exists.
 > Use case — reach here whenever a field may hold one of a fixed, known set.
 
+> Defined at [enums — the construct](../constructs/data/enums.md); this doc carries every condition for using one.
+
 ## Location
 
 ### Folder
 - must sit in an `Enums/` folder beside the code that declares it.
 
 ### File
-- must give each enum its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
 
 ---
 

@@ -7,13 +7,16 @@
 > Use case — a column, a file or a cache entry holding one type as JSON;
 > the API wire contract is the [api domain's](../domains/api/api-messages.md).
 
+> Defined at [json — the construct](../constructs/behavior/json.md); this doc carries every condition for using one.
+
 ## Location
 
 ### Folder
 - must sit beside the type it persists, in that type's own folder.
 
 ### File
-- must give each seam its own file, named for the type it serializes.
+- must give it its own file, named for the type →
+  [one type, one file](../mla.md).
 
 ---
 

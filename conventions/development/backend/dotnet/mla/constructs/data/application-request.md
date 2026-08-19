@@ -12,7 +12,8 @@
 - must sit in a `Queries/`, `Commands/` or `Events/` folder under the domain that owns the use case.
 
 ### File
-- must give each message its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

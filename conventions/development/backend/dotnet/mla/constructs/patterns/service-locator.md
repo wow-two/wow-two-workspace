@@ -1,6 +1,6 @@
 # Service locator
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > Resolving a collaborator from the container at the point of use instead of taking it through the constructor.
 > Purpose — record why this is banned, and the three places a container reference is still legitimate.
@@ -29,7 +29,7 @@ public sealed class CodeCreateCommandHandler(IServiceProvider services) { }
 
 Three exceptions, and nothing else:
 
-- must allow it at the **composition root** — `HostConfigurationExtensions` builds the graph, so it holds the provider
+- must allow it at the **composition root** — `HostConfiguration.Extensions.cs` builds the graph, so it holds the provider
   ([host configuration](../../platform/startup/host-configuration.md)).
 - must allow `IServiceScopeFactory` where the consumer outlives a scope — a `BackgroundService` creating one scope
   per iteration ([hosted service](../behavior/hosted-service.md)).

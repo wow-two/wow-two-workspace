@@ -12,7 +12,8 @@
 - must sit in a `CommandHandlers/`, `QueryHandlers/` or `EventHandlers/` folder beside its messages.
 
 ### File
-- must give each handler its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

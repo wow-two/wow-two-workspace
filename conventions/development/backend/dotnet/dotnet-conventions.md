@@ -1,6 +1,6 @@
 # Conventions — Development — Backend (.NET)
 
-*Last updated: 2026-08-18*
+*Last updated: 2026-08-19*
 
 > .NET conventions for every backend service under `wow-two-ws/`. Lookup table — open a file when the task
 > touches it; do not pre-read. Cut by **scope**: how far a rule reaches.
@@ -30,21 +30,53 @@ in `lla/`, role bans with the role.
 
 ---
 
-## The three layers of a thing [REQUIRED]
+## The layers of a thing [REQUIRED]
 
-Every thing we write about sits at up to three layers. Some things have only one; none has more.
+The model is [development conventions](../../development-conventions.md) § *The layers of a thing*.
+What it means here:
 
-| Layer | Is | Documented when |
+| Layer | Home | Example |
 |---|---|---|
-| 1 · construct | the official definition the language or framework gives — `CancellationToken`, `ValueTask`, `const`, `record` | it aligns with our conventions permanently, so there is nothing left to improve |
-| 2 · our definition | what we mean by a role nothing official defines — `Broker`, `Dto`, `Registry` | always; no other source defines it |
-| 3 · component | the small self-sufficient thing, plus how our architecture uses it — a `Settings` record, a clock seam | it is complete with no service, domain or collaborator present |
+| 1 · baseline | [lla/constructs](lla/constructs/constructs.md) | `const` · `record` · `BackgroundService` · `TimeProvider` |
+| 2 · construct | [mla/constructs](mla/constructs/constructs.md) | what a `Broker`, a `Constants` class or an `Entity` **is** |
+| 3 · application | [mla/components](mla/components/components.md) · [mla/domains](mla/domains/) | how it is applied, split by whether it stands alone |
 
-- must not document a construct we expect to replace — `AbstractValidator` carries no message-translation hook we need,
-  so it is a baseline we will outgrow rather than a rule we keep.
+- must not document a third-party library's own surface → [development conventions](../../development-conventions.md)
+  § *Whose thing earns a doc*. Naming `AbstractValidator<T>` in a rule of ours is the allowed case; documenting
+  FluentValidation is not.
 - must place a rule at the lowest layer that can hold it — a rule about `const` is layer 1, a rule about our `Constants`
   class is layers 2 and 3.
-- must let a layer be absent — a construct needing no role of ours stops at layer 1.
+
+---
+
+### Reading the map
+
+A thing occupies one home per layer it has. Two tests, applied in order:
+
+1. **Does C# or .NET ship the form?** → it has an `lla/constructs` row. Absent for a role we coined.
+2. **Do we define a thing of our own on top of it?** → it earns an `mla/constructs` doc, and its conditions
+   land in `mla/components` when it stands alone, or in `mla/domains` when it needs collaborators.
+
+| Thing | `lla/constructs` — the C# form | `mla/constructs` — what ours **is** | Layer 3 — every condition |
+|---|---|---|---|
+| `Constants` | `const` · `static readonly` | the class as one value's authority | `mla/components/constants.md` |
+| `Extensions` | extension method | the static tier over a **domain** | `mla/components/extensions.md` |
+| `Enum` | `enum` | a closed option set we name | `mla/components/enums.md` |
+| `Settings` | `record` · `init` | the record a section binds into | `mla/components/settings.md` |
+| `Time` | `TimeProvider` | our clock seam | `mla/components/time.md` |
+| `Json` | — | the `{Type}Json` storage seam | `mla/components/json.md` |
+| `Entity` | — | a type that owns a row | `mla/domains/persistence/` |
+| `Repository` | — | rows in, rows out | `mla/domains/persistence/access/` |
+| `HostedService` | `BackgroundService` | one-shot work at host start | `mla/platform/startup/` |
+
+- must give every `mla/components` doc an `mla/constructs` doc — a component is layer 3 **of** something,
+  and the thing it applies has to be defined somewhere.
+- must not read a missing `lla` row as a missing layer — `Broker`, `Constants` and `Json` are roles we
+  coined, so they start at layer 2.
+- must not read a missing `mla/components` doc as a gap — a thing needing collaborators has its layer 3 in
+  the domain that supplies them.
+- must keep a variation out of `mla/constructs` — one-to-many is an application of `Entity`, so it lives
+  wherever that entity's layer 3 lives.
 
 ---
 
@@ -104,7 +136,7 @@ behavior: the moment a flow appears, the type has stopped being a model.
 | Level | Folder | Holds |
 |---|---|---|
 | the construct | [constructs/](lla/constructs/constructs.md) | every C# construct, what each is for, construct-level bans · [event](lla/constructs/constructs.md) · [records](lla/constructs/constructs.md) |
-| the self-sufficient thing | [components/](mla/components/components.md) | [constants](mla/components/constants.md) · [enums](mla/components/enums.md) · [extensions](mla/components/extensions.md) · [indexers](mla/components/indexers.md) · [json](mla/components/json.md) · [settings](mla/components/settings.md) · [time](mla/components/time.md) |
+| the self-sufficient thing | [components/](mla/components/components.md) | [constants](mla/components/constants.md) · [enums](mla/components/enums.md) · [extensions](mla/components/extensions.md) · [json](mla/components/json.md) · [settings](mla/components/settings.md) · [time](mla/components/time.md) |
 | how it is written down | [notation/](lla/notation/notation.md) | [naming](lla/notation/naming/naming.md) · [documentation](lla/notation/documentation/documentation.md) · [style](lla/notation/style/style.md) |
 
 The leaves those folders hold:
@@ -112,7 +144,7 @@ The leaves those folders hold:
 | File | What it covers |
 |---|---|
 | [statements](lla/constructs/statements.md) | Every statement and expression form, with a verdict |
-| [indexers](mla/components/indexers.md) | `this[…]` — accessor starters, and what the key selects |
+| [indexers](lla/components/indexers.md) | `this[…]` — accessor starters, and what the key selects |
 | [summary](lla/notation/documentation/summary.md) | `<summary>` — the mandated first word per type-kind, plus tone |
 | [remarks](lla/notation/documentation/remarks.md) | `<remarks>` — never required; the ten frames |
 | [params](lla/notation/documentation/params.md) | `<param>` — one per parameter, always |
@@ -220,7 +252,7 @@ One folder per architecture pattern. The lead states the solution grouping; the 
 | [known-endpoints.md](mla/platform/responses/known-endpoints.md) | Fixed identity / system endpoints — `api/identity/*`, `api/system/status` |
 | [launch-profiles.md](mla/platform/startup/launch-profiles.md) | `launchSettings.json` — a single `https` profile, even/odd port pair from `ports.md` |
 | [platform](mla/platform/platform.md) | The bucket lead — `build/` · `startup/` · `responses/` |
-| [problem-details.md](mla/platform/responses/problem-details.md) | RFC-7807 error responses — `Problem()`, `IErrorHttpStatusCodeMapper`, global handler |
+| [problem-details.md](mla/platform/responses/problem-details.md) | RFC 9457 error responses — `Problem()`, `IErrorHttpStatusCodeMapper`, global handler |
 | [responses](mla/platform/responses/responses.md) | Sub-domain lead — one success shape, one error shape |
 | [results.md](mla/platform/responses/results.md) | `AppResult<TSuccess>` — the outcome contract every layer returns |
 | [serialization.md](mla/platform/responses/serialization.md) | JSON wire contract — camelCase props + **camelCase string enums** + null-omit + ISO dates; wired once in `AddControllers()` |

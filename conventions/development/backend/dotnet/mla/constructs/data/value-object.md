@@ -12,7 +12,8 @@
 - must sit in the `Models/` folder of the entity that stores it.
 
 ### File
-- must give each value object its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

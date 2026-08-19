@@ -12,7 +12,8 @@
 - must sit beside the types it builds, in the layer that owns them.
 
 ### File
-- must give each factory its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 

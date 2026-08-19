@@ -223,7 +223,6 @@ A construct carrying **behavior** answers what a type *does*. It has no value id
 - must carry a `<param>` for every parameter of a documented method.
 
 #### [Returns](../notation/documentation/returns.md)
-- must carry `<returns>` unless the method returns `void`, `Task` or `ValueTask`.
 
 ```csharp
 // ✅ the verb, every parameter, the boundary case

@@ -1,6 +1,6 @@
 # Entity contracts
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > The interfaces a persisted type implements — identity, audit, soft-delete, tenancy and concurrency.
 > Purpose — contracts live in a zero-ORM package, so the Domain assembly never references EF Core.
@@ -8,10 +8,26 @@
 
 ## Identity
 
+`IEntity` is the umbrella — it says the type is a table shape, and says nothing about keys. Every concrete
+type declares **which shape of key it has**, so a missing key reads as a choice rather than an oversight.
+
+| Contract | For | Key |
+|---|---|---|
+| `IKeyedEntity<TId>` | the ordinary row | one column, exposed as `Id` |
+| `ICompositeKeyEntity` | a join or link row | two or more columns, no single `Id` |
+| `IKeylessEntity` | a view- or query-backed read shape | none |
+
 - must implement `IKeyedEntity<TId>` on every type that owns a row — `where TId : notnull, IEquatable<TId>`.
 - must use `Guid` as the standard `TId`.
-- must reserve the bare `IEntity` marker for keyless read shapes — a projection or a view-backed read.
-- must not use bare `IEntity` on a type that needs an `Id`.
+- must declare exactly one of the three on a concrete type — bare `IEntity` cannot say whether the key was
+  chosen or forgotten, so it is the one shape a reviewer cannot check.
+- must not implement `IEntity` directly; the three derive from it, and generic code constrains on it.
+- must not wrap a composite key in a value-object `TId` to reach `IKeyedEntity<TId>` — the provider keys on
+  the real columns, so the wrapper maps to nothing.
+- all four live in the SDK's `Data.Abstractions`, provider-free by construction.
+
+- must declare an entity-shaping rule here, never in a database, access or migration doc —
+  [persistence](../persistence.md) § *The contract leads, the provider follows*.
 
 ---
 

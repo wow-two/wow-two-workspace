@@ -1,6 +1,6 @@
 # Persistence
 
-*Last updated: 2026-08-18*
+*Last updated: 2026-08-19*
 
 > How a service stores and reads its own state, cut into the four things that swap independently.
 > Purpose — an entity is not tied to an engine, an engine not to a mapper, neither to a migrator.
@@ -25,6 +25,21 @@
 
 - must place a rule at the axis that owns it — a type mapping is the engine's, a configuration API is access's.
 - must not assume one axis implies another; a Dapper service still needs an engine and a migrator.
+
+---
+
+## The contract leads, the provider follows
+
+A key, an audit stamp and a soft-delete flag are properties of the **row**, not of Postgres, EF or Dapper.
+The entity axis declares them once; every axis below reads that declaration and adds only its own mechanics.
+
+- must declare an entity-shaping rule in [entity contracts](entities/entity-contracts.md), never in a
+  database, access or migration doc.
+- must keep a provider doc to its own mechanics — `HasNoKey()`, `HasKey(x => new { … })`, a column type,
+  an index — each reading a contract already declared upstream.
+- must not let an EF-first habit become the contract: another provider keys, stamps and soft-deletes the
+  same rows, and the entity cannot tell which one is mapping it.
+- must move a rule up when two providers restate it — a shared rule was never the provider's.
 
 ---
 

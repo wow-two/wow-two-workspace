@@ -1,6 +1,6 @@
 # Hosted services
 
-*Last updated: 2026-08-16*
+*Last updated: 2026-08-19*
 
 > A type the host starts and stops, doing its work off the request path.
 > Purpose — give boot work and long-running loops a lifetime the host owns rather than a request's.
@@ -12,7 +12,8 @@
 - must sit in a `Services/` folder in the layer that owns the work it runs.
 
 ### File
-- must give each hosted service its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 
@@ -79,4 +80,4 @@ protected override async Task ExecuteAsync(CancellationToken stoppingToken)
 
 - [service.md](service.md) — the type it resolves per run
 - [components](../constructs.md) — the `BackgroundService` row, and the `Scheduler` / `Observer` folds
-- [host configuration](../../platform/startup/host-configuration.md) — `AddSchedulers()`, where it is registered
+- [host configuration](../../platform/startup/host-configuration.md) — registered in its own domain's `Add{Domain}()`

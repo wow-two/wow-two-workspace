@@ -12,7 +12,8 @@
 - must sit beside the types it binds, in the layer that composes them.
 
 ### File
-- must give each registry its own file, named for the type.
+- must give it its own file, named for the type →
+  [one type, one file](../../mla.md).
 
 ---
 
