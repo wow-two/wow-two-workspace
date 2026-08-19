@@ -1,0 +1,30 @@
+# Serialization
+
+*Last updated: 2026-07-03*
+
+> The JSON wire contract every API emits and accepts — property casing, enum + scalar forms, nulls.
+> Configured once at the host, never per controller. The frontend mirrors it verbatim:
+> [type mapping](../../../../../../frontend/mla/domains/api/type-mapping.md).
+
+## Contract
+
+- must serialize property names + dictionary keys as **camelCase** (`JsonNamingPolicy.CamelCase`).
+- must serialize `enum` values as **camelCase strings** — `JsonStringEnumConverter(JsonNamingPolicy.CamelCase)`.
+- must not emit integer ordinals or PascalCase names for an `enum`.
+- must **omit null** on write (`DefaultIgnoreCondition = WhenWritingNull`) — an absent key, never `"field": null`.
+- must serialize `Guid` as a string, `decimal` / `int` / `long` as a number, `bool` as a boolean.
+- must serialize `DateTimeOffset` / `DateOnly` / `TimeOnly` / `TimeSpan` as ISO-8601 strings.
+
+> Wire vs storage: this is the **API** enum form (camelCase string); DB storage is snake_case text
+> ([postgres](../../../../core/mla/domains/persistence/database/postgres/postgres.md) § *Enum column mapping*). One enum → `active` on the wire, `active` in the column, `Active` in code.
+
+---
+
+## Wiring
+
+- must apply the contract once, at the host — `AddControllers().AddJsonStringEnums()` over the SDK preset
+  `JsonOptionsPresets.Default` ([host configuration](../startup/host-configuration.md)).
+- must not hand-roll a `JsonSerializerOptions` per controller.
+- must reuse the **same options object** for manual (de)serialization (e.g. a jsonb `ValueConverter`)
+  so the stored and wire shapes can't drift.
+- must not override casing / enum / null policy per endpoint — the contract is uniform across the service.
