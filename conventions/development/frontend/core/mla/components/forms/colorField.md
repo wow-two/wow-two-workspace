@@ -1,0 +1,35 @@
+# ColorField
+
+*Last updated: 2026-08-19*
+
+> The hex text field — typed, with a live swatch adornment, and no panel behind it.
+> What a control is → [control](../../constructs/visual/control.md).
+> Its full surface → `ColorField.spec.md`.
+
+## Reach for it when
+
+- must let the reader type or paste a hex, from a spec, a brand doc, or a designer
+- must show the parsed colour back while typing, without opening anything
+- should pair it with [ColorPicker](colorPicker.md), which mounts one inside its panel
+
+---
+
+## Instead of
+
+| Reach for | When |
+|---|---|
+| [ColorPicker](colorPicker.md) | the colour is dragged out of a panel rather than typed |
+| [ColorSwatchPicker](colorSwatchPicker.md) | the choice is a fixed palette |
+| [ColorSwatch](colorSwatch.md) | the hex is displayed and never edited |
+| [TextInput](textInput.md) | the string is not a colour and needs no swatch or parse |
+
+---
+
+## Values
+
+- must expect the commit on blur or `Enter` — the draft is free-form until then
+- must expect an unparseable draft to revert to the last committed hex
+- must expect an emptied field to commit `null`, the cleared state
+- should accept `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA`, with or without the `#`
+- must expect the committed value normalised to `#RRGGBB`, or `#RRGGBBAA` under `hasAlpha`
+- should leave `swatchShape` at `square` and `hasAlpha` off

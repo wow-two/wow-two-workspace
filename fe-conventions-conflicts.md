@@ -3,100 +3,203 @@
 *Last updated: 2026-08-19*
 
 > Defects **inside** the conventions: two docs stating opposite verdicts on one identifier, a rule refuted by
-> its own example, the index describing a doc differently from the doc itself, or one rule restated in a second
+> its own example, an index describing a doc differently from the doc itself, or one rule restated in a second
 > doc instead of linked ([conventions.md](conventions/conventions.md) § *One owner per rule*).
-> Purpose — a rule that contradicts another cannot gate code; every row here needs a verdict, not a sweep.
+> Purpose — a rule that contradicts another cannot gate code; every row needs a verdict, not a sweep.
 > Use case — pick a row, decide the winning side, edit both docs, tick it. Code debt lives in the SDK's
 > [conventions sweep](workbench/wow-two-sdk-beta/wow-two-sdk-beta.ui/engineering/planning/ui-sdk-conventions-sweep.md).
 
-Re-measured 2026-08-19, after the de-duplication pass removed ~940 lines across 68 docs. Coordinates are current.
+Fourth measurement, 2026-08-19, after the `visual/` · `behavior/` · `data/` recut of `mla/constructs/`.
 Paths are relative to `conventions/development/frontend/`.
 
-**28 open.** The `suffixes.md` dissolve closed 13 — every row where a kind doc cited a list that doc never carried.
+**6 open, 34 closed this pass.** Mechanically the tree is clean: 1078 links resolve, 72 `§` references
+resolve, 0 unreachable docs, 0 missing timestamps, 4 lines over 120 (all pre-existing).
 
 ---
 
-## Cross-doc contradictions — 20
+## Open — needs a decision
 
-| # | Identifier | Doc A says | Doc B says |
-|---|---|---|---|
-| 4 | API failure carrier | `data/result.md:24`,`:28` — return a `Result`, never throw | `state-and-data.md:34` · `submission.md:12` · `forms.md:23` — throw `ApiError` |
-| 5 | one component per folder | `components.md:23-26` — SDK must, an app may flatten | `architecture.md:52` · `react/components.md:27` · `frontend-conventions.md:62` |
-| 7 | capability modules vs 5 layers | `architecture.md:14-20` — five layers | `headless-suffixes.md:12` · `provider.md:27` · `primitive.md:27` |
-| 8 | `components.md` § Folder scope | `components.md:30` — excludes views and pages | `page.md:34` · `view.md:32` · 11 more kind docs at `:32` |
-| 10 | constant casing | `naming.md:93` · `constants.md:17` — PascalCase | `extensions.md:46` — `UPPER_CASE` fields |
-| 11 | `T[]` / `readonly T[]` | `typescript.md:44`,`:96` · `type-mapping.md:74` | `routing.md:32` — `readonly AppRoute[]` |
-| 12 | `changeOrigin` | `boundaries.md:54` — `false` | `state-and-data.md:20` — `true` |
-| 13 | `*Registry` | `models.md:47` — `Catalog`, not `Registry` | `headless-suffixes.md:38` keep-list |
-| 14 | `{Noun}Extensions` doc verb | `documentation.md:57` — `Extends` | `extensions.md:53`,`:16` — `Provides` |
-| 15 | hook home | `architecture.md:18`,`:42` — `application/{domain}/hooks/` | `hooks.md:19-20` — `src/hooks/` |
-| 16 | `{Noun}Extensions` home | `architecture.md:19` — `domain/` | `extensions.md:61-63` — `lib/` |
-| 17 | write-contract suffix | `models.md:32` — `*ApiRequest` | `architecture.md:56` — `*Request` |
-| 18 | `*State` | `suffixes.md:83` · `state.md:17` — a component | `architecture.md:55` · `state-and-data.md:58` — a data type |
-| 19 | `Skeleton` | `state.md:17` — a state | `feedback.md:17` — a feedback, and `:13` excludes a content stand-in |
-| 20 | `LoadingOverlay` | `state.md:17`,`:28` — a state | `overlay.md:17`,`:27` · `suffixes.md:17` — an overlay |
-| 21 | app-internal import path | `imports.md:84` — the `@/` alias | `vue-sfc.md:29-30` — relative paths |
-| 22 | component construct | `architecture.md:5` · `naming.md:11` — React, `.ts`/`.tsx` | ` ```vue ` examples in all 15 kind docs |
-| 23 | `class` | `typescript.md:67` — `Error` subclass or builder | `react/boundaries.md:28` — an error boundary |
-| 24 | hook naming | `architecture.md:55` — `use{Noun}` | `hooks.md:11` |
-| 24b | React/Vue vocabulary in one doc | `hooks.md:54-56`,`:62` — "composable" + `onScopeDispose` inside a React doc | — |
-| 36 | URL-hash routing | `state-and-data.md:60` — retired | `routing.md:84` — `[x] history:'hash'` shipped |
+Each row is two live rules that disagree, where choosing changes what code does, or a naming preference with
+no evidence favouring either side.
+
+### 18 — `*State`, one suffix and two referents
+
+- `visual/state.md:57` — *must end `*State` — the whole-region stand-in for content that is absent,
+  pending, or failed.*
+- `architecture.md:58` — *data `use{Entity}` returns `{Entity}State`*; `state-and-data.md:59` repeats it.
+- Neither side is stale, and picking one renames real exports — `CodesState` reads as both.
 
 ---
 
-## Rule refuted by its own example — 3
+### 62 — `*Field` provides, but the code consumes
 
-| # | Identifier | Rule says | Its own example says |
-|---|---|---|---|
-| 25 | `disabled` | `props.md:58` — a DOM attribute passes through unrenamed | `props.md:66`,`:78` — `isDisabled` |
-| 32 | `WHITESPACE_REGEX` | `naming.md:93` · `constants.md:17` | `extensions.md:19`,`:21`,`:46` |
-| 37 | write-contract suffix, inside one doc | `models.md:17`,`:32` — `*ApiRequest` | `models.md:39`,`:48`,`:50` — `*Request` |
+- `visual/field.md` — a field **provides** the form-control context its child reads.
+- The code inverts it: `ColorField` · `DateField` · `TimeField` · `DateTimeField` all call
+  `useFormControl()`, while `ColorPicker` is what mounts `FormControlProvider`.
+- Either the gate is wrong, or four components are named for a role they do not play.
+- Found by the application pass, from the code side; no doc says it.
 
 ---
 
-## Index drift — 4
+### 19 — `Skeleton`, claimed by two kinds
 
-| # | Where | Drift |
+- `visual/state.md:17` lists it ✅, and `state.md:11` admits it — *must **replace** the content of a region,
+  not sit beside it*.
+- `visual/feedback.md:17` lists it ✅, but `feedback.md:14` excludes it — *must carry its own copy; a bare
+  mark with no text is an [indicator]*.
+- Not resolvable on the gates alone: `feedback.md:17` also lists `Spinner` and `ProgressBar`, which fail the
+  same copy gate, and `state.md:18` explicitly sends `Spinner` to feedback. Moving `Skeleton` alone leaves
+  the copy gate refuted by its own siblings.
+
+---
+
+### 22 — which framework a kind doc's example is written in
+
+- `architecture.md:5` — *the slice tree a **React/TS** app is built on*; `naming.md:11` names `.ts` / `.tsx`
+  only; `react/components.md:15` counts 281 SDK files.
+- All 15 kind docs demonstrate every rule in ` ```vue ` fences, and `visual/provider.md:52` mandates
+  `provide()` plus a `use{Capability}()` composable.
+- Both frameworks ship. The fork is one example language, or both per doc.
+
+---
+
+### 49b — the suffix a primitive takes
+
+- `constructs.md:42` — *must suffix every component, however well known the bare word is*.
+- `visual/primitive.md:59` — *must take no suffix; the behaviour's own word is the whole name — `Slot` ·
+  `Portal` · `Presence`*, routed by `visual/visual.md:72` as `none — the behaviour's own word`.
+- The other five bare-name carve-outs are gone (**49a**, below). This one is not a carve-out but the kind's
+  own fixed form; retiring it needs a suffix that does not exist yet, which runs `constructs.md`
+  § *Adding a new suffix*.
+
+---
+
+### 56 — register bleed, with nowhere to move to
+
+- `constructs.md:131` — *should reach for a `@wow-two-beta/ui` component before hand-rolling*.
+- `constructs.md:141` — *must set Prettier `printWidth: 120`*.
+- `hooks.md:27-28` — object return versus tuple return.
+- `data/result.md:27` — *must reach for `AppError` first*.
+- All four are the judgement register inside definition docs (`mla/components/components.md:12-16`).
+  `mla/components/` holds only its own lead, so the fix writes the destination doc first — new content,
+  not a repoint.
+
+---
+
+## Closed this pass — 34
+
+### The failure carrier — row 4
+
+`ApiError` no longer appears anywhere in the tree. `state-and-data.md:34-36` returns `Result<T>` and maps the
+failure to `AppError`, its code fence reading through `isFail`; `submission.md:12-15` and `forms.md:23`
+follow; `toApiError` → `toAppError` in the query matrix; `frontend-conventions.md:117` repointed.
+
+---
+
+### `screen` retired — row 60
+
+Rewritten at `architecture.md:17` · `boundaries.md:11` · `page.md:63`,`:99` · `routing.md:60-61` ·
+`forms.md:29`,`:60` · `submission.md:11` · `auth.md:6`,`:23` · `html/headings.md` (4 sites) ·
+`html/landmarks.md` (6 sites). Left alone: `screen reader`, the Tailwind `*-screen` utilities, `off-screen`,
+and `uploads.md:12`'s verb — none is a component word.
+
+---
+
+### The bare-name carve-out — row 49a
+
+Five carve-out lines deleted — `control.md` · `layout.md` · `display.md` · `nav.md` · `field.md`. Neither
+`visual.md:52` nor `naming.md:118` advertises "the bare names that take none" any more. The ✅ rosters in
+those docs still carry bare entries (`Box`, `Combobox`, `Avatar`, `Pagination`); each needs a coined name, so
+they ride with **49b**.
+
+---
+
+### One owner per rule — 12 rows
+
+| # | Restated where | Owner it links to now |
 |---|---|---|
-| 33 | `frontend-conventions.md:70-71` | names `screen` among the kind docs; no `screen` kind exists |
-| 34 | `frontend-conventions.md:62` | calls one-per-folder unconditional; `components.md:26` scopes it to the SDK |
-| 35 | `frontend-conventions.md:39-40` | lists `service-free` `constants` `enums` `extensions` under `lla/`; all live in `mla/components/` |
-| 38 | `frontend-conventions.md:14` · `mla/mla.md:20-27` | both omit `frameworks/` from `mla/`'s buckets, which `:84` documents |
+| 5 · 34 | `architecture.md:53` · `react/components.md:27` | `constructs.md` § *Folder* |
+| 12 | `boundaries.md:54` fixed `changeOrigin: false` | `state-and-data.md` § *API client* |
+| 14 | `extensions.md` § JSDoc said `Provides` | `documentation.md` § *Verb starters* |
+| 15 | `hooks.md` § Location put hooks in `src/hooks/` | `architecture.md` § *Sub-domains* |
+| 16 | `extensions.md` § Location put them in `lib/` | `architecture.md` · `boundaries.md` |
+| 24 | `architecture.md:56` restated `use{Noun}` | `hooks.md` § *Naming* |
+| 36 | `state-and-data.md:60` retired hash routing | `routing.md:16` |
+| 50 | `extensions.md:42` cited the wrong doc for `class` | `typescript.md` § *Absence* |
+| 51 | `enums.md:102` named `constructs.md` as `is*` owner | `enums.md:76-78` keeps it |
+| 52 | `hooks.md` § JSDoc restated the hook verbs | `documentation.md` § *Verb starters* |
+| 53 | `imports.md:80` restated the React-UMD ban | `style.md` § *React types* |
+| 54 | `visual.md` § Headless restated the keep-list | `headless-suffixes.md` |
+
+Row 14 also picked the winner: `documentation.md:57` says `Extends`, and its own `:61` reserves `Provides`
+for something else — so `extensions.md`'s example verb changed with it.
 
 ---
 
-## Structural — `service-free.md`
+### Suffix and casing — 5 rows
 
-| # | What |
+| # | Was | Now |
+|---|---|---|
+| 10 · 32 | `extensions.md:46` mandated `UPPER_CASE` fields | casing is `naming.md`'s |
+| 10 · 32 | its example ran `WHITESPACE_REGEX` | `WhitespaceRegex` · `DefaultInitials` |
+| 11 | `routing.md:32` typed `readonly AppRoute[]` | `ReadonlyArray<AppRoute>` |
+| 17 · 37 | `architecture.md` · `constructs.md` · `models.md:40`,`:50` said `*Request` | `*ApiRequest` |
+| 20 | `state.md:17` listed `LoadingOverlay` as a state | dropped; `overlay.md:58` owns it |
+| 25 | `props.md:58` passed `disabled` through unrenamed | off the native list, `is*` stated |
+
+---
+
+### Scope and vocabulary — 5 rows
+
+| # | Was | Now |
+|---|---|---|
+| 7 | the five layers read as universal | `architecture.md:24-25` scopes them to a product |
+| 8 | `constructs.md:83` excluded views and pages | applies to every rendering kind |
+| 21 | `vue-sfc.md:29` mandated relative imports | scoped to a published library's `src/` |
+| 23 | `typescript.md:67` allowed no boundary class | React's error boundary is the third case |
+| 24b | `hooks.md` carried "composable" + `onScopeDispose` | one word — "hook"; teardown cites the two |
+
+Row 7's pointer is `visual.md` § *Placement*; row 24b's are `vue/reactivity.md` and `react/hooks.md`, which
+own the teardown seam.
+
+---
+
+### Index drift — 6 rows
+
+| # | Was | Now |
+|---|---|---|
+| 13 | `models.md:48` bans `Registry`, `headless-suffixes.md:39` mandates it | two rules — `models.md:48` says which |
+| 46 · 55 | `mla/components/` fixed `lla/components/` doc shape | § *Adding a doc here*, scoped to its folder |
+| 57 | i18n · config · states · icons listed as gaps | all four ship; a11y + static assets remain |
+| 58 | `visual.md:44` omitted the loading case's home | `display/` `feedback/` |
+| 59 | three folders carry no `{folder}.md` | refuted by `conventions.md:90` |
+| 61 | 18 docs sat beside `data/` | refuted — the recut left three folders |
+
+Row 59: a folder holding one doc needs no lead, and `domains.md:26` now states the threshold.
+
+---
+
+### Also fixed in passing
+
+- `typescript.md`'s `## Banned constructs` → `## Banned`, so `lla/constructs/constructs.md:27`'s pointer
+  resolves in every one of the 40 group docs.
+- `visual.md:74-75` split into two bullets, so the coining-gate `§` reference carries its own link.
+
+---
+
+## Mechanical checks
+
+| Check | Count |
 |---|---|
-| 46 | `:30`,`:34-38` mandate a `## Location` → `## Declaration` → `## Content` shape that `constants.md`, `enums.md` and `extensions.md` do not carry |
-| 47 | `:6` says keep the app-free roles out of MLA; `:12` says place an inert one in `mla/components/`, where the file itself sits |
-| 48 | its H1 is `# Components`, colliding with `components.md`; `notation.md:32` and `constructs.md:37` both link it as "components" |
+| relative links resolving | 1078 / 1078 |
+| `§ *Section*` references resolving | 72 / 72 |
+| docs with no inbound link | 0 |
+| docs missing `*Last updated:*` | 0 |
+| lines over 120 | 4 |
 
----
-
-## Closed
-
-| Identifier | Closed by |
-|---|---|
-| `*Dto` reach past `integration/` · its `Invoice` example · `*Input` as a form model | the `models.md` rewrite |
-| acronym `JSONEditor` in `suffixes.md:88` | `JsonEditor` |
-| barrel import vs the slice's public surface, and its own `:40-41` example | `imports.md:89` restated as *the barrel that owns it* |
-| `T \| null` banned vs `use with care`, and `typescript.md:47` | scoped — absence is `field?: T`, a stated `null` is a prop value |
-| `presentation/{kind}/` vs domain slicing | kind folders are SDK layout; a product slices by domain |
-| props destructuring | `components.md:56-58` scopes access per framework |
-| three broken `§` anchors — `css.md:39` · `react/boundaries.md:32` · `routing.md:72` | repointed to headings that exist |
-| 9 citations pointing at lists `suffixes.md` never carried | the dissolve — each kind doc owns its own names |
-| `suffixes.md` as a central keep-list | dissolved; 15 kind docs · `components.md` § *Naming* · `component-catalog.md` routing |
-| 4 rows where a kind doc's example refuted `suffixes.md` | the same dissolve — the kind doc now owns the rule its example shows |
-| acronym casing — docs showed the SDK's real all-caps names | renamed in code and docs together, 4 gates green |
-
----
-
-## Restated rules
-
-Swept 2026-08-19 across four disjoint lanes — ~940 lines removed from 68 docs. What the pass created is tracked
-above as rows 39-45. The meta rule is [conventions.md](conventions/conventions.md) § *One owner per rule*.
+The four long lines predate this pass: `observability.md:20` · `css/css.md:14` · `html/html.md:22` ·
+`vue-sfc.md:118`. The last is a single markdown link to a workbench path, which cannot wrap.
+Measured with `LC_ALL=en_US.UTF-8 awk 'length($0)>120'`.
 
 ---
 
@@ -110,4 +213,3 @@ above as rows 39-45. The meta rule is [conventions.md](conventions/conventions.m
 ## Neighbours
 
 - [frontend conventions](conventions/development/frontend/frontend-conventions.md) — the docs this audits
-- [handoff](fe-sweep-handoff.md) — session state

@@ -101,11 +101,11 @@ A rule is filed by three independent questions. Each has its own word, and the w
 |---|---|---|
 | **layer** | `lla` · `mla` · `hla` | how far does the rule carry — a symbol, one app, between our apps |
 | **bucket** | `constructs` · `components` · `domains` · `architecture` · `platform` · `frameworks` | what question does it answer |
-| **register** | definition · judgement · surface | how deep does the statement go |
+| **register** | definition · application · surface | how deep does the statement go |
 
 - must say **layer** only of `lla` / `mla` / `hla` — the word is taken, and a second use collides on the reader.
 - **definition** states what a role is, its suffix, its contract shape → the `constructs` bucket.
-- **judgement** states which one to reach for and with what values → the `components` bucket.
+- **application** states which one to reach for and with what values → the `components` bucket.
 - **surface** enumerates one instance's props, slots and states → it lives with the code, never in a convention.
 - must keep the surface register out of this tree — a convention that lists an instance's props goes stale the
   release after it is written, and the instance already documents itself beside its own source.
@@ -165,13 +165,22 @@ Backend rules live under the stack that owns them (`backend/dotnet/`), and each 
 **Routing.** Kind of type → `mla/components/{kind}.md` · any symbol → `lla/` · where it lives → `mla/architecture/` ·
 build and start → `mla/platform/` · a technology or use case → `mla/domains/{domain}/` · both ends ours → `hla/`.
 
-### frontend/ — frontend conventions (cut by scope) · [the frontend index](development/frontend/frontend-conventions.md)
+### frontend/ — frontend conventions (cut twice) · [the frontend index](development/frontend/frontend-conventions.md)
 
-| Group | File |
+Two orthogonal cuts: **scope** — how far a rule reaches; **shape** — what is being built.
+
+| Folder | Holds |
 |---|---|
-| `code-style/` | `naming` · `documentation` · `imports` · `code-organization` · `models` · `type-mapping` · `enums` · `extensions` |
-| `architecture/` | `architecture` · `state-and-data` |
-| `presentation/` | `components` · `visual` (the 15 kinds) · `suffixes` · `forms` · `hooks` · `styling` |
+| `core/lla/` | one symbol — constructs per platform · a form end to end · naming · docs · style |
+| `core/mla/` | one app — the kinds we declare · which to reach for · domains · framework deltas |
+| `core/hla/` | between our own frontends — **empty by design** |
+| `shapes/app/` | a product frontend — architecture · platform (styling, dev server) · routing |
+| `shapes/library/` | a package another frontend imports — kind-grouped layout, capability modules |
+
+**Routing.** A kind you declare → `core/mla/constructs/` · which one, with what values →
+`core/mla/components/` · a language form end to end → `core/lla/components/` · how any symbol is written →
+`core/lla/notation/` · a capability → `core/mla/domains/{domain}/` · where a folder is created, how it builds
+and ships → `shapes/{app,library}/`.
 
 ---
 

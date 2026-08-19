@@ -3,122 +3,165 @@
 *Last updated: 2026-08-19*
 
 > Conventions for every frontend under `wow-two-ws/`. Lookup table — open a file when the task
-> touches it; do not pre-read. Cut by **scope**: how far a rule reaches.
+> touches it; do not pre-read. The tree splits twice, and the cuts are orthogonal.
 > How to write a doc here → template + rules in [conventions](../../conventions.md).
 
-## The three scopes
+## The two cuts [REQUIRED]
 
-| Scope | Reaches | Holds |
+| Cut | Answers | Folder |
 |---|---|---|
-| `lla/` | one symbol | constructs per platform · a form used end to end · naming · doc blocks · style |
-| `mla/` | one app, and everything it talks to | six buckets → [mla](mla/mla.md) |
-| [`hla/`](hla/hla.md) | between our own frontends | micro-frontend composition · shared runtime · cross-app routing |
+| scope | how far a rule reaches — one symbol, one app, between frontends | [core/](core/core.md) |
+| shape | what is being built — a product app, a component library | [shapes/](shapes/shapes.md) |
 
-**Routing.** A role you declare over and over → `mla/constructs/{role}.md`; which one to reach for, and with
-what values → `mla/components/`. A language form used end to end → `lla/components/{form}.md`; how any
-symbol is written → `lla/notation/`.
-Where a type lives → `mla/architecture/`. How the app builds and boots → `mla/platform/`. A concrete
-technology or capability → `mla/domains/{domain}/`. A rule spanning apps we both own → `hla/`.
-
-- only `lla/` is platform-bound — a layer, a domain contract and a micro-frontend seam belong to the app, so
-  nothing nests under a platform outside `lla/constructs/`.
-- what a framework *offers* is a construct (`defineProps`, `useState`); how we *build a component* with it is
-  `mla/`. Each cites the other rather than restating it.
-- a framework is a **provider** inside a domain — `vue/` and `react/` are provider folders, the shape the
-  backend uses for `persistence/{ef,dapper,sql}`.
-- the test between `mla/` and `hla/`: do we own both ends? A third-party widget is adapted in `mla/`.
-- the test between baseline and a domain: would the rule survive if the feature were deleted?
+- must place a rule in `core/` when it holds whatever the deliverable is.
+- must place it under `shapes/` when it loses its subject once that deliverable is absent — a layer, a route,
+  a bundler target, a package manifest ([shapes](shapes/shapes.md) § *The test*).
+- must name only the **folder** in a construct or component doc — `overlays/`, `pages/` — and leave which tree
+  holds it to the shape.
 
 ---
 
-## `lla/` — one symbol
+## The scopes and the shapes
 
-The test is whether TypeScript, a framework or the browser supplies the term; `Dto`, `Entity` and `Page`
-are ours, so they sit in `mla/` however familiar they read.
+The scope model — what `lla` · `mla` · `hla` each own, and how to route a rule between them — lives in
+[core](core/core.md). The deliverable model — the two shapes, the test, the vectors inside one — lives in
+[shapes](shapes/shapes.md). Read them there; this index does not restate either.
 
-- [constructs](lla/constructs/constructs.md) — one folder per platform: every construct, what each is for,
-  and its ban.
-- [components](lla/components/components.md) — a language form used end to end:
-  [constants](lla/components/constants.md) · [enums](lla/components/enums.md) ·
-  [extensions](lla/components/extensions.md).
-- [notation](lla/notation/notation.md) — [naming](lla/notation/naming/naming.md) ·
-  [props](lla/notation/naming/props.md) · [documentation](lla/notation/documentation/documentation.md) ·
-  [style](lla/notation/style/style.md) · [imports](lla/notation/style/imports.md).
-
-- `constructs/` states the form and the verdict on writing it; `components/` carries that same form through
-  declaring, keeping, wiring and reading it.
-- a role **we** coined is never `lla/` — `Page`, `Overlay`, `Model` and `Result` are ours, so they sit in
-  `mla/constructs/`, and the judgement over them in [`mla/components/`](mla/components/components.md).
-- notation is a **default set** — a component may override a rule in its own file, and one that does not
-  override cites `notation/` rather than restating it.
+**Routing.** A kind you declare → `core/mla/constructs/{kind}.md`; which one to reach for, and with what values
+→ `core/mla/components/`. A language form used end to end → `core/lla/components/{form}.md`; how any symbol is
+written → `core/lla/notation/`. A concrete technology or capability → `core/mla/domains/{domain}/`; the delta one
+framework adds → `core/mla/frameworks/{framework}/`. A rule spanning frontends we both own → `core/hla/`.
+Where a folder is created, how the thing builds, routes, styles and ships → `shapes/{app,library}/`.
 
 ---
 
-## `mla/` — one app
+## The layers of a thing [REQUIRED]
 
-The scope lead and the SDK boundary → [mla](mla/mla.md).
+The model is [development conventions](../development-conventions.md) § *The layers of a thing*.
+What it means here:
+
+| Layer | Home | Example |
+|---|---|---|
+| 1 · baseline | [lla/constructs](core/lla/constructs/constructs.md) | `type` · `const` · `<button>` · `@theme` |
+| 2 · construct | [mla/constructs](core/mla/constructs/constructs.md) | what a `Page` or a `Model` **is** |
+| 3 · application | `lla/components` · `mla/components` · `mla/domains` | how it is applied, by who owns the form |
+
+- must not document a third-party library's own surface → [development conventions](../development-conventions.md)
+  § *Whose thing earns a doc*. Naming `tailwind-variants` in a rule of ours is the allowed case; documenting
+  TanStack Query is not.
+- must place a rule at the lowest layer that can hold it — a rule about a `const` object is layer 1, a rule
+  about our enum value sets is layers 1 and 3.
+
+### Reading the map
+
+A thing occupies one home per layer it has. Two tests, applied in order:
+
+1. **Does TypeScript, the browser or a framework ship the form?** → it has a `lla/constructs` row.
+2. **Do we define a thing of our own on top of it?** → it earns a `mla/constructs` doc, and its conditions land
+   in `lla/components` when the language supplied the form, `mla/components` when we coined the thing, and
+   `mla/domains` when it needs collaborators.
+
+| Thing | Layer 1 — the platform form | Layer 2 — what ours **is** | Layer 3 — every condition |
+|---|---|---|---|
+| `Constants` | `const` · `as const` | the language's own | [constants](core/lla/components/constants.md) |
+| `Enums` | `const` object · union | the language's own | [enums](core/lla/components/enums.md) |
+| `Extensions` | `const` object of statics | the language's own | [extensions](core/lla/components/extensions.md) |
+| `Page` · `Overlay` | — | the 15 kinds that render | [components](core/mla/components/components.md) |
+| `Model` · `Dto` | `interface` · `type` | the layer a type may cross | [data](core/mla/constructs/data/data.md) |
+| `Result` | discriminated union | the carrier every call returns | [result](core/mla/constructs/data/result.md) |
+| a hook | `useState` · `useEffect` | the `use*` state it owns | [behavior](core/mla/constructs/behavior/behavior.md) |
+| a route | — | a place, a guard, metadata | [routing](shapes/app/routing/routing.md) |
+
+- must not read a missing `lla` row as a missing layer — `Page`, `Overlay` and `Result` are roles we coined, so
+  they start at layer 2.
+- must not read a missing `components` doc as a gap — a thing needing collaborators has its layer 3 in the
+  domain that supplies them.
+- must keep a variation out of `mla/constructs` — a responsive presentation is an application of `Overlay`, so
+  it lives wherever that kind's layer 3 lives.
 
 ---
 
-## `mla/constructs/` — what a role is
+## Layer direction [REQUIRED]
+
+Rules flow `lla` → `mla` → `hla`. A higher layer may **override or extend** a lower one; a lower layer never
+reaches up. A shape overrides neither — it answers a question `core/` never asks.
+
+- must state an override in the higher layer's own file, never by editing the lower layer's rule.
+- must carry a **backlink** from the higher layer to the exact lower-layer rule it overrides or extends —
+  `{file}` § *Section*, the way a kind doc cites [notation](core/lla/notation/notation.md).
+- must cite the lower layer rather than restate it when the higher layer adds nothing.
+- must resolve a conflict in favour of the higher layer, and say so at the point of override.
+
+---
+
+## Files
+
+### `core/lla/` — one symbol
+
+The lead is [lla](core/lla/lla.md) — the three buckets and the boundary.
+
+- [constructs/](core/lla/constructs/constructs.md) — one folder per platform, each construct and its ban:
+  [typescript](core/lla/constructs/typescript/typescript.md) · [html](core/lla/constructs/html/html.md) ·
+  [css](core/lla/constructs/css/css.md) · [tailwind](core/lla/constructs/tailwind/tailwind.md).
+- [components/](core/lla/components/components.md) — a language form end to end:
+  [constants](core/lla/components/constants.md) · [enums](core/lla/components/enums.md) ·
+  [extensions](core/lla/components/extensions.md).
+- [notation/](core/lla/notation/notation.md) — [naming](core/lla/notation/naming/naming.md) ·
+  [props](core/lla/notation/naming/props.md) ·
+  [documentation](core/lla/notation/documentation/documentation.md) ·
+  [style](core/lla/notation/style/style.md) · [imports](core/lla/notation/style/imports.md).
+
+### `core/mla/` — one app
+
+The lead is [mla](core/mla/mla.md) — the four buckets, the SDK boundary, and the doc template both registers take.
 
 | File | What it covers |
 |---|---|
-| [constructs](mla/constructs/constructs.md) | One-per-folder, `readonly` props, naming, the suffix gate |
-| [component catalog](mla/constructs/component-catalog.md) | The index of kinds, and which suffix routes to which |
-| [headless suffixes](mla/constructs/headless-suffixes.md) | The keep-list for a seam — `*Client` · `*Bus` |
-| [hooks](mla/constructs/hooks.md) | `use*` naming, object vs tuple return, abort on unmount |
-| [data](mla/constructs/data/data.md) | The `*Dto` family, `*Model`, `*Content`, and the `Result` carrier |
+| [constructs](core/mla/constructs/constructs.md) | The authoring pass: kind → name → docs → props → gate |
+| [visual](core/mla/constructs/visual/visual.md) | The 15 kinds that render, suffix routing, where a group is placed |
+| [behavior](core/mla/constructs/behavior/behavior.md) | The seams a component consumes, and the `use*` state it owns |
+| [data](core/mla/constructs/data/data.md) | The `*Dto` family, `*Model`, `*Content`, and the `Result` carrier |
+| [compound](core/mla/constructs/compound.md) | A root that owns named subparts, and how both halves export |
+| [components](core/mla/components/components.md) | The three registers, the gate, and one folder per visual group |
 
-The fifteen kind docs are linked one per row from the
-[component catalog](mla/constructs/component-catalog.md) — `page` through `primitive`. A kind doc says what the
-kind **is**; one component's own props, slots and states belong to its `{Component}.spec.md` in the SDK repo.
+### `core/mla/domains/` — a capability, its contract and its providers
 
----
+One row per domain → [domains](core/mla/domains/domains.md). The four with the most surface:
+[data](core/mla/domains/data/state-and-data.md) (the `/api` client, `Result`, server vs UI state) ·
+[forms](core/mla/domains/forms/forms.md) (engine pin, values, schema, field chrome) ·
+[submission](core/mla/domains/forms/submission.md) (submit path, field errors, validation timing) ·
+[api](core/mla/domains/api/type-mapping.md) (the .NET ↔ wire ↔ TS scalar contract).
 
-## `mla/components/` — which one to reach for, and with what values
+### `core/mla/frameworks/` — the framework delta
 
-- [components](mla/components/components.md) — the three registers, the gate, and the authoring template.
+- [react](core/mla/frameworks/react/react.md) — [components](core/mla/frameworks/react/components.md) ·
+  [hooks](core/mla/frameworks/react/hooks.md) · [jsx](core/mla/frameworks/react/jsx.md) ·
+  [boundaries](core/mla/frameworks/react/boundaries.md).
+- [vue](core/mla/frameworks/vue/vue.md) — [SFC](core/mla/frameworks/vue/vue-sfc.md) ·
+  [composition](core/mla/frameworks/vue/composition.md) · [macros](core/mla/frameworks/vue/macros.md) ·
+  [reactivity](core/mla/frameworks/vue/reactivity.md) · [template](core/mla/frameworks/vue/template.md) ·
+  [builtins](core/mla/frameworks/vue/builtins.md).
 
-The folder carries the judgement register only. `constants`, `enums` and `extensions` are forms TypeScript
-supplies, so they sit in [`lla/components/`](lla/components/components.md).
+### `core/hla/` — between our own frontends
 
----
+[hla](core/hla/hla.md) — named ahead of its contents; empty until a second frontend exists.
 
-## `mla/architecture/` — where a type lives
+### `shapes/app/` — a product frontend
 
-- [architecture](mla/architecture/architecture.md) — five layers × domain slices, inward dependency, the
-  slice tree, compound components.
-- [boundaries](mla/architecture/boundaries.md) — in-app restraint, the SDK-extraction trigger, packaging,
-  the dev server.
+The lead is [app](shapes/app/app.md) — its vectors and their status.
 
----
+| File | What it covers |
+|---|---|
+| [architecture](shapes/app/architecture/architecture.md) | Five layers × domain slices, the slice tree |
+| [boundaries](shapes/app/architecture/boundaries.md) | In-app restraint, the SDK-extraction trigger, packaging |
+| [platform](shapes/app/platform/platform.md) | The vector lead over the styling and dev-server wiring |
+| [styling](shapes/app/platform/styling.md) | The `index.css` entry, `@source` depth, brand tokens, dark mode |
+| [dev-server](shapes/app/platform/dev-server.md) | HTTPS through mkcert, the `/api` proxy, previewing a route |
+| [routing](shapes/app/routing/routing.md) | `createAppRouter`, the `AppRoute` model, places vs actions |
 
-## `mla/frameworks/` — the framework delta
+### `shapes/library/` — a package another frontend imports
 
-- [react](mla/frameworks/react/react.md) — [components](mla/frameworks/react/components.md) ·
-  [hooks](mla/frameworks/react/hooks.md) · [jsx](mla/frameworks/react/jsx.md) ·
-  [boundaries](mla/frameworks/react/boundaries.md).
-- [vue](mla/frameworks/vue/vue.md) — [SFC](mla/frameworks/vue/vue-sfc.md) ·
-  [composition](mla/frameworks/vue/composition.md) · [macros](mla/frameworks/vue/macros.md) ·
-  [reactivity](mla/frameworks/vue/reactivity.md) · [template](mla/frameworks/vue/template.md) ·
-  [builtins](mla/frameworks/vue/builtins.md).
-
----
-
-## `mla/platform/` — how the app is built, styled and served
-
-- [styling](mla/platform/styling.md) — Tailwind v4 `@import` / `@theme`, tokens, `cn()`, variants, dark mode.
-
----
-
-## `mla/domains/` — a capability, its contract and its providers
-
-One row per domain, its contract and its shipped providers → [domains](mla/domains/domains.md). The four with
-the most surface: [data](mla/domains/data/state-and-data.md) (the `/api` client, dev proxy, `ApiError`) ·
-[forms](mla/domains/forms/forms.md) (engine pin, values, schema, field chrome) ·
-[submission](mla/domains/forms/submission.md) (submit path, field errors, validation timing) ·
-[api](mla/domains/api/type-mapping.md) (the .NET ↔ wire ↔ TS scalar contract).
+[library](shapes/library/library.md) — the kind-grouped layout and capability modules; delivery unwritten.
 
 ---
 
@@ -126,8 +169,6 @@ the most surface: [data](mla/domains/data/state-and-data.md) (the `/api` client,
 
 | Gap | Why |
 |---|---|
-| **Accessibility** | No keyboard / ARIA / focus baseline; the SDK ships primitives, consumer rules unstated |
-| **i18n** | EN / RU / UZ handled ad-hoc; no locale convention, and it gates the enum-label move |
-| **Environment & config** | `import.meta.env`, build-time vs runtime config, the secrets boundary |
-| **Error & loading states** | error boundaries, skeletons and empty states share no pattern |
-| **Icons & assets** | `lucide-*` is the de-facto icon set but unwritten; static-asset handling unspecified |
+| **Accessibility** | No consumer-side keyboard / ARIA / focus baseline; the SDK ships the primitives only |
+| **Static assets** | Image, font and public-folder handling unspecified; icons ship, assets do not |
+| **Library delivery** | `exports`, `sideEffects`, peer deps and versioning are read off the packages, not written |
