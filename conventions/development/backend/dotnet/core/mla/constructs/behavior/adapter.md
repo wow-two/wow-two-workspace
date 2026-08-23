@@ -41,7 +41,7 @@
 
 ```csharp
 // ✅
-public sealed class HybridCacheAdapter : ICacheBroker
+public sealed class HybridCacheRepository : ICacheBroker
 // ❌ our own type needs no adapter; that is a `Mapper` or a `Service`
 public sealed class CodeDtoAdapter
 ```

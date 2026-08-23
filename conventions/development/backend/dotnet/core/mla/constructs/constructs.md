@@ -39,7 +39,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `BackgroundService` | work the host runs off the request path, for as long as it lives | [background service](behavior/background-service.md) |
 | `Client` | one external provider's call surface, out-of-proc | [client](behavior/client.md) |
 | `Broker` | the app-side seam over an external dependency | [broker](behavior/broker.md) |
-| `Repository` | data access — rows in, rows out | [repository](behavior/repository.md) |
+| `Repository` | any seam reaching data — rows, documents, blobs, keys, files | § *`Repository`* |
 | `Factory` | runtime instance creation, per key or per request | [factories](patterns/factories.md) |
 | `Registry` | key → type or capability bindings, registered at composition | [registry](behavior/registry.md) |
 | `Tracker` | live status many producers push into, persisted nowhere | — |
@@ -59,7 +59,7 @@ Split by what the type is for — [data](data/data.md) holds, [behavior](behavio
 | `Builder` | stepwise construction, ending in `Build()` | [builder](behavior/builder.md) |
 | `Policy` | decides whether, when, or how often another operation runs | [policy](behavior/policy.md) |
 | `Settings` | a config section bound through `IOptions<T>` | [settings](data/settings.md) |
-| `Options` | behavior knobs passed in code, bound from nothing | § *`Settings` vs `Options`* |
+| `Options` | behavior knobs passed in code, bound from nothing | [options](data/options.md) |
 | `DbContext` | the EF unit of work | [database](../domains/persistence/database/database.md) |
 | `Configuration` | an EF `IEntityTypeConfiguration<T>` | [entity configuration](../domains/persistence/access/ef/entity-configuration.md) |
 | `Constants` | a holder of `const` and `static readonly` values | [constants](data/constants.md) |
@@ -98,12 +98,55 @@ Both answer "given X, give me Y". The line is who owns the mapping data.
 
 ---
 
+## `Repository`
+
+One role for every seam that reaches something holding data — a table, a document, a blob, a cache, a
+key with a TTL, a file on disk.
+
+- must name the contract `Repository` whatever holds the data, because the contract has to survive a
+  swap: moving a domain from Postgres to Redis is a host-configuration change, and a use case never
+  learns that it happened.
+- must not encode the engine, the permanence or the access shape in the role — each of those is an
+  implementation fact, and a role that carries one renames when the implementation changes.
+- must carry the implementation in the **prefix** — `EfUserRepository`, `RedisOtpRepository`,
+  `LocalFileBlobRepository`, `InMemoryTenantRepository`. Swapping one never touches the contract.
+- must keep an entity's **persistence knowledge** in its repository — relations, key shape, hashing,
+  encoding, the projection a row needs. A service never sees how a thing is stored.
+- may compose a repository from a more abstract one — the entity's repository states what this entity
+  needs, and the generic one underneath does the reaching. Both are repositories.
+- must use `Service` only when the logic is about **what to fetch and why**, which is a business decision;
+  *how this entity is stored* never is.
+
+---
+
+## Role and shape
+
+A capability contract carries the **role**; the type implementing it carries the **shape** it takes.
+
+- must suffix the contract with its role — `ICacheRepository`, `IBlobRepository`, `IUserRepository`.
+- must carry the shape as a **prefix** and the role as the suffix — `InMemoryDeadLetterRepository`,
+  `SystemTextJsonMessageSerializer`, `HybridCacheRepository`. The suffix answers *what is this*, the prefix
+  answers *which implementation*.
+- must not stack two role words — `CacheStorageAdapter` names a kind, a role and a shape at once, where
+  `HybridCacheRepository` says the same thing in the order the tree already uses.
+- must leave a lone implementation the role's own name — a shape prefix earns its place by telling one
+  implementation from another.
+- `Adapter` · `Broker` · `Client` stay suffixes where the shape **is** the role — a type whose whole job is
+  fitting a library, reaching a system, or speaking a provider's surface.
+
+---
+
 ## `Client` vs `Broker`
 
 Both reach an external system. The line is whose vocabulary the type exposes.
 
 - must use `Client` when the surface is the provider's own — its types, its call set, nothing of ours.
 - must use `Broker` when the surface is ours, whatever it calls underneath.
+- must use `Adapter` when the type fits a **library** to a contract we declared, and `Broker` when it
+  reaches a **system** — `HybridCacheRepository` delegates to a library type, while a hand-written Redis
+  seam would cross the wire in our vocabulary and be a `Broker`.
+- both may implement one capability contract — `ICacheRepository` names the capability, and the adapter or the
+  broker behind it is an implementation detail the caller never sees.
 - the test: would the surface change if the provider were swapped? no → `Client`; yes → `Broker`.
 - either may exist alone; a `Broker` may sit over a `Client`, a vendor SDK, or a raw `HttpClient`.
 
@@ -113,6 +156,17 @@ Both reach an external system. The line is whose vocabulary the type exposes.
 
 - must use `Settings` when the config binder populates it from `appsettings.json`.
 - must use `Options` when a caller supplies it in code — a delegate, or `new`.
+
+Both carry their defaults the same way, and the origin only changes what enforces the rule.
+
+- must give every omittable member a default on the type — the caller states what differs, nothing else.
+- must declare a member that has to be supplied as `required`, with no default — a placeholder value that
+  never runs is worse than an absent one, because it runs.
+- must not ban defaults to keep configuration honest — `required` is what marks a value the caller owns,
+  and a full `appsettings.json` of unchanged values hides the few lines that matter.
+- `Options` enforces `required` at compile time — `new T()` will not build → [options](data/options.md).
+- `Settings` enforces it in validation — the configuration binder leaves a `required` member `null`
+  rather than throwing → [settings](data/settings.md).
 
 ---
 
@@ -143,7 +197,57 @@ Rename to the canonical; never introduce the synonym.
 - must fold a name in our own SDK like any other — the SDK is ours, so a convention change reaches it as a
   row in that repo's sweep file, never as an exemption.
 - must name a pure `static class` as one of three — `Constants` for values, `Extensions` for logic over a domain,
-  `Mapper` for a transform. There is no fourth static form, and a bare noun (`SqlNaming`, `Geohash`) is none of them.
+  `Mapper` for a transform. There is no fourth static form, and a bare noun (`GeohashEncoder`, `QuietZoneConstants`) is none of them.
+
+### `Factory` vs `Mapper`
+
+Both take arguments and hand back an object. The line is which end the caller cares about.
+
+- must use `Factory` when the **output type is the point** and the arguments are ingredients —
+  `AppErrorFactory.NotFound(resource, id)` builds an `AppError` out of parts that were never one.
+- must use `Mapper` when **one shape becomes another** — `ConfigurationMapper.Map<T>(configuration)`
+  hands back the same information wearing a different type.
+- must allow `Factory` on a `static class` when both gates below pass — the container-resolved form in
+  [factories](patterns/factories.md) is the same role with a variant to choose.
+- must name it singular — `DbUpProviderFactory`, never `…Factories`; the type is one factory with many
+  methods, not a bag of them.
+
+---
+
+### `static readonly` is a value
+
+- must file a `static readonly` object built once at type load under `Constants` — being configured does
+  not make it behavior, and `JsonOptionsConstants` owns those options the way a literal is owned.
+- must split a type that holds values **and** runs an operation — the values go to `Constants`, the
+  operation takes its own role.
+
+---
+
+### Static or instance
+
+Two independent gates, and a `static class` needs **both**.
+
+| Gate | Passes when | Fails when |
+|---|---|---|
+| **Simple** | the logic is arrangement — combining strings, ordering fields, a format's layout | it is a real algorithm — hashing, compression, key derivation, cipher work |
+| **Single** | exactly one variant of the operation exists | the operation names a family a caller could pick from |
+
+- must declare a `static class` only when both gates pass — base32 encoding, snake-casing, a geohash.
+- must declare an instance type when either gate fails, so the choice is made at registration.
+- must not treat statelessness as the test — a stateless type still goes instance when a gate fails.
+
+Worked examples:
+
+- an RFC payload encoded by combining strings — simple ✓, single ✓ → `static class`
+- the same string work where the spec admits several encodings — simple ✓, single ✗ → instance
+- hashing a string — simple ✗, single ✗ → instance
+- a geohash — simple ✓, single ✓ → `static class`, and `GeohashEncoder` still needs one of the three forms
+
+- must read an algorithm-selecting argument on a static method as the signal both gates failed —
+  `Hash(value, HashAlgorithm.Sha256)` is a registration decision leaking into every caller.
+- must not count a `static readonly` options field as state — a value built once at type load is a constant.
+- a single-variant operation that grows a second implementation becomes a service then, and the rename is
+  the record that it grew one.
 - must keep `Source` where it names a content origin read from, not a value derived — `IMigrationSource`.
 
 ---

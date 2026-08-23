@@ -35,6 +35,12 @@
 
 ### Construct
 - must declare a `public sealed class` deriving `AbstractValidator<T>`, with no SDK base class.
+- may take collaborators — a rule needing a lookup is still a rule, and a service must never receive an
+  input it has to reject.
+- must live in `Infrastructure`, message validators and domain validators alike, because either may inject
+  → [architecture](../../../../shapes/service/architecture/architecture.md).
+- must treat a uniqueness check as advisory — the row can change before the write lands, so the constraint
+  at the write is the arbiter and the rule is the early return.
 
 ### Type name
 - must suffix with `Validator`, named for the **concept** — `WifiContentValidator`.

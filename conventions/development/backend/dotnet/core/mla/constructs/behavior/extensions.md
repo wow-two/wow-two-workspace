@@ -22,8 +22,9 @@
 ### Type doc
 
 #### [Summary](../../../lla/notation/documentation/summary.md)
-- must start with **Extends**, and name the domain.
-- must not name the receiver type — a class extends a domain, not one type.
+- must start with **Extends**, and name whichever the type name carries — the domain, the capability, or the
+  primitive.
+- must not name one of our own receiver types — a class extends a domain, not one type.
 
 ```csharp
 // ✅ names the domain
@@ -36,10 +37,16 @@
 - must declare a `public static class` → [constructs](../../../lla/constructs/constructs.md) § *Behavior components*.
 - must take no collaborator — a method needing one belongs to a [service](service.md).
 - must hold no mutable state.
+- must carry only logic that admits no variant → [constructs](../constructs.md) § *Static or instance*.
 
 ### Type name
-- must be named `{Domain}Extensions`, after the domain the logic belongs to.
-- must not name the type it extends — `CodeExtensions` covers `CodeEntity` and `CodeModel` alike.
+- must be named `{Domain}Extensions` after the domain the logic belongs to, `{Capability}Extensions` when the
+  logic is one named capability rather than a domain's spread — `CasingExtensions`, `EncodingExtensions`.
+- must name the receiver when it is a BCL primitive — `StringExtensions`, `DateExtensions`,
+  `NumericExtensions`; a primitive belongs to no domain of ours, so its own name is the only one available.
+- must reach for the capability over the primitive once the methods share one subject — `StringExtensions`
+  holding only casing methods hides what it is, and the next unrelated method has nowhere else to go.
+- must not name one of our own types — `CodeExtensions` covers `CodeEntity` and `CodeModel` alike.
 - must not name the layer — no `ApplicationExtensions`.
 
 ---

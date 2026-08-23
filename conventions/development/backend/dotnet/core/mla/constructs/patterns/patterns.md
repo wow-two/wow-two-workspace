@@ -57,6 +57,45 @@ Exhaustive across the four families below. A pattern we have never written is st
 
 ---
 
+## Where a pattern's participants live
+
+Every pattern with a `use` or `owned` verdict names types, and each of those types carries a role from the
+[keep-list](../constructs.md) and files in the folder that role owns. A pattern is never a folder.
+
+| Pattern | Participant | Role | Folder |
+|---|---|---|---|
+| Factory Method | the creator | `Factory` | `FoundationServices/Factories/` |
+| Builder | the fluent builder | `Builder` | beside the type it builds |
+| Singleton | none — a container lifetime | — | — |
+| Prototype | none — `record` `with` | — | — |
+| Adapter | the fitted third-party type | `Adapter` | `Adapters/` |
+| Decorator | the wrapper | the wrapped type's role | beside what it wraps |
+| Proxy | the stand-in | the subject's role | beside the subject |
+| Chain of Responsibility | the flow, and one link | `Pipeline` · `PipelineStep` | `ProcessingServices/` |
+| State | the machine | `StateMachine` | `ProcessingServices/` |
+| Strategy | each implementation | the role the work has | its role's folder |
+| Template Method | the abstract base | the role the work has | its role's folder |
+| Unit of Work | the `DbContext` | `DbContext` | `Persistence/DataContexts/` |
+| Outbox / Inbox | the dispatcher | `BackgroundService` | `BackgroundServices/` |
+| Saga / Routing Slip | the machine, the slip | `StateMachine` · `Saga` | `OrchestrationServices/` |
+| Circuit Breaker / Retry | the pipeline | `Policy` | `FoundationServices/Policies/` |
+| Ambient Context | the accessor | `Service` | `ProcessingServices/` |
+| Null Object | `NoOp{Capability}` | the capability's role | its role's folder |
+| Repository | the data access | `Repository` | `Persistence/Repositories/` |
+| CQRS | the message, the handler | `Command` · `Query` · `Handler` | `UseCases/` |
+| Registry | the bindings | `Registry` | `Registries/` |
+| Mapper | the transform | `Mapper` | `FoundationServices/Mappers/` |
+| Options | the knobs | `Options` · `Settings` | beside the `Add*`, or `Settings/` |
+| Result / Either | the carrier | `Result` | `Models/` |
+| Idempotency | the marker, the step | `IIdempotent` · `PipelineStep` | `UseCases/` · `ProcessingServices/` |
+
+- must read a pattern as a **shape a role takes**, never as a role of its own — `Decorator` and `Proxy` carry
+  the role of what they wrap, which is why neither has a suffix.
+- must not add a folder for a pattern — the participant's role already has one.
+- must file a banned pattern nowhere — `Composite`, `Flyweight` and `Visitor` name no participant we build.
+
+---
+
 ## Creational
 
 | Pattern | Our form | Verdict |
@@ -116,7 +155,7 @@ Exhaustive across the four families below. A pattern we have never written is st
 | CQRS | a `Query` or `Command` message, one handler each | `owned` |
 | Registry | key → type bindings, complete or it throws | `owned` |
 | Mapper | a total in→out transform owning no data | `owned` |
-| Options | `Settings` bound from config, `Options` passed in code | `owned` |
+| Options | → [options](../data/options.md) · [settings](../data/settings.md) | `owned` |
 | Result / Either | `Result<T>` and `AppResult<TSuccess>` closed unions | `owned` |
 | Dependency Injection | constructor injection, wired once at the root | `owned` |
 | Idempotency | `IIdempotent` plus the `IdempotencyBehavior<,>` step | `owned` |
@@ -145,7 +184,7 @@ The pattern is real and in use; another doc is its authority, and this row only 
 | Idempotency | `mediator.md` § *Pipeline behaviors* | `IIdempotent` + `IdempotencyBehavior<,>` |
 | Registry | `registry.md` § *Members* | a `Registry` that throws on an unbound key |
 | Mapper | `mapper.md` § *Members* | a total `Mapper`, handed every input |
-| Options | `mla/constructs/constructs.md` § *`Settings` vs `Options`* | `Settings` from config, `Options` in code |
+| Options | [options](../data/options.md) | the construct owns both suffixes and their shapes |
 | Result / Either | `results.md` § *Rules* | `AppResult<TSuccess>` collapsed with `.Match` |
 | Dependency Injection | `constructs.md:243` | constructor injection |
 | Claim Check | `outbox.md` § *Limits* | store the payload, stage the pointer |

@@ -105,7 +105,7 @@ services.AddNpgsqlDataSource(builder =>
 
 **Why bulk, why a translator:**
 
-- `MapEnums` derives the PG type name from the enum type name via `CaseConverter.ToCase(name, style)`.
+- `MapEnums` derives the PG type name from the enum type name via `CaseMapper.ToCase(name, style)`.
 - it routes both type and member names through one `CaseStyleNameTranslator(style)` (an `INpgsqlNameTranslator`).
 - driver-level label mapping and any string-based mapping therefore agree *by construction* — they can't drift.
 - no listing each enum twice (`MapEnum<T>` on both `NpgsqlDataSourceBuilder` and `UseNpgsql`).
@@ -126,7 +126,7 @@ services.AddNpgsqlDataSource(builder =>
 builder.Property(e => e.Status).HasEnumStringConversion();        // snake_case text column
 ```
 
-- applies `EnumCaseConverter<TEnum>`, a `ValueConverter<TEnum, string>`.
+- applies `EnumCaseMapper<TEnum>`, a `ValueConverter<TEnum, string>`.
 - reads are case-insensitive on the label; writes emit the configured style.
 - **Dapper** — `DapperServiceCollectionExtensions.AddEnumTypeHandler<TEnum>()` (defaults `CaseStyle.Snake`):
 
@@ -134,7 +134,7 @@ builder.Property(e => e.Status).HasEnumStringConversion();        // snake_case 
 services.AddEnumTypeHandler<OrderStatus>();                       // registers EnumTypeHandler<OrderStatus>
 ```
 
-- both paths round-trip through `EnumNameConverter<TEnum>` — `ToLabel` / `Parse` / `TryParse`.
+- both paths round-trip through `EnumNameMapper<TEnum>` — `ToLabel` / `Parse` / `TryParse`.
   - it is the single source of truth for label ↔ member, cached per `(enum, style)`.
 
 > **Forward note:** a future text-enum-default mode — text standard, native PG opt-in — lands with the SQLite track.

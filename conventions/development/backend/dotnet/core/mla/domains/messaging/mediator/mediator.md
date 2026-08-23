@@ -137,7 +137,7 @@ Built-ins — each registers as `AddMediatorBehavior(typeof(<Behavior><,>))`:
   - ASP.NET Core authz; throws `UnauthorizedAccessException` / `AuthorizationException`.
 
 - **Idempotency** — opt in via `IIdempotent.IdempotencyKey`; an unmarked request passes through.
-- the first call stores via `IIdempotencyStore`, and a repeat replays the response.
+- the first call stores via `IIdempotencyRepository`, and a repeat replays the response.
 - wires the single-instance `InMemoryIdempotencyStore` — swap a distributed store for multi-instance.
 - TTL via `IdempotencyBehavior<,>.Ttl` (default 24h).
 - **Authorization** — `IRequireAuthorization.PolicyName`, nullable → the default policy.

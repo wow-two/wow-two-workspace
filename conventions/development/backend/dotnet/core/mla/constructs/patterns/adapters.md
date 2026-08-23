@@ -9,7 +9,7 @@
 ## Shape
 
 - must suffix the type with `Adapter` and prefix it with the **foreign** side —
-  `FluentValidationAdapter<T> : IValidator<T>` (`src/Foundation/Validation/`), `HybridCacheAdapter : ICache`
+  `FluentValidationAdapter<T> : IValidator<T>` (`src/Foundation/Validation/`), `HybridCacheRepository : ICacheRepository`
   (`src/Caching/Hybrid/`), `FeatureManagerAdapter : IFeatureFlags` (`src/FeatureFlags/Core/`).
 - must implement one of our interfaces and add nothing to it — an adapter translates, it does not decide.
 - must keep the foreign type inside the adapter: no consumer references it, and the `.csproj` reference stays local.

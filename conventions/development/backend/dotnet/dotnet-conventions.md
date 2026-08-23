@@ -161,7 +161,7 @@ The lead is [constructs](core/mla/constructs/constructs.md) — the suffix keep-
 | [policy](core/mla/constructs/behavior/policy.md) | The decision that governs another operation — `Decides` starter, `Policy` suffix |
 | [adapter](core/mla/constructs/behavior/adapter.md) | A third-party type fitted to our interface, in-process — `Adapts` starter |
 | [builder](core/mla/constructs/behavior/builder.md) | Stepwise construction ending in `Build()` — `Builds` starter |
-| [repository.md](core/mla/constructs/behavior/repository.md) | Dapper, `IDbConnectionFactory`, `SqlNaming`, generic repositories |
+| [repository.md](core/mla/constructs/behavior/repository.md) | Dapper, `IDbConnectionFactory`, `SqlNamingMapper`, generic repositories |
 | [api request](core/mla/constructs/data/api-request.md) | The `{Verb}{Noun}ApiRequest` body — folder, summary starter, suffix |
 | [dto](core/mla/constructs/data/dto.md) | The wire projection — `{Entity}Dto`, entity-first and singular |
 | [value object](core/mla/constructs/data/value-object.md) | Values stored inside an entity's row; identity is the values |

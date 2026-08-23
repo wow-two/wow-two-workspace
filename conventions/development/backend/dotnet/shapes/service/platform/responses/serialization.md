@@ -4,7 +4,7 @@
 
 > The JSON wire contract every API emits and accepts — property casing, enum + scalar forms, nulls.
 > Configured once at the host, never per controller. The frontend mirrors it verbatim:
-> [type mapping](../../../../../../frontend/mla/domains/api/type-mapping.md).
+> [type mapping](../../../../../../frontend/core/mla/domains/api/type-mapping.md).
 
 ## Contract
 
@@ -23,7 +23,7 @@
 ## Wiring
 
 - must apply the contract once, at the host — `AddControllers().AddJsonStringEnums()` over the SDK preset
-  `JsonOptionsPresets.Default` ([host configuration](../startup/host-configuration.md)).
+  `JsonOptionsConstants.Default` ([host configuration](../startup/host-configuration.md)).
 - must not hand-roll a `JsonSerializerOptions` per controller.
 - must reuse the **same options object** for manual (de)serialization (e.g. a jsonb `ValueConverter`)
   so the stored and wire shapes can't drift.

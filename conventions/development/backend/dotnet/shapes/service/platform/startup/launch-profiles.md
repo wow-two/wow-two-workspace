@@ -15,7 +15,7 @@
 - must set `ASPNETCORE_ENVIRONMENT` to `Development`
 - must trust the dev cert once per machine — `dotnet dev-certs https --trust`
 - the Vite dev server proxies `/api` to the even (HTTPS) port with `secure: false`
-  ([state and data](../../../../../../frontend/mla/domains/data/state-and-data.md))
+  ([state and data](../../../../../../frontend/core/mla/domains/data/state-and-data.md))
 
 ### Example
 

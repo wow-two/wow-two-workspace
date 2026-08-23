@@ -9,7 +9,12 @@
 ## Location
 
 ### Folder
-- must sit in a `Settings/` folder under the domain the section configures.
+- must sit in a `Settings/` folder under the layer that reads it, in a service →
+  [architecture](../../../../shapes/service/architecture/architecture.md) § *Where a folder is created*.
+- must sit beside the `Add*` extension that reads it, in a library, where no layer split exists →
+  [options](options.md) § *Location*.
+- the two differ because a service exiles its `Add*` methods to `Api/Configurations/`, and a record the
+  Application layer reads cannot follow one across that boundary.
 
 ### File
 - must give it its own file, named for the type →
@@ -35,7 +40,9 @@
 ### Construct
 - must declare a `sealed record` → [data](data.md) § *Declaration*.
 - must declare `{ get; init; }` — the binder writes once, at startup.
-- must carry no default value on any member — a missing setting fails the boot rather than running wrong.
+- must carry defaults as the pair's shared rule states → [constructs](../constructs.md) § *`Settings` vs `Options`*.
+- must not rely on `required` alone to fail a boot — the binder leaves a `required` member `null` instead of
+  throwing, so only validation catches an absent value.
 
 ### Type name
 - must suffix with `Settings` — `PostgresSettings`, `GoogleAuthSettings`.

@@ -40,7 +40,7 @@ Neither a construct nor a statement — a directive declares no type and runs no
 |---|---|---|
 | `#nullable` | use | only to enable; a per-file disable hides a real warning |
 | `#if` · `#elif` · `#else` · `#endif` | use with care | a build-configuration branch, never a feature switch |
-| `#region` · `#endregion` | use with care | [constructs](../../constructs/constructs.md) § *Behavior components* |
+| `#region` · `#endregion` | use | grouping members past 60 lines → [constructs](../../constructs/constructs.md) § *Behavior components* |
 | `#pragma warning` | use with care | must name the warning and carry a `//` saying why |
 | `#line` · `#error` · `#warning` | use with care | generator output and build-time assertions only |
 

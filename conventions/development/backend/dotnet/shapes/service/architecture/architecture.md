@@ -48,15 +48,19 @@ not on-disk paths. Projects are named `{Brand}.{Domain}[.{SubDomain}]`, PascalCa
 
 | Folder | Holds | Examples (SmartQr) |
 |---|---|---|
-| `services/` | the product — deployable hosts and their domain / persistence / feature libs | `SmartQr.Api`, `SmartQr.Common.Domain`, `SmartQr.Codes` |
-| `platform/` | SDK-bound extractables, named `{Brand}.Platform.*` | `SmartQr.Platform.Core`, `SmartQr.Platform.Migrations` |
-| `libraries/` | product-level shared libs that are not service code | — |
-| `tools/` | CLIs and dev utilities | `SmartQr.Migrations.Cli` |
-| `tests/` | test projects | `SmartQr.Tests.Unit`, `SmartQr.Tests.E2E` |
+| `Services/` | the product — deployable hosts and their domain / persistence / feature libs | `SmartQr.Api`, `SmartQr.Common.Domain`, `SmartQr.Codes` |
+| `Platform/` | SDK-bound extractables, named `{Brand}.Platform.*` | `SmartQr.Platform.Core`, `SmartQr.Platform.Migrations` |
+| `Libraries/` | product-level shared libs that are not service code | — |
+| `Tools/` | CLIs and dev utilities | `SmartQr.Migrations.Cli` |
+| `Tests/` | test projects | `SmartQr.Tests.Unit`, `SmartQr.Tests.E2E` |
 
-- must reference `services → platform` and never the reverse — `platform/*` sees the kit and the BCL only
+- must name a solution folder **PascalCase** — it sits beside PascalCase project names in the same tree,
+  and a lowercase node reads as a disk path, which a virtual node is not.
+- must reference `Services → Platform` and never the reverse — `Platform/*` sees the kit and the BCL only
 - must add a folder when a project needs it, and may declare one empty to signal a roadmapped extraction
-- must keep the lift of `platform/*` into the SDK a move plus a namespace rename, never a rewrite —
+- must place every project on disk into exactly one folder — a project left out of the tree is invisible to
+  the IDE's *All tests from Solution*, which then reports green over a suite it never ran
+- must keep the lift of `Platform/*` into the SDK a move plus a namespace rename, never a rewrite —
   what qualifies is [extract / keep / remove](../../../../../sdk-extraction.md), not this doc
 
 ---
@@ -65,7 +69,7 @@ not on-disk paths. Projects are named `{Brand}.{Domain}[.{SubDomain}]`, PascalCa
 
 A solution folder is a virtual node; a project joins it by **GUID**, not by disk path.
 
-- must use `.slnx` — XML `<Folder Name="/platform/"><Project Path="…csproj" /></Folder>`
+- must use `.slnx` — XML `<Folder Name="/Platform/"><Project Path="…csproj" /></Folder>`
 - must nest a project in a classic `.sln` through `GlobalSection(NestedProjects)`, `{childGuid} = {folderGuid}`
 - must leave a project's own GUID and its `ProjectConfigurationPlatforms` block untouched when it moves between folders
 - an empty folder in a classic `.sln` omits its `NestedProjects` lines
@@ -77,16 +81,25 @@ A solution folder is a virtual node; a project joins it by **GUID**, not by disk
 A construct names its folder — `Services/`, `Entities/`, `Controllers/` — and stops. This is the doc that
 says which project holds it.
 
-| Folder | Project |
-|---|---|
-| `Entities/` · `Enums/` · `Constants/` · `Extensions/` · value objects | `Domain` |
-| `Commands/` · `Queries/` · `Events/` · `*Handlers/` · `Models/` (holds `Model`) · `Services/` · `Validators/` · `Settings/` | `Application` |
-| `Repositories/` · `Brokers/` · `Adapters/` · `Integrations/{Provider}/` · `Mappers/` · `Factories/` · `Registries/` | `Infrastructure` |
-| EF configurations · migrations · the `DbContext` | `Persistence` |
-| `Controllers/` · `Requests/` · `Models/` (holds `Dto`) | `Api`, each under the domain — `Api/{Domain}/Controllers/` |
-| `Configurations/` — `HostConfiguration` and its parts | `Api` |
+- **`Domain`** — `Entities/` · `Enums/` · `Constants/` · `Extensions/` · value objects.
+- **`Application`** — the contract, and nothing that executes:
+  - `UseCases/` holding `Commands/` · `Queries/` · `Events/`
+  - `Models/` (holds `Model`) · `Constants/`
+  - `Services/` and `Repositories/`, interfaces only
+- **`Infrastructure`** — every implementation except row access:
+  - `UseCases/` holding `CommandHandlers/` · `QueryHandlers/` · `EventHandlers/`
+  - `FoundationServices/` holding `Validators/` · `Mappers/` · `Serializers/` · `Parsers/` ·
+    `Encoders/` · `Decoders/` · `Renderers/` · `Formatters/` · `Exporters/` · `Publishers/` ·
+    `Generators/` · `Extensions/`
+  - a foundation service may inject another; composing peers does not promote it to a flow
+  - `ProcessingServices/` · `OrchestrationServices/`
+  - `Settings/` (holds `Settings` and `Options` alike)
+  - `Brokers/` · `Adapters/` · `Integrations/{Provider}/` · `Factories/` · `Registries/`
+- **`Persistence`** — `Repositories/` · `DataContexts/` · `Configurations/` · `Migrations/`.
+- **`Api`** — `Controllers/` · `Requests/` · `Models/` (holds `Dto`), each under its domain
+  (`Api/{Domain}/Controllers/`), plus `Configurations/` for `HostConfiguration` and its parts.
 
-- must read a folder's **name** off its construct doc, and its **project** off this table.
+- must read a folder's **name** off its construct doc, and its **project** off the list above.
 - must not restate a project in a construct doc — the same folder sits elsewhere in another shape.
 - must place a `BackgroundServices/` folder in the project that owns the work, not always in `Api`.
 - must read a repeated folder name by its project — `Models/` holds `Model` in `Application` and `Dto` in

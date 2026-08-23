@@ -20,7 +20,7 @@
 // ✅ illustrative — the inner instance is a constructor parameter, and both registrations are explicit
 services.AddSingleton<MaxMindGeoBroker>();
 services.AddSingleton<IGeoBroker>(sp =>
-    new CachingGeoBroker(sp.GetRequiredService<MaxMindGeoBroker>(), sp.GetRequiredService<ICache>()));
+    new CachingGeoBroker(sp.GetRequiredService<MaxMindGeoBroker>(), sp.GetRequiredService<ICacheRepository>()));
 ```
 
 ---

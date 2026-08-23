@@ -110,7 +110,7 @@ Two paired calls stand up a production-shaped host; auth, mediator and data stay
   `UseCors` `UseRateLimiter` `UseOutputCache` `UseResponseCompression`, maps OpenAPI + `MapHealthChecks`
 - OpenAPI is exposed only in Development unless `ExposeOpenApi` is set; the health endpoint is `AllowAnonymous`
 - maturity — **shipped · used** by 6 product backends
-- configuration loading is separate: `ConfigurationLoader.Load<T>(IConfiguration, section)` +
+- configuration loading is separate: `ConfigurationMapper.Load<T>(IConfiguration, section)` +
   `EnvironmentVariableAttribute` + `AddEnvironmentOverlaidOptions`, in `src/Foundation/Configuration/`
 
 ---
@@ -120,7 +120,7 @@ Two paired calls stand up a production-shaped host; auth, mediator and data stay
 One error model spans the mediator result, the HTTP status map and the ProblemDetails writer.
 
 - lives in `src/Foundation/{Results,Errors}/`, `src/Mediator/Result/`, `src/Web/{ErrorMapping,ExceptionHandling}/`
-- error model — `AppError`, `AppAggregateError`, `AppErrors`, `AppException`, `ErrorMessages`,
+- error model — `AppError`, `AppAggregateError`, `AppErrorFactory`, `AppException`, `ErrorMessageConstants`,
   `ErrorOrigin`, `ErrorNature` + `IErrorNatureClassifier` / `DefaultErrorNatureClassifier`
 - `AppErrorType` — 18 members: `Unexpected` `Validation` `NotFound` `Conflict` `Unauthorized` `Forbidden`
   `TooManyRequests` `DbTimeout` `OperationTimeout` `ExternalUnauthorized` `ExternalUnavailable` `FileNotFound`
@@ -159,13 +159,13 @@ Products split by generation — 5 repos use `Result<`, the rest use `AppResult`
 
 | Concern | Lives in | Entry points |
 |---|---|---|
-| JSON presets | `src/Foundation/Serialization/` | `JsonOptionsPresets` |
+| JSON presets | `src/Foundation/Serialization/` | `JsonOptionsConstants` |
 | MVC JSON | `src/Web/Json/` | `AddControllersWithSdkJson`, `AddJsonStringEnums` |
-| Time | `src/Foundation/Time/` | `AddTimeProviders`, `TimeZoneHelpers`, `CronExpressionParser` |
-| Casing | `src/Foundation/Naming/` | `CaseStyle`, `CaseConverter`, `WordTokenizer`, `EnumNameConverter<TEnum>` |
+| Time | `src/Foundation/Time/` | `AddTimeProviders`, `TimeZoneMapper`, `CronExpressionParser` |
+| Casing | `src/Foundation/Naming/` | `CaseStyle`, `CaseMapper`, `WordMapper`, `EnumNameMapper<TEnum>` |
 
 - `Naming` is the single casing authority — zero deps, and the source for column, enum-label and SQL casing
-- `CaseStringExtensions` carries the string-level surface
+- `CasingExtensions` carries the string-level surface
 - maturity — all three **shipped · used**; `AddJsonStringEnums` alone is used by 6 backends
 
 ---
@@ -231,7 +231,7 @@ A MediatR-API-compatible facade with no MediatR dependency.
 | Validation | `AddMediatorValidationBehavior` | — |
 | Logging | `AddMediatorLoggingBehavior` | — |
 | Authorization | `AddMediatorAuthorizationBehavior` | `IRequireAuthorization` |
-| Idempotency | `AddMediatorIdempotencyBehavior` | `IIdempotent`, `IIdempotencyStore` |
+| Idempotency | `AddMediatorIdempotencyBehavior` | `IIdempotent`, `IIdempotencyRepository` |
 | Exception → result | `AddMediatorExceptionToResultBehavior` | — |
 
 - maturity — **shipped · used**; `AddMediator` is the single most-adopted SDK symbol (15 consumer repos)
@@ -243,7 +243,7 @@ A MediatR-API-compatible facade with no MediatR dependency.
 The broadest area in the SDK — 84 source files, 33 registration methods.
 
 **Own user model** (`src/Identity/Core/`) — `AddUserAccounts`, `IdentityUser`, `IdentityRole`, `IdentityRelations`,
-`IdentitySchema`, `IUserStore<TUser, in TKey>` / `EfUserStore`, `UserAccountManager`, `IdentityBuilder`,
+`IdentitySchema`, `IUserRepository<TUser, in TKey>` / `EfUserRepository`, `UserAccountManager`, `IdentityBuilder`,
 `IdentityResult`, `ILookupNormalizer` / `LookupNormalizer`.
 
 **Authentication schemes**
@@ -266,9 +266,9 @@ Yandex. Shared baseline in `OAuthBaseline.cs`.
 |---|---|---|
 | Current user | `AddCurrentUser` | `ICurrentUser`, `UserKind`, `CookieCurrentUser` |
 | Guest session | `AddGuestSession` | `IGuestSession`, `CookieGuestSession` |
-| Claim normalization | `AddClaimNormalization` | `ClaimNormalizer`, `ClaimProviderProfiles`, `NormalizedClaimTypes` |
+| Claim normalization | `AddClaimNormalization` | `ClaimNormalizer`, `ClaimProviderProfileFactory`, `NormalizedClaimTypeConstants` |
 | Token issuance | `AddJwtTokenIssuance` | `ITokenIssuer`, `JwtTokenIssuer` |
-| OTP | `AddOtpService`, `AddTelegramOtpDelivery` | `IOtpService`, `IOtpStore`, `IOtpDeliveryHandler` |
+| OTP | `AddOtpService`, `AddTelegramOtpDelivery` | `IOtpService`, `IOtpRepository`, `IOtpDeliveryHandler` |
 | TOTP MFA | — | `TotpService` |
 | WebAuthn MFA | `AddFido2WebAuthn` | — |
 | Password hashing | `UseArgon2PasswordHasher` | `Argon2PasswordHasher` |
@@ -297,7 +297,7 @@ Yandex. Shared baseline in `OAuthBaseline.cs`.
 
 **EF Core** — `src/Data/EntityFrameworkCore/`
 
-- `AppDbContextBase`, `AddEntityFrameworkCore<TContext>`, `AddDatabaseOptions`, `EntityModelConventions`
+- `AppDbContextBase`, `AddEntityFrameworkCore<TContext>`, `AddDatabaseOptions`, `EntityModelExtensions`
 
 | Provider | Entry point |
 |---|---|
@@ -309,15 +309,15 @@ Yandex. Shared baseline in `OAuthBaseline.cs`.
 - interceptors — `AuditInterceptor` + `IAuditCurrentUserAccessor` + `AddEfCoreAuditInterceptor` /
   `UseAuditInterceptor`; `SoftDeleteInterceptor` + `AddEfCoreSoftDeleteFilter` / `UseSoftDeleteInterceptor`;
   generic wiring via `AddEfInterceptor`, `AddEfSaveChangesInterceptor`, `AddRegisteredInterceptors`,
-  `EfInterceptorWiring`, `EfInterceptorWiringValidator`
-- mapping — `JsonValueConverter<T>` / `JsonValueComparer<T>`, `EnumCaseConverter<TEnum>`, naming conventions
+  `EfInterceptorExtensions`, `EfInterceptorWiringValidator`
+- mapping — `JsonValueConverter<T>` / `JsonValueComparer<T>`, `EnumCaseMapper<TEnum>`, naming conventions
   extensions, `UseTriggersConventional` + `AddTriggersFromAssemblies`, `UseProjectablesConventional`
 - repositories — `EfRepository<TEntity, TId>`, `AddEfRepositories`, `AddEfRepository`, `AddEfWriteRepositories`,
   `AddCqrsRepository`
 
 **Dapper** — `src/Data/Dapper/`
 
-- `AddDapperConventions`, `SqlNaming`, `EnumTypeHandler<TEnum>` + `AddEnumTypeHandler`, `DateOnlyTypeHandler`,
+- `AddDapperConventions`, `SqlNamingMapper`, `EnumTypeHandler<TEnum>` + `AddEnumTypeHandler`, `DateOnlyTypeHandler`,
   `ListTypeHandler`, `SqliteConnectionFactory`
 - `DapperRepository<TEntity, TId>`, `AddDapperRepository`, `AddDapperReadRepository`
 
@@ -350,8 +350,8 @@ Three runners plus a CLI. The bespoke SQL migrator is the one products actually 
 
 | Runner | Entry point | Backing |
 |---|---|---|
-| EF Core | `AddEfMigrationsRunner` | `EfMigrationsHostedService`, connect-retry |
-| DbUp | `AddDbUpRunner` | `DbUpHostedService`, `DbUpProviderFactories` |
+| EF Core | `AddEfMigrationsRunner` | `EfMigrationsBackgroundService`, connect-retry |
+| DbUp | `AddDbUpRunner` | `DbUpBackgroundService`, `DbUpProviderFactory` |
 
 **CLI** — `src/Data/Migrations/cli/`, `PackAsTool`, command `wow-migrate`
 
@@ -367,7 +367,7 @@ The largest unused area — 57 source files, 39 registration methods, 25 test fi
 - lives in `src/Messaging/`; event-centric (`IEvent` only), topology-free
 - core — `IEventBus`, `IEvent`, `IEventHandler<TEvent>`, `IBusControl`, `AddEventHandlersFromAssemblies`
 - transport seam — `ISendTransport`, `IReceiveTransport`, `ITransportCapabilities`, `ReceiveContext`,
-  `TransportEventBus`, `MessagePump`, `TransportConsumerHostedService`, `EventProcessingPipeline`
+  `TransportEventBus`, `MessagePump`, `TransportConsumerBackgroundService`, `EventProcessingPipeline`
 
 | Transport | Entry point | File |
 |---|---|---|
@@ -380,8 +380,8 @@ The largest unused area — 57 source files, 39 registration methods, 25 test fi
 
 - reliability — `IOutbox` / `EfOutbox` + `AddEfOutbox`, `IOutboxDispatcher` + `AddEfOutboxDispatcher`,
   `IInboxProcessor` + `AddEfInbox`, `IOutboxClaimStrategy` / `PostgresSkipLockedOutboxClaimStrategy`
-- retry + DLQ — `AddDelayedEventRetry`, `AddSecondLevelEventRetry`, `IRetryPolicy`, `IDeadLetterStore`,
-  `IDeadLetterAdmin` + `AddDeadLetterAdmin`, `IDeadLetterQueryStore` + `AddInMemoryDeadLetterQueryStore`
+- retry + DLQ — `AddDelayedEventRetry`, `AddSecondLevelEventRetry`, `IRetryPolicy`, `IDeadLetterRepository`,
+  `IDeadLetterAdmin` + `AddDeadLetterAdmin`, `IDeadLetterQueryRepository` + `AddInMemoryDeadLetterQueryStore`
 - resilience — `IEventResiliencePipeline`, `AddEventResilienceDefaults`, `AddPollyEventResilience`,
   `IEventFaultClassifier` + `AddEventFaultClassification`
 - sagas — two models: `EventSaga` / `IEventSagaRunner` / `IEventSagaStep` routing slip (`AddEventSaga`), and
@@ -389,15 +389,15 @@ The largest unused area — 57 source files, 39 registration methods, 25 test fi
   `AddSagaRepository`, `SagaTimeouts`)
 - serialization — `IMessageSerializer`, `CloudEventsMessageSerializer`, `MessagePackMessageSerializer`,
   `MessageSerializerRegistry`, `AddMessageSerializer`, `AddReceiveOnlyMessageSerializer`
-- topology + routing — `ITopologyProvider`, `IEndpointNameFormatter`, `IMessageTypeResolver`, `MapMessageType`,
+- topology + routing — `ITopologyProvider`, `IEndpointNameMapper`, `IMessageTypeResolver`, `MapMessageType`,
   `AddMessageTopology`, `AddDestinationBinding`, `AddReplyAddressProvider`
 - request/reply — `IRequestClient<in TRequest, TResponse>`, `AddRequestClient`
 - observability — `IMessagingMetrics` + `AddMessagingMetrics`, `IConsumeObserver`, `IPublishObserver`,
   `IReceiveObserver`, `AddMessageObserver`, `MessagingDiagnostics`
 - other seams — `IConsumeFilter` + `AddConsumeFilter`, `AddEventClaimCheck`, `AddMessagingConcurrency`,
   `IMessageHeaderPropagationPolicy` + `AddMessageHeaderPropagation`
-- webhooks — `AddWebhooks`, `IWebhookPublisher` / `WebhookPublisher`, `IWebhookSubscriptionStore`,
-  `IWebhookDeliveryLog`, `WebhookSignature`, `WebhookSsrfGuard`
+- webhooks — `AddWebhooks`, `IWebhookPublisher` / `WebhookPublisher`, `IWebhookSubscriptionRepository`,
+  `IWebhookDeliveryLog`, `WebhookSignatureHasher`, `WebhookSsrfGuard`
 - maturity — **shipped · unused**. CAP adapters are folder-only (`src/Messaging/Cap/`); AWS SQS, Azure Event Hubs
   and MQTT folders exist with no transport file.
 
@@ -405,12 +405,12 @@ The largest unused area — 57 source files, 39 registration methods, 25 test fi
 
 ## Caching
 
-- lives in `src/Caching/`; house contract `ICache` + `ICacheKeyBuilder` / `CacheKeyBuilder`, `CacheEntryOptions`
+- lives in `src/Caching/`; house contract `ICacheRepository` + `ICacheKeyBuilder` / `CacheKeyBuilder`, `CacheEntryOptions`
 
 | Backing | Entry point |
 |---|---|
 | In-process | `AddInMemoryCaching` |
-| HybridCache | `AddHybridCaching`, `HybridCacheAdapter`, `HybridCacheConventionOptions` |
+| HybridCache | `AddHybridCaching`, `HybridCacheRepository`, `HybridCacheConventionOptions` |
 | Redis (L2) | `AddRedisDistributedCache` |
 
 - maturity — **shipped · unused**. Cosmos, SQL Server and FusionCache folders exist but hold no source.
@@ -464,9 +464,9 @@ Four packages, split by tier.
 - fixtures — `IAsyncTestFixture`, `IAsyncFixtureCollection`, `AsyncFixtureCollection`,
   `ContainerFixtureBase<TContainer>`
 - containers — `PostgresFixture` `RedisFixture` `RabbitMqFixture` `KafkaFixture` `MongoDbFixture` `AzuriteFixture`
-- auth — `AddTestAuth`, `UseTestUser`, `TestAuthHandler`, `TestCurrentUser`, `TestClaimTypes`, `CookieExtraction`
+- auth — `AddTestAuth`, `UseTestUser`, `TestAuthHandler`, `TestCurrentUser`, `TestClaimTypeConstants`, `CookieExtensions`
 - helpers — `Polling.UntilAsync`, `HttpExtensions` (`PostJsonAsync` `PutJsonAsync` `PatchJsonAsync`
-  `ReadEnvelopeAsync` `AttachCookie` `AsJson`), `BogusFakerFactory`, `VerifyDefaults.Initialize`
+  `ReadEnvelopeAsync` `AttachCookie` `AsJson`), `BogusFakerFactory`, `VerifyDefaultConstants.Initialize`
 - `Testing/Assertions/` holds only `Assertions.md` — the assertions bundle is documented, not implemented
 
 **`Testing.Data`** — `src/Testing.Data/`
@@ -488,7 +488,7 @@ Four packages, split by tier.
 ## Distributed extras
 
 - **Email** — `src/Comms/Email/`; `AddEmailDefaults`, `IEmailSender`, `EmailOptions`. shipped · unused
-- **Blob storage** — `src/Storage/`; `AddLocalBlobStorage`, `IBlobStorage`, `BlobInfo`. partial · unused
+- **Blob storage** — `src/Storage/`; `AddLocalBlobStorage`, `IBlobRepository`, `BlobInfo`. partial · unused
 - **Jobs** — `src/Jobs/Hangfire/`; `AddHangfireJobs`, `UseHangfireJobsDashboard`. shipped · unused
 - **Realtime** — `src/Realtime/`; `AddConventionalSignalR`, `UseConventionalWebSockets`. shipped · unused
 
@@ -497,7 +497,7 @@ Four packages, split by tier.
 - realtime detail — `SdkHub<TClient>`, `IUserConnectionTracker` / `InMemoryUserConnectionTracker` +
   `AddUserConnectionTracking`, `AddRedisBackplane`, SSE via `SseEndpointExtensions` / `SseWriter` / `SseEvent`,
   raw sockets via `IWebSocketConnectionHandler` / `WebSocketAcceptExtensions`
-- storage is partial — only the local filesystem backing (`LocalFileBlobStorage`); no S3, Azure or GCS
+- storage is partial — only the local filesystem backing (`LocalFileBlobRepository`); no S3, Azure or GCS
 
 ---
 
@@ -507,7 +507,7 @@ Four packages, split by tier.
 - **Feature flags** — `src/FeatureFlags/`; `AddFeatureFlags`, `AddOpenFeatureClient`. partial · unused
 - **AI** — `src/Ai/`; `AddOllamaChatClient`, `AddTiktokenTokenCounter`, `ITokenCounter`. partial · unused
 
-- tenancy detail — `ISettableTenantContext`, `AmbientTenantContext`, `ITenantStore` / `InMemoryTenantStore`,
+- tenancy detail — `ISettableTenantContext`, `AmbientTenantContext`, `ITenantRepository` / `InMemoryTenantStore`,
   `RequestTenantResolver`, `TenantResolutionMiddleware`, `TenantStampInterceptor`, `TenantModelBuilderExtensions`,
   `TenantInfo`, `TenancyConventionOptions`
 - flags are partial — `FeatureManagerAdapter` over `Microsoft.FeatureManagement` + an OpenFeature seam only;
@@ -531,10 +531,10 @@ Four packages, split by tier.
 - codes — `ICodeRenderer` / `CodeRenderer`, `IQrCodeRenderer`, `IBarcodeRenderer`, `IQrMatrixGenerator`,
   `ISvgRasterizer` / `SkiaSvgRasterizer`, `SvgRenderer`, `ModuleMatrix`, `CodeRenderRequest`, `RenderedCode`,
   plus a style model (`StyleSpec`, `GradientSpec`, `LogoSpec`, `EmojiSpec`, `ModuleShape`, `FinderShape`,
-  `QuietZone`, `StyleSpecNormalizer`) — extracted from forever-pin, consumed back by it
+  `QuietZoneConstants`, `StyleSpecNormalizer`) — extracted from forever-pin, consumed back by it
 - captions — `ICaptionParser` + VTT / SRT / TTML / JSON3 parsers, `ICaptionWriter` (VTT, SRT),
   `CompositeCaptionParser`, `CaptionFormatDetector`, `CaptionTrack`, `CaptionSegment`, `CaptionTimecode`
-- geo — `GeoCoordinate`, `GeoBoundingBox`, `IGeoDistanceCalculator`, `Geohash`, `GeoJsonSerializer`
+- geo — `GeoCoordinate`, `GeoBoundingBox`, `IGeoDistanceCalculator`, `GeohashEncoder`, `GeoJsonSerializer`
 - localization — `ITextHumanizer`, `IRelativeTimeFormatter`, `AddRequestLocalizationConventions`
 - integrations — `IGitHubClient` / `GitHubClient`, `IContainerRegistryClient` / `GhcrClient`,
   `IAccessTokenProvider` + `AddHttpContextAccessTokenProvider`
@@ -574,7 +574,7 @@ Four packages, split by tier.
 - SDK adoption at startup — `AddApiDefaults` · `AddPostgresPersistence<AppDbContext>` · `AddMediator` ·
   `AddMediatorValidationBehavior` · `AddCodeRendering` · `AddGuestSession` · `AddCurrentUser` ·
   `AddGoogleIdTokenVerifier` · `AddCookieAuthentication` · `AddValidationExceptionFilter` · `AddJsonStringEnums` ·
-  `ConfigurationLoader.Load<T>` · `MigrateBespokeOnStartupAsync` · `UseApiDefaults`
+  `ConfigurationMapper.Load<T>` · `MigrateBespokeOnStartupAsync` · `UseApiDefaults`
 - persistence — `AppDbContext : AppDbContextBase`, Postgres, snake_case, 10 bespoke SQL migration pairs
 - tests — Unit (15) · Integration (6, `RelationalTestDb`) · E2E (12, `MultiHostFixture` + `PostgresFixture`) ·
   Migrations (8, `MigratorTestBase`)

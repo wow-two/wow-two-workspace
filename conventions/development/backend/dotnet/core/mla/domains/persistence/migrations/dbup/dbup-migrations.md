@@ -20,27 +20,28 @@
 
 ## Register
 
-- one call wires options + the hosted service — `AddDbUpRunner(this IServiceCollection, Action<DbUpOptions>)`:
+- one call wires options + the background service —
+  `AddDbUpRunner(this IServiceCollection, string connectionString, Action<DbUpOptions>?)`:
 
 ```csharp
-services.AddDbUpRunner(o =>
+services.AddDbUpRunner(cfg.GetConnectionString("Default")!, o =>
 {
-    o.ConnectionString = cfg.GetConnectionString("Default")!;
-    o.UpgradeEngineFactory = DbUpProviderFactories.Postgres;
+    o.UpgradeEngineFactory = DbUpProviderFactory.Postgres;
     o.ScriptsAssembly = typeof(SomePersistenceMarker).Assembly;   // defaults to entry assembly
     o.ScriptsNamespacePrefix = "App.Migrations.Scripts.";          // optional filter
 });
 ```
 
-- `AddDbUpRunner` calls `AddOptions<DbUpOptions>().Configure(configure).ValidateOnStart()`.
-  - plus `AddHostedService<DbUpHostedService>()`.
-- both args null-guarded (`ArgumentNullException.ThrowIfNull`).
+- the connection string is a parameter because `DbUpOptions.ConnectionString` is `required` →
+  [options](../../../../constructs/data/options.md) § *Declaration*.
+- `AddDbUpRunner` builds the options, applies the delegate, and registers the instance.
+  - plus `AddHostedService<DbUpBackgroundService>()`.
 
 ---
 
 ## Apply on boot
 
-- `DbUpHostedService` (an `IHostedService`) runs in `StartAsync`.
+- `DbUpBackgroundService` (an `IHostedService`) runs in `StartAsync`.
   - pending scripts apply as the host starts, before requests.
 - `DbUpOptions.Enabled == false` → logs `"DbUp runner is disabled — skipping"`, no-ops. Default `true`.
 - resolves the scripts assembly (`ScriptsAssembly ?? Assembly.GetEntryAssembly()`); throws if neither resolves.
@@ -68,9 +69,9 @@ services.AddDbUpRunner(o =>
 
 ## Provider selection
 
-- `UpgradeEngineFactory` picks the engine; use the `DbUpProviderFactories` shortcuts:
+- `UpgradeEngineFactory` picks the engine; use the `DbUpProviderFactory` shortcuts:
 
-| `DbUpProviderFactories` | Engine |
+| `DbUpProviderFactory` | Engine |
 |---|---|
 | `Postgres` | `DeployChanges.To.PostgresqlDatabase(cs)` |
 | `SqlServer` | `DeployChanges.To.SqlDatabase(cs)` |

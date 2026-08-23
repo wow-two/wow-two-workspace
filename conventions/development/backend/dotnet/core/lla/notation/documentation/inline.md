@@ -12,6 +12,8 @@
 - must skip the comment when the code is self-evident.
 - must not run a `//` or `/* */` past one line — the earned-multi-line clause covers `<summary>` / `<remarks>` only.
 - must move a note needing a second line to the commit, the tracking issue, or the module's `.standard.md`.
+- must not draw a section banner in `//` — `// ── Columns ──` groups members, and grouping is `#region`'s
+  job → [constructs](../../constructs/constructs.md) § *Behavior components*.
 
 ```csharp
 // Acquire the advisory lock so only one host migrates at a time.

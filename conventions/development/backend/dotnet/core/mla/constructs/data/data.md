@@ -20,6 +20,7 @@
 | [constants](constants.md) | the class that owns a value's authority |
 | [enums](enums.md) | a closed set of named options we own |
 | [settings](settings.md) | the record a configuration section binds into |
+| [options](options.md) | the class a caller fills in code, defaults already set |
 | [entity configuration](../../domains/persistence/access/ef/entity-configuration.md) | an EF mapping for one entity |
 
 ---

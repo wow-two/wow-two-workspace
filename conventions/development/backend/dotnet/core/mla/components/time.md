@@ -43,7 +43,7 @@ What it is, how it is declared and what it is called → [time](../constructs/be
 ## Registration
 
 `AddTimeProviders()`
-([`TimeServiceCollectionExtensions.cs`](../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeServiceCollectionExtensions.cs))
+([`TimeServiceCollectionExtensions.cs`](../../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeServiceCollectionExtensions.cs))
 registers both abstractions in the composition root:
 
 ```csharp
@@ -75,7 +75,7 @@ fake.Advance(TimeSpan.FromHours(2));
 
 > **Drift — `IClock` is not faked.** Both `AddTimeProviders` overloads hardcode
 > `TryAddSingleton<IClock>(SystemClock.Instance)`
-> ([`TimeServiceCollectionExtensions.cs:19,33`](../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeServiceCollectionExtensions.cs)).
+> ([`TimeServiceCollectionExtensions.cs:19,33`](../../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeServiceCollectionExtensions.cs)).
 > Code under test that reads `IClock` hits the real system clock even when a `FakeTimeProvider` is
 > registered. For deterministic NodaTime tests, register a `FakeClock` yourself after `AddTimeProviders`.
 
@@ -83,26 +83,26 @@ fake.Advance(TimeSpan.FromHours(2));
 
 ## Time zones
 
-Resolve every zone through **`TimeZoneHelpers.ResolveTimeZone(string anyZoneId)`**
-([`TimeZoneHelpers.cs`](../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeZoneHelpers.cs))
+Resolve every zone through **`TimeZoneMapper.ResolveTimeZone(string anyZoneId)`**
+([`TimeZoneMapper.cs`](../../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/TimeZoneMapper.cs))
 — never `TimeZoneInfo.FindSystemTimeZoneById` directly. It wraps `TimeZoneConverter`, so the **same id
 works on any host OS** — Windows id `"Eastern Standard Time"` *or* IANA id `"America/New_York"`:
 
 ```csharp
-var tz = TimeZoneHelpers.ResolveTimeZone("America/New_York");   // works on Windows
-var tz2 = TimeZoneHelpers.ResolveTimeZone("Eastern Standard Time"); // works on Linux
+var tz = TimeZoneMapper.ResolveTimeZone("America/New_York");   // works on Windows
+var tz2 = TimeZoneMapper.ResolveTimeZone("Eastern Standard Time"); // works on Linux
 ```
 
 - throws `TimeZoneNotFoundException` on an unknown id.
-- cross-convert ids explicitly with `TimeZoneHelpers.IanaToWindows(string)` /
-  `TimeZoneHelpers.WindowsToIana(string)`.
+- cross-convert ids explicitly with `TimeZoneMapper.IanaToWindows(string)` /
+  `TimeZoneMapper.WindowsToIana(string)`.
 
 ---
 
 ## Cron
 
 Parse cron through **`CronExpressionParser.Parse(string)`**
-([`CronExpressionParser.cs`](../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/CronExpressionParser.cs))
+([`CronExpressionParser.cs`](../../../../../../../workbench/wow-two-sdk-beta/wow-two-sdk.backend.beta/engineering/codebase/wow-two-back-beta-sdk/src/Foundation/Time/CronExpressionParser.cs))
 — a thin wrapper over `Cronos.CronExpression`. It auto-detects 5-field (standard) vs 6-field
 (with-seconds) forms; throws `Cronos.CronFormatException` on a bad expression.
 
@@ -111,12 +111,12 @@ var expr = CronExpressionParser.Parse("*/15 * * * *");           // CronExpressi
 var next = CronExpressionParser.NextOccurrence(                  // DateTimeOffset?
     "0 0 8 * * *",
     timeProvider.GetUtcNow(),
-    TimeZoneHelpers.ResolveTimeZone("Asia/Tashkent"));
+    TimeZoneMapper.ResolveTimeZone("Asia/Tashkent"));
 ```
 
 `CronExpressionParser.NextOccurrence(string expression, DateTimeOffset from, TimeZoneInfo zone)` parses,
 then delegates to `CronExpression.GetNextOccurrence(from, zone)` — feed it a zone from
-`TimeZoneHelpers.ResolveTimeZone`, and an instant from the injected `TimeProvider`.
+`TimeZoneMapper.ResolveTimeZone`, and an instant from the injected `TimeProvider`.
 
 ---
 

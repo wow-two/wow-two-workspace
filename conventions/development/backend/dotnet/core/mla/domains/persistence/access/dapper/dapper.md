@@ -101,7 +101,7 @@ public sealed record OlxListingEntity : IKeyedEntity<Guid>, IHasTableName
 }
 ```
 
-- column set = **every public instance property with a getter *and* setter**, mapped via `SqlNaming.ColumnCase`.
+- column set = **every public instance property with a getter *and* setter**, mapped via `SqlNamingMapper.ColumnCase`.
 - the Id column is `nameof(IKeyedEntity<TId>.Id)`.
 
 ### Store-generated columns
@@ -145,20 +145,20 @@ services.AddDapperRepository<OlxListingsRepository, OlxListingEntity, Guid>();
 
 For hand-written queries and commands.
 
-- **Table references** — `SqlNaming.Table<TEntity>()`, or `SqlNaming.Table<TEntity>("o")` for an aliased reference.
+- **Table references** — `SqlNamingMapper.Table<TEntity>()`, or `SqlNamingMapper.Table<TEntity>("o")` for an aliased reference.
   - requires `TEntity : IHasTableName`.
-  - define a class-level constant: `private static readonly string Table = SqlNaming.Table<OlxListingEntity>();`.
-- **Column names** — `SqlNaming.Col("EnrichedAt")` → `enriched_at`, default `CaseStyle.Snake`.
-  - aliased: `SqlNaming.Col("EnrichedAt", "l")` → `l.enriched_at`.
-  - strongly-typed: `SqlNaming.Col<OlxListingEntity>(x => x.EnrichedAt)`.
+  - define a class-level constant: `private static readonly string Table = SqlNamingMapper.Table<OlxListingEntity>();`.
+- **Column names** — `SqlNamingMapper.Col("EnrichedAt")` → `enriched_at`, default `CaseStyle.Snake`.
+  - aliased: `SqlNamingMapper.Col("EnrichedAt", "l")` → `l.enriched_at`.
+  - strongly-typed: `SqlNamingMapper.Col<OlxListingEntity>(x => x.EnrichedAt)`.
   - hard-coded snake_case is fine for simple single-table queries.
-  - use `SqlNaming.Col` for dynamic WHERE clauses or aliased joins.
-- **Parameters** — `SqlNaming.ParRef("Limit")` → `@limit`, a placeholder, default `CaseStyle.Camel`.
-  - `SqlNaming.Par("Limit")` → bare `limit`, for `DynamicParameters.Add`.
-  - strongly-typed: `SqlNaming.ParRef<OlxListingEntity>(x => x.Id)`.
+  - use `SqlNamingMapper.Col` for dynamic WHERE clauses or aliased joins.
+- **Parameters** — `SqlNamingMapper.ParRef("Limit")` → `@limit`, a placeholder, default `CaseStyle.Camel`.
+  - `SqlNamingMapper.Par("Limit")` → bare `limit`, for `DynamicParameters.Add`.
+  - strongly-typed: `SqlNamingMapper.ParRef<OlxListingEntity>(x => x.Id)`.
   - pass values via an anonymous object or `DynamicParameters`.
 - **Casing is global** — defaults columns `Snake`, params `Camel`.
-  - override **once at startup** via `SqlNaming.ColumnCase` / `SqlNaming.ParameterCase` if a schema differs.
+  - override **once at startup** via `SqlNamingMapper.ColumnCase` / `SqlNamingMapper.ParameterCase` if a schema differs.
   - never per-call.
 - **Raw strings** — follow the raw-string rules in
   [code-organization.md](../../../../../lla/notation/style/style.md); opening `"""` on its own line.
@@ -168,7 +168,7 @@ For hand-written queries and commands.
 ```csharp
 public sealed class UnenrichedListingsRepository(IDbConnectionFactory connectionFactory)
 {
-    private static readonly string Table = SqlNaming.Table<OlxListingEntity>();
+    private static readonly string Table = SqlNamingMapper.Table<OlxListingEntity>();
 
     public async Task<int> GetCountAsync(CancellationToken ct = default)
     {
@@ -187,8 +187,8 @@ public sealed class UnenrichedListingsRepository(IDbConnectionFactory connection
 }
 ```
 
-> **Stale-helper fix:** `Tab<T>()` / `Col()` do not exist. The helpers are static members on `SqlNaming` —
-> `SqlNaming.Table<T>` / `SqlNaming.Col` / `SqlNaming.Col<T>` / `SqlNaming.Par` / `SqlNaming.ParRef`.
+> **Stale-helper fix:** `Tab<T>()` / `Col()` do not exist. The helpers are static members on `SqlNamingMapper` —
+> `SqlNamingMapper.Table<T>` / `SqlNamingMapper.Col` / `SqlNamingMapper.Col<T>` / `SqlNamingMapper.Par` / `SqlNamingMapper.ParRef`.
 > `Table<T>` requires `IHasTableName`.
 
 ### DI registration (query/command classes)
@@ -223,7 +223,7 @@ public Task<List<T>> GetBatchAsync(CancellationToken ct) =>
 ```
 
 > `const string` cannot use string interpolation — use `static readonly string` when a fragment references the
-> `SqlNaming.Table<T>()` / `SqlNaming.Col(...)` helpers.
+> `SqlNamingMapper.Table<T>()` / `SqlNamingMapper.Col(...)` helpers.
 
 ---
 

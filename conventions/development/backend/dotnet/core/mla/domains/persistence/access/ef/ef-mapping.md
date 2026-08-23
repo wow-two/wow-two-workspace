@@ -31,7 +31,7 @@ EF Core maps C# types over it, and never creates, alters or seeds it.
 - must override `OnModelCreating(ModelBuilder)` and call `base.OnModelCreating(modelBuilder)` first.
   - the base runs `ApplyConfigurationsFromAssembly(GetType().Assembly)` then `ApplyConventions()`.
   - `ApplyConventions()` adds the soft-delete query filter + `IVersioned` concurrency token,
-    via `EntityModelConventions.ApplyConventions`.
+    via `EntityModelExtensions.ApplyConventions`.
   - the override adds nothing about columns or DDL — only runtime mapping (relationships, conversions, `Ignore`).
 - must put extra model conventions in `ConfigureConventionsCore(ModelConfigurationBuilder)`.
   - value converters, default precision.
@@ -188,7 +188,7 @@ Optimistic-concurrency markers map via provider conventions called from `OnModel
 
 | Marker | Provider | Token | Applied by |
 |---|---|---|---|
-| `IVersioned` | any | `uint Version` (bumped in `SaveChanges`) | `EntityModelConventions.ApplyConventions` (via base) |
+| `IVersioned` | any | `uint Version` (bumped in `SaveChanges`) | `EntityModelExtensions.ApplyConventions` (via base) |
 | `IHasXmin` | Postgres | system `xmin` column (`xid`) | `ApplyNpgsqlConventions()` |
 | `IRowVersioned` | SqlServer | `byte[] RowVersion` (`rowversion`) | `ApplySqlServerConventions()` |
 

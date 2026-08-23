@@ -29,7 +29,7 @@ services.AddEfMigrationsRunner<AppDbContext>();                       // default
 services.AddEfMigrationsRunner<AppDbContext>(o => o.Enabled = false); // out-of-band apply
 ```
 
-- registers `EfMigrationsHostedService<TContext>` (an `IHostedService`).
+- registers `EfMigrationsBackgroundService<TContext>` (an `IHostedService`).
 - validates `EfMigrationsOptions` on start — `AddOptions<EfMigrationsOptions>().ValidateOnStart()`.
 - `TContext : DbContext` — the context that owns the schema and carries the generated `Migrations/` C# files.
 
@@ -37,7 +37,7 @@ services.AddEfMigrationsRunner<AppDbContext>(o => o.Enabled = false); // out-of-
 
 ## Apply on boot
 
-- `EfMigrationsHostedService<TContext>.StartAsync` calls `context.Database.MigrateAsync(...)`.
+- `EfMigrationsBackgroundService<TContext>.StartAsync` calls `context.Database.MigrateAsync(...)`.
   - applies all pending migrations; idempotent, an already-applied one no-ops.
 - resolves `TContext` from a fresh DI scope (`CreateScope`); logs per attempt.
 - connect-race resilient — retries up to `MaxConnectAttempts`, sleeping `ConnectRetryDelay` between tries.

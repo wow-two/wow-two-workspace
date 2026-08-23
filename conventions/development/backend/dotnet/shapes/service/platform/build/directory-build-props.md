@@ -33,7 +33,7 @@ byte-for-byte in `sift` + `arcade`:
 
 | Property | Value | Why |
 |---|---|---|
-| `TargetFramework` | `net10.0` | one framework across the solution — the stack floor ([../../repo/repo-conventions.md](../../../../../repo/repo-conventions.md#tech-stack)) |
+| `TargetFramework` | `net10.0` | one framework across the solution — the stack floor ([../../repo/repo-conventions.md](../../../../../../repo/repo-conventions.md#tech-stack)) |
 | `Nullable` | `enable` | nullable reference types on everywhere — no per-project opt-out |
 | `ImplicitUsings` | `enable` | global usings for the common namespaces — less `.cs` header noise |
 | `LangVersion` | `latest` | newest C# the SDK offers (collection expressions, primary constructors, …) |
@@ -42,6 +42,17 @@ byte-for-byte in `sift` + `arcade`:
 - **must not override a baseline property per-project** — raise it when one project needs a different
   value.
 - a needed override usually signals the setting belongs in the SDK-style split, not a local override.
+
+
+## Test runs
+
+- must run tests as `Development` — the host validates the container on build there, and `Production`
+  (the `dotnet test` default) skips it, so a registration whose dependency nobody registered stays green
+  until something resolves it.
+- must set it through a `tests.runsettings` beside `Directory.Build.props`, wired by
+  `RunSettingsFilePath` under a `$(MSBuildProjectName.EndsWith('.Tests'))` condition — a documented flag
+  is missed by a plain `dotnet test`, and the IDE then disagrees with the terminal.
+- must set `IsPackable` false on the same condition — a test project is never a package.
 
 ---
 

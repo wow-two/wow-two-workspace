@@ -34,7 +34,8 @@
 
 ### Type name
 - must suffix with `Mapper`.
-- must return a `Result` carrying the mapped value — a total transform still wraps it.
+- must return a `Result` when the transform has a failure mode, and the value bare when it cannot fail by
+  construction → [results](../../../../shapes/service/platform/responses/results.md) § *What returns a `Result`*.
 
 ---
 

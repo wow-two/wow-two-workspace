@@ -26,12 +26,12 @@ Registration detail:
 
 - `Bespoke` → `AddDatabaseBespokeMigrations` — design-stage; engine proven in `smart-qr`, extraction pending.
   - contract in `bespoke-migrations.md`.
-- `Ef` → `AddEfMigrationsRunner<TContext>` wires `EfMigrationsHostedService<TContext>`.
+- `Ef` → `AddEfMigrationsRunner<TContext>` wires `EfMigrationsBackgroundService<TContext>`.
   - the service calls `context.Database.MigrateAsync(ct)`.
   - tuned by `EfMigrationsOptions` — `Enabled`, `MaxConnectAttempts`, `ConnectRetryDelay` (Docker boot-race retry).
-- `DbUp` → `AddDbUpRunner(Action<DbUpOptions>)` wires `DbUpHostedService`.
+- `DbUp` → `AddDbUpRunner(Action<DbUpOptions>)` wires `DbUpBackgroundService`.
   - `DbUpOptions` — `ScriptsAssembly`, `ScriptsNamespacePrefix`, `UpgradeEngineFactory`, `ConnectionString`.
-  - provider via `DbUpProviderFactories.Postgres` / `.SqlServer` / `.MySql`.
+  - provider via `DbUpProviderFactory.Postgres` / `.SqlServer` / `.MySql`.
 
 ---
 

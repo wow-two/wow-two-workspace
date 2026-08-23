@@ -5,7 +5,7 @@
 > The record a configuration section binds into.
 > Purpose — configuration reaches code as a typed, immutable shape, validated once at startup.
 > Use case — any value that differs per environment; behavior knobs passed in code are
-> [`Options`](../constructs/constructs.md).
+> [`Options`](../constructs/data/options.md).
 
 > Defined at [settings — the construct](../constructs/data/settings.md); this doc carries every condition for using one.
 

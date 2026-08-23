@@ -245,7 +245,8 @@ private readonly Lazy<RouteTable> routes;
 - must hold no mutable state unless the role is a `Tracker`.
 - must reach for `Lazy<T>` only when the value is expensive and some paths never read it —
   a scoped or singleton lifetime already defers construction to the first resolve.
-- must separate member groups with a `// ── Section ──` divider once the type passes 60 lines.
+- must separate member groups with `#region` / `#endregion` once the type passes 60 lines — an IDE folds a
+  region and a comment banner is invisible to it.
 - may use `=>` where the component doc grants it ([style](../notation/style/style.md) § *The body*).
 
 ### Constructs

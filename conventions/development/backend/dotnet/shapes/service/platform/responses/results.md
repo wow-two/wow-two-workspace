@@ -24,6 +24,21 @@ The carrier's declaration is a [component](../../../../core/mla/constructs/data/
 - may use `=>` for a member that returns or delegates — a carrier holds a success or an error, not logic that grows
   ([style](../../../../core/lla/notation/style/style.md) § *The body*).
 
+
+## What returns a `Result`
+
+Failure is expected, not exceptional — that is why the carrier exists rather than an exception at every seam.
+
+- must return a `Result` from any operation with a **failure mode**, whatever its role — a `Mapper` that
+  interprets its input, a `Validator`, a `Repository`, a `Broker`, a flow service.
+- must return the value bare only when the operation **cannot fail by construction** — no parse, no lookup,
+  no external contract, and every input in range produces an output. `"Order".ToSnakeCase()` is one.
+- must not read the role as the answer — `Mapper` is not exempt and `Extensions` is not exempt; the
+  question is whether a failure mode exists, and a role never settles that.
+- must not throw where a `Result` would do — an exception is for a programmer error or a dead process
+  → [exceptions](../../../../core/mla/constructs/behavior/service.md).
+- a chained extension returning `Result<T>` is the cost of a real failure mode, not a reason to hide one.
+
 ---
 
 ## `AppError`
@@ -31,7 +46,7 @@ The carrier's declaration is a [component](../../../../core/mla/constructs/data/
 `AppError(AppErrorType Type, string Message, IReadOnlyDictionary<string,object?>? Metadata = null) { ErrorOrigin? Origin }`
 — open `record`, subclassed by `ValidationError` and `AppAggregateError`.
 
-- **must** author errors via a catalog — SDK `AppErrors.{Kind}(...)`, app `OrderErrors.*`.
+- **must** author errors via a catalog — SDK `AppErrorFactory.{Kind}(...)`, app `OrderErrors.*`.
 - **must not** `new AppError { … }` at a call site.
 - **must not** put an HTTP status on the error — `AppErrorType` is transport-agnostic.
 - status maps at the edge ([problem-details.md](problem-details.md)).
